@@ -1,46 +1,37 @@
 # Kur'an Kelimeleri Flashcard
 
-Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yöntemiyle öğrenmek için Android uygulaması.
+Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yöntemiyle öğrenmek için mobil uygulama.
 
 > 🚧 Geliştirme aşamasında.
 
-## Özellikler
+## Özellikler (planlanan)
 
-- **FSRS zamanlama:** Anki'nin de kullandığı FSRS algoritmasıyla (FSRS-6) tekrar planlama, hedef hatırlama oranı (desired retention) ayarlanabilir
+- **FSRS zamanlama:** Anki'nin de kullandığı FSRS algoritmasıyla tekrar planlama, hedef hatırlama oranı (desired retention) ayarlanabilir
 - **Tek deste, otomatik güncelleme:** Kelime listesi bu repodan çekilir; liste güncellendiğinde uygulama güncellemesi beklemeden yeni kelimeler gelir, ilerleme korunur
 - **Çevrimdışı çalışma:** Tekrarlar internet olmadan yapılabilir
 - **Senkron ve yedek:** Google hesabıyla giriş yaparak ilerlemeyi cihazlar arasında senkronlama; ilerlemeyi dosya olarak dışa/içe aktarma
+- **Anki'den geçiş:** Anki'deki çalışma geçmişini içe aktarma
 - **İlerleme:** Öğrenilen kelime yüzdesi, Kur'an metnindeki kelime geçişlerinin ne kadarının tanındığı (metin kapsamı), son 30 günün tekrar grafiği ve çalışma serisi
+
+Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASARIM.md)
 
 ## Teknoloji
 
-- Kotlin, Jetpack Compose (Material 3), Hilt, Navigation Compose
-- FSRS-6: `:fsrs` modülünde saf Kotlin, birim testli ([py-fsrs](https://github.com/open-spaced-repetition/py-fsrs) / [ts-fsrs](https://github.com/open-spaced-repetition/ts-fsrs) ile aynı formüller ve varsayılan ağırlıklar)
-- Cihazda SQLite (Room) ve DataStore
-- Senkron: Cloudflare Pages Functions + D1 (`server/`)
+- [FSRS](https://github.com/open-spaced-repetition) aralıklı tekrar algoritması (FSRS-6, `fsrs/` modülünde Kotlin)
+- Android: Kotlin, Jetpack Compose (Material 3), Hilt, Room (cihazda SQLite), DataStore
+- Senkron: Cloudflare Pages Functions + D1
 - Deste verisi üretimi: Python
-
-### İlerleme verisi
-
-İlerleme yalnızca **tekrar kayıtlarından** oluşur: `{id, kelime, zaman, cevap}`. Kayıtlar hiç değiştirilmez, yalnızca eklenir;
-kartın durumu bu kayıtlar FSRS'ten geçirilerek hesaplanır. Bu sayede:
-
-- senkron, iki cihazın kayıtlarını kimliğe göre birleştirmekten ibarettir, çakışma çıkmaz;
-- yedek dosyası yalnızca bu kayıtları taşır, içe aktarılınca durumlar yeniden hesaplanır;
-- ileride FSRS parametrelerini kişiye göre eğitmek (optimizer) için gereken geçmiş baştan tutulur.
-
-Kelimeler Anki not GUID'leriyle tanınır; liste güncellenince kelimeler bu kimliğe göre güncellenir, listeden çıkanların
-ilerlemesi silinmez.
 
 ## Proje yapısı
 
 | Klasör | İçerik |
 |---|---|
 | `app/` | Android uygulaması |
-| `fsrs/` | FSRS-6 zamanlayıcısı (saf Kotlin/JVM) |
+| `fsrs/` | FSRS-6 zamanlayıcısı (saf Kotlin/JVM, birim testli) |
 | `scripts/build_deck.py` | `data/kelimeler.apkg` → `data/deck.db.gz` + `data/deck-version.json` |
 | `data/` | Anki destesi ve uygulamanın okuduğu deste dosyaları |
 | `server/` | Senkron sunucusu (Cloudflare Pages Functions + D1) ve gizlilik politikası sayfası |
+| `docs/` | Tasarım kararları |
 
 ## Derleme
 
@@ -56,20 +47,17 @@ JDK 21 (Android Studio'nun JBR'si) ve Android SDK gerekir; Gradle sarmalayıcıy
 `local.properties` içinde `sdk.dir` tanımlı olmalıdır (Android Studio projeyi açınca oluşturur). Play yükleme anahtarı
 için `keystore.properties.example` dosyasını `keystore.properties` olarak kopyalayıp doldurun; bu dosya depoya girmez.
 
-## Desteyi güncellemek
+## Deste
 
-1. Anki'den güncel desteyi `data/kelimeler.apkg` olarak dışa aktarın ("Eski Anki sürümleriyle uyumlu" seçeneği açık).
-   Not GUID'leri sabit kalmalı; ilerleme bunlara bağlı.
-2. Deste dosyalarını üretin:
+Destenin güncel hali her zaman [`data/kelimeler.apkg`](data/kelimeler.apkg) dosyasında tutulur. Uygulamanın kullandığı veri bu dosyadan üretilir:
 
-   ```bash
-   python3 scripts/build_deck.py
-   ```
+```bash
+python3 scripts/build_deck.py
+```
 
-3. `data/` altındaki değişiklikleri `main`'e gönderin. Uygulamalar `data/deck-version.json` dosyasına bakarak yeni sürümü
-   kendileri indirir (açılışta en fazla 12 saatte bir, ya da Ayarlar → Deste → Güncellemeleri kontrol et).
-
-Yeni bir derleme de aynı `data/deck.db.gz` dosyasını APK'nın içine koyar; ilk açılışta internet gerekmez.
+Betik `data/deck.db.gz` (gzip'li SQLite) ve `data/deck-version.json` dosyalarını üretir. Bu dosyalar `main`'e gönderilince
+uygulamalar yeni sürümü kendileri indirir (açılışta en fazla 12 saatte bir, ya da Ayarlar → Deste → Güncellemeleri kontrol et);
+yeni bir derleme de aynı dosyayı APK'nın içine koyar, ilk açılışta internet gerekmez. Not GUID'leri sabit kalmalı; ilerleme bunlara bağlı.
 
 ## Senkron sunucusu (isteğe bağlı)
 
@@ -105,13 +93,16 @@ hesabına yedekler; uygulama yeniden kurulduğunda ilerleme buradan geri gelir.
 
 ## Anki kullanıcıları için
 
-Desteyi Anki'de kullanmak isteyenler için AnkiWeb'deki paylaşılan deste yayında kalmaya devam edecek.
+Desteyi Anki'de kullanmak isteyenler için AnkiWeb'deki paylaşılan deste yayında kalmaya devam edecek. En güncel sürümü doğrudan [`data/kelimeler.apkg`](data/kelimeler.apkg) dosyasından indirip Anki'ye aktarabilirsiniz; kart kimlikleri sabit olduğu için içe aktarma çalışma geçmişini korur.
 
 ## Kaynaklar
 
-- **Kur'an metni:** [Tanzil Project](https://tanzil.net) — Creative Commons Attribution 3.0. Metin değiştirilmeden kullanılmıştır.
-- **Morfoloji verisi:** [Quranic Arabic Corpus](https://corpus.quran.com) — GNU General Public License.
-- **Yazı tipi:** [Amiri](https://github.com/aliftype/amiri) — SIL Open Font License 1.1.
+- **Kur'an metni:** [Tanzil Project](https://tanzil.net) — Tanzil Quran Text (Uthmani, sürüm 1.0.2), Creative Commons Attribution-NoDerivs 3.0 (CC BY-ND 3.0). Metin değiştirilmeden kullanılmıştır.
+- **Morfoloji verisi:** [Quranic Arabic Corpus](https://corpus.quran.com) — GNU General Public License. Düzeltilmiş ve Arapça harfe çevrilmiş sürümü [mustafa0x/quran-morphology](https://github.com/mustafa0x/quran-morphology) kullanılmıştır.
+- **Meal:** Elmalılı Muhammed Hamdi Yazır, *Hak Dini Kur'an Dili* meali (sadeleştirilmiş). Metin [fawazahmed0/quran-api](https://github.com/fawazahmed0/quran-api) üzerinden (`tur-elmallsadelesti1`) alınmıştır.
+- **Kelime açıklamaları:** Râğıb el-İsfahânî, *el-Müfredât fî Garîbi'l-Kur'ân*, thk. Safvân Adnân ed-Dâvûdî, Dâru'l-Kalem / ed-Dâru'ş-Şâmiyye, Dımaşk–Beyrut, 1412 h.
+- **Fontlar:** Amiri ve Amiri Quran (Khaled Hosny) — SIL Open Font License 1.1. Desteye [Fontsource](https://fontsource.org) paketlerinden gömülmüştür.
+- Kelimelerin Türkçe anlamları, çoğul/çekim bilgileri ve el-Müfredât alıntılarının Türkçe çevirileri yapay zekâ (Claude) ile hazırlanmıştır.
 
 ## Lisans
 
