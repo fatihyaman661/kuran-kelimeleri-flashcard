@@ -1,0 +1,1 @@
+# kuran-kelimeleri-flashcard
