@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kur\'an Kelimeleri</string>
+
+    <string name="nav_today">Bugün</string>
+    <string name="nav_words">Kelimeler</string>
+    <string name="nav_settings">Ayarlar</string>
+    <string name="back">Geri</string>
+    <string name="nav_menu_open">Menüyü aç</string>
+    <string name="nav_menu_subtitle">Aralıklı tekrarla Kur\'an kelimeleri</string>
+
+    <!-- Bugün -->
+    <string name="greeting_morning">Hayırlı sabahlar</string>
+    <string name="greeting_day">Hayırlı günler</string>
+    <string name="greeting_evening">Hayırlı akşamlar</string>
+    <string name="greeting_night">Hayırlı geceler</string>
+    <string name="home_streak">%1$d gün</string>
+    <string name="home_today_session">Bugünün çalışması</string>
+    <string name="home_estimate">≈ %1$d dk</string>
+    <string name="home_hero_verse">اِقْرَأْ بِاسْمِ رَبِّكَ</string>
+    <string name="home_today_reviews_label">tekrar bugün</string>
+    <string name="home_today_new_label">yeni kelime</string>
+    <string name="home_today_accuracy_label">doğru oranı</string>
+    <string name="home_subtitle">%1$d kelime · Kur\'an\'daki sıklık sırasıyla</string>
+    <string name="home_preparing">Deste hazırlanıyor…</string>
+    <string name="counter_new">Yeni</string>
+    <string name="counter_learning">Öğreniliyor</string>
+    <string name="counter_review">Tekrar</string>
+    <string name="home_start">Çalışmaya başla</string>
+    <string name="home_done_title">Bugünlük bitti</string>
+    <string name="home_done_body">Yarın yeni kelimeler ve tekrarlar seni bekliyor.</string>
+    <string name="home_next_learning">Sıradaki öğrenme kartı %1$s sonra açılacak.</string>
+    <string name="home_progress_title">İlerleme</string>
+    <string name="home_learned">%1$d / %2$d kelime öğrenildi</string>
+    <string name="home_learned_short">%1$d / %2$d kelime</string>
+    <string name="home_coverage_title">Metin kapsamı</string>
+    <string name="home_coverage_body">Öğrendiğin kelimeler, Kur\'an metnindeki kelime geçişlerinin bu kadarını oluşturuyor.</string>
+    <string name="home_learned_percent_label">öğrenildi</string>
+    <string name="home_activity_title">Son 30 gün</string>
+    <string name="home_activity_total">Son 30 günde %1$d tekrar</string>
+    <string name="home_activity_day">%1$s · %2$d tekrar</string>
+    <string name="home_activity_today">Bugün</string>
+    <string name="home_activity_description">Son 30 günün günlük tekrar sayıları. Toplam %1$d, en yüksek günde %2$d tekrar.</string>
+    <string name="home_today_reviews">Bugün %1$d tekrar · %2$d yeni kelime</string>
+    <string name="home_today_accuracy">Doğru oranı %%%1$d</string>
+    <string name="home_deck_updated">Deste güncellendi: %1$d yeni kelime eklendi.</string>
+    <string name="home_deck_updated_removed">Deste güncellendi: %1$d yeni kelime eklendi, %2$d kelime çıkarıldı.</string>
+    <string name="dismiss">Kapat</string>
+
+    <!-- Çalışma -->
+    <string name="study_show_answer">Cevabı göster</string>
+    <string name="study_tap_to_reveal">Çevirmek için dokun</string>
+    <string name="kind_new">Yeni kelime</string>
+    <string name="kind_learning">Öğreniliyor</string>
+    <string name="kind_review">Tekrar</string>
+    <string name="rating_again">Tekrar</string>
+    <string name="rating_hard">Zor</string>
+    <string name="rating_good">İyi</string>
+    <string name="rating_easy">Kolay</string>
+    <string name="study_undo">Son cevabı geri al</string>
+    <string name="study_undone">Son cevap geri alındı</string>
+    <string name="study_undo_synced">Senkronlanmış bir cevap geri alınamaz</string>
+    <string name="study_nothing_to_undo">Geri alınacak cevap yok</string>
+    <string name="study_finished_title">Tebrikler!</string>
+    <string name="study_finished_body">Bugünlük kartlar bitti.</string>
+    <string name="study_session_count">Bu oturumda %1$d kart çalıştın.</string>
+    <string name="study_back_home">Ana sayfaya dön</string>
+
+    <!-- Süreler -->
+    <string name="duration_minutes">%1$d dk</string>
+    <string name="duration_hours">%1$d sa</string>
+    <string name="duration_days">%1$d g</string>
+    <string name="duration_months">%1$d ay</string>
+    <string name="duration_years">%1$s yıl</string>
+    <string name="time_now">şimdi</string>
+    <string name="time_in">%1$s sonra</string>
+    <string name="time_ago">%1$s önce</string>
+
+    <!-- Kelime ayrıntısı -->
+    <string name="detail_root">Kök</string>
+    <string name="detail_meta">Kur\'an\'da %1$d defa · sıra #%2$d</string>
+    <string name="section_examples">Örnekler</string>
+    <string name="section_mufredat">el-Müfredât (Râğıb el-İsfahânî)</string>
+    <string name="show_all_examples">Bütün örnekler (%1$d)</string>
+    <string name="show_less">Daha az göster</string>
+    <string name="show">Göster</string>
+    <string name="hide">Gizle</string>
+
+    <!-- Kelimeler -->
+    <string name="words_subtitle">Kur\'an\'daki sıklık sırasıyla</string>
+    <string name="settings_subtitle">Çalışma, deste ve yedek</string>
+    <string name="words_search">Arapça, anlam ya da kök ara</string>
+    <string name="clear">Temizle</string>
+    <string name="filter_all">Tümü</string>
+    <string name="filter_new">Yeni</string>
+    <string name="filter_learning">Öğreniliyor</string>
+    <string name="filter_learned">Öğrenildi</string>
+    <string name="words_empty">Sonuç bulunamadı</string>
+    <string name="state_due_now">Bugün</string>
+    <string name="state_due_in">%1$s sonra</string>
+
+    <string name="word_progress_title">Tekrar bilgisi</string>
+    <string name="word_state">Durum</string>
+    <string name="word_next">Sonraki tekrar</string>
+    <string name="word_stability">Kararlılık</string>
+    <string name="word_difficulty">Zorluk</string>
+    <string name="word_retrievability">Hatırlama olasılığı</string>
+    <string name="word_reps">Tekrar / unutma</string>
+    <string name="word_history">Geçmiş</string>
+    <string name="word_never">Bu kelime henüz çalışılmadı.</string>
+    <string name="phase_new">Yeni</string>
+    <string name="phase_learning">Öğreniliyor</string>
+    <string name="phase_review">Öğrenildi</string>
+    <string name="phase_relearning">Yeniden öğreniliyor</string>
+
+    <!-- Ayarlar -->
+    <string name="section_study">Çalışma</string>
+    <string name="retention_title">Hedef hatırlama oranı</string>
+    <string name="retention_body">Bir kelimenin tekrarı geldiğinde onu hatırlama olasılığın. Yükseldikçe tekrarlar sıklaşır ve günlük yük artar.</string>
+    <string name="new_per_day_title">Günlük yeni kelime</string>
+    <string name="new_per_day_body">Her gün çalışmaya eklenecek en fazla yeni kelime.</string>
+    <string name="decrease">Azalt</string>
+    <string name="increase">Artır</string>
+
+    <string name="section_deck">Deste</string>
+    <string name="deck_version">Sürüm %1$s · %2$d kelime</string>
+    <string name="deck_checked">Son kontrol: %1$s</string>
+    <string name="deck_check">Güncellemeleri kontrol et</string>
+    <string name="deck_checking">Kontrol ediliyor…</string>
+    <string name="deck_up_to_date">Deste güncel.</string>
+    <string name="deck_needs_app_update">Yeni deste için uygulamayı güncellemen gerekiyor.</string>
+    <string name="deck_check_failed">Kontrol edilemedi. İnternet bağlantını kontrol et.</string>
+
+    <string name="section_sync">Senkron</string>
+    <string name="sync_body">Google hesabınla giriş yaptığında ilerlemen cihazların arasında senkronlanır. Sunucuda yalnızca tekrar kayıtların ve Google hesap kimliğin tutulur.</string>
+    <string name="sync_not_configured">Bu derlemede senkron sunucusu tanımlı değil.</string>
+    <string name="sync_sign_in">Google ile giriş yap</string>
+    <string name="sync_sign_out">Çıkış yap</string>
+    <string name="sync_now">Şimdi senkronla</string>
+    <string name="sync_last">Son senkron: %1$s</string>
+    <string name="sync_never">Henüz senkronlanmadı</string>
+    <string name="sync_running">Senkronlanıyor…</string>
+    <string name="sync_done">%1$d kayıt gönderildi, %2$d kayıt alındı.</string>
+    <string name="sync_failed">Senkron başarısız oldu. İnternet bağlantını kontrol et.</string>
+    <string name="sync_expired">Oturumun süresi doldu, tekrar giriş yap.</string>
+    <string name="sync_pending">%1$d tekrar gönderilmeyi bekliyor.</string>
+    <string name="sync_delete">Sunucudaki verilerimi sil</string>
+    <string name="sync_delete_title">Sunucudaki veriler silinsin mi?</string>
+    <string name="sync_delete_body">Sunucudaki bütün tekrar kayıtların ve oturumların silinir. Bu cihazdaki ilerlemen olduğu gibi kalır.</string>
+    <string name="sync_deleted">Sunucudaki verilerin silindi.</string>
+    <string name="delete">Sil</string>
+    <string name="cancel">Vazgeç</string>
+
+    <string name="section_backup">Yedek</string>
+    <string name="backup_body">İlerlemeni (tekrar kayıtlarını) dosya olarak kaydedip başka bir cihaza taşıyabilirsin. Yedek mevcut ilerlemeyle birleştirilir, hiçbir şey silinmez.</string>
+    <string name="backup_export">Dışa aktar</string>
+    <string name="backup_import">İçe aktar</string>
+    <string name="backup_exported">%1$d tekrar kaydı dışa aktarıldı.</string>
+    <string name="backup_imported">%1$d yeni tekrar kaydı eklendi.</string>
+    <string name="backup_invalid">Bu dosya bir Kur\'an Kelimeleri yedeği değil.</string>
+    <string name="backup_failed">İşlem tamamlanamadı.</string>
+    <string name="backup_file_name">kuran-kelimeleri-yedek-%1$s.json</string>
+
+    <string name="section_about">Hakkında</string>
+    <string name="about_version">Sürüm %1$s</string>
+    <string name="about_sources">Kaynaklar</string>
+    <string name="source_tanzil">Kur\'an metni: Tanzil Project, Tanzil Quran Text (Uthmani 1.0.2), CC BY-ND 3.0. Metin değiştirilmeden kullanılmıştır.</string>
+    <string name="source_corpus">Morfoloji verisi: Quranic Arabic Corpus (GNU GPL), mustafa0x/quran-morphology sürümü.</string>
+    <string name="source_meal">Meal: Elmalılı Muhammed Hamdi Yazır, Hak Dini Kur\'an Dili (sadeleştirilmiş).</string>
+    <string name="source_mufredat">Kelime açıklamaları: Râğıb el-İsfahânî, el-Müfredât fî Garîbi\'l-Kur\'ân (thk. Safvân Adnân ed-Dâvûdî).</string>
+    <string name="source_font">Yazı tipleri: Amiri ve Amiri Quran (Khaled Hosny), SIL Open Font License 1.1.</string>
+    <string name="source_fsrs">Zamanlama: FSRS (Free Spaced Repetition Scheduler).</string>
+    <string name="source_ai">Türkçe anlamlar, çekim bilgileri ve el-Müfredât çevirileri yapay zekâ (Claude) ile hazırlanmıştır.</string>
+    <string name="about_license">Uygulama GNU GPLv3 lisanslıdır.</string>
+    <string name="about_source_code">Kaynak kodu (GitHub)</string>
+    <string name="about_privacy">Gizlilik politikası</string>
+    <string name="source_code_url">https://github.com/fatihyaman661/kuran-kelimeleri-flashcard</string>
+</resources>

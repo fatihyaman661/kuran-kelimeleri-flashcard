@@ -1,0 +1,17 @@
+{
+  "name": "kuran-kelimeleri-server",
+  "private": true,
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "db:init": "wrangler d1 execute kuran-kelimeleri --remote --file=schema.sql",
+    "db:init:local": "wrangler d1 execute kuran-kelimeleri --local --file=schema.sql",
+    "deploy": "wrangler pages deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250901.0",
+    "typescript": "^5.9.0",
+    "wrangler": "^4.34.0"
+  }
+}

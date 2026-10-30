@@ -1,0 +1,14 @@
+# Cloudflare Pages projesi: functions/ altındaki /api/* uçları + public/ altındaki statik sayfalar
+# (gizlilik politikası). Kurulum adımları README'de.
+name = "kuran-kelimeleri"
+pages_build_output_dir = "public"
+compatibility_date = "2025-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kuran-kelimeleri"
+database_id = "BURAYA_wrangler_d1_create_CIKTISINDAKI_KIMLIK"
+
+[vars]
+# Google Cloud Console → API'ler ve Hizmetler → Kimlik bilgileri → "Web uygulaması" istemci kimliği.
+GOOGLE_CLIENT_ID = "BURAYA_WEB_ISTEMCI_KIMLIGI.apps.googleusercontent.com"

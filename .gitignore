@@ -1,0 +1,26 @@
+# Gradle / Android Studio
+.gradle/
+build/
+/local.properties
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+.kotlin/
+
+# Derleme çıktıları depoya girmez
+*.apk
+*.aab
+
+# İmza anahtarları asla depoya girmez
+*.jks
+*.keystore
+keystore.properties
+
+# Cloudflare yerel durumu
+server/.wrangler/
+server/node_modules/
+
+.DS_Store
+__pycache__/

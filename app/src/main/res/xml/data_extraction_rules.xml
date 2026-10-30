@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+: Google hesabına yalnızca ilerleme dosyası yedeklenir (bkz. BackupRepository).
+     Veritabanı kelime listesini de içerdiği için yedeklenmez; liste depodan yeniden gelir. -->
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="file" path="auto-backup/" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="file" path="auto-backup/" />
+    </device-transfer>
+</data-extraction-rules>
