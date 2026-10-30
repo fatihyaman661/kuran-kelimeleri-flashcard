@@ -5,7 +5,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.roundToInt
-import kotlin.random.Random
 import kotlin.time.Duration
 
 /**
@@ -134,7 +133,7 @@ class Scheduler(
         }
         val maxIvl = min((interval + delta).roundToInt(), parameters.maximumIntervalDays)
         val minIvl = min(max(2, (interval - delta).roundToInt()), maxIvl)
-        val fuzzed = Random(seed).nextDouble() * (maxIvl - minIvl + 1) + minIvl
+        val fuzzed = SplitMix64.unitDouble(seed) * (maxIvl - minIvl + 1) + minIvl
         return min(fuzzed.toInt(), parameters.maximumIntervalDays)
     }
 

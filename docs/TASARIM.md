@@ -23,7 +23,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 ## Zamanlama: FSRS
 
 - FSRS-6, `fsrs/` modülünde saf Kotlin olarak uygulandı; formüller, öğrenme adımları ve varsayılan ağırlıklar py-fsrs 6 / ts-fsrs ile aynı, birim testli.
-  - Hazır kütüphane yerine kendi uygulamamız: kart durumu tekrar kayıtlarından yeniden hesaplandığı için her hesap aynı sonucu vermeli. Bunun için fuzz kelime kimliği + tekrar sayısından tohumlanır, geçen süre de 04:00'te dönen günlerle ölçülür (Anki gibi).
+  - Hazır kütüphane yerine kendi uygulamamız: kart durumu tekrar kayıtlarından yeniden hesaplandığı için her hesap aynı sonucu vermeli. Bunun için fuzz kelime kimliği + tekrar sayısından tohumlanır ve `kotlin.random.Random` yerine SplitMix64 ile üretilir (`Random`'ın aynı tohumla aynı diziyi vermesi yalnızca aynı Kotlin sürümünde garanti; SplitMix64 sürümden ve platformdan bağımsız). Geçen süre de 04:00'te dönen günlerle ölçülür (Anki gibi).
   - Alternatif: [java-fsrs](https://github.com/open-spaced-repetition/java-fsrs) (MIT, Maven Central). `FSRS-Kotlin` deposunun lisansı olmadığı için kullanılamaz.
 - Hedef hatırlama oranı (desired retention) kullanıcı tarafından ayarlanabilir, varsayılan 0.90.
 - İlk sürümde varsayılan FSRS parametreleri kullanılır. Kişiye özel parametre optimizasyonu sonradan eklenebilir; bunun için tekrar kayıtlarının **baştan eksiksiz tutulması şart**.
