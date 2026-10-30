@@ -45,6 +45,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -87,6 +89,15 @@ private enum class Destination(val route: String, @StringRes val label: Int, val
     Settings(Routes.SETTINGS, R.string.nav_settings, Icons.Filled.Settings),
 }
 
+/**
+ * Ekran geçişi sürerken gelen dokunuşları yok sayar. Kapanmakta olan çalışma ekranındaki X'e ikinci
+ * dokunuş (aynı köşedeki menü butonuna basılmak istenirken) başlangıç ekranını da yığından atıp boş
+ * ekran bırakıyordu; butona çift dokunmak da ekranı iki kez açıyordu.
+ */
+private inline fun NavBackStackEntry.ifResumed(action: () -> Unit) {
+    if (lifecycle.currentState == Lifecycle.State.RESUMED) action()
+}
+
 /** [KelimelerApp] içinde sağlanır; sekme başlıklarındaki hamburger butonu çekmeceyi bununla açar. */
 val LocalOpenNavigationDrawer = compositionLocalOf<() -> Unit> { {} }
 
@@ -123,12 +134,16 @@ fun KelimelerApp(navController: NavHostController = rememberNavController()) {
         ) {
             Box(Modifier.fillMaxSize()) {
                 NavHost(navController, startDestination = Routes.TODAY, modifier = Modifier.fillMaxSize()) {
-                    composable(Routes.TODAY) { HomeScreen(onStudy = { navController.navigate(Routes.STUDY) }) }
-                    composable(Routes.WORDS) { WordListScreen(onOpenWord = { navController.navigate(Routes.word(it)) }) }
+                    composable(Routes.TODAY) { entry ->
+                        HomeScreen(onStudy = { entry.ifResumed { navController.navigate(Routes.STUDY) } })
+                    }
+                    composable(Routes.WORDS) { entry ->
+                        WordListScreen(onOpenWord = { id -> entry.ifResumed { navController.navigate(Routes.word(id)) } })
+                    }
                     composable(Routes.SETTINGS) { SettingsScreen() }
-                    composable(Routes.STUDY) { StudyScreen(onBack = { navController.popBackStack() }) }
-                    composable(Routes.WORD, arguments = listOf(navArgument(Routes.WORD_ARG) { type = NavType.StringType })) {
-                        WordDetailScreen(onBack = { navController.popBackStack() })
+                    composable(Routes.STUDY) { entry -> StudyScreen(onBack = { entry.ifResumed { navController.popBackStack() } }) }
+                    composable(Routes.WORD, arguments = listOf(navArgument(Routes.WORD_ARG) { type = NavType.StringType })) { entry ->
+                        WordDetailScreen(onBack = { entry.ifResumed { navController.popBackStack() } })
                     }
                 }
             }
