@@ -60,6 +60,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - Repo GPLv3. Eklenecek kütüphanelerin lisansı GPLv3 ile uyumlu olmalı (FSRS kütüphaneleri genelde MIT, uyumlu).
 - Tanzil metni değiştirilmeden kullanılmalı ve kaynak gösterilmeli (CC BY 3.0).
 - Quranic Arabic Corpus verisi GPL; kaynak gösterilmeli.
+- Destede ayrıca Elmalılı meali (sadeleştirilmiş), el-Müfredât (Safvân ed-Dâvûdî tahkiki) alıntıları ve Amiri / Amiri Quran fontları (SIL OFL 1.1) kullanılıyor; README'deki kaynaklar listesi güncel tutulmalı. Hakkında ekranında da bu kaynaklar gösterilmeli.
 
 ## Çalışma düzeni
 
