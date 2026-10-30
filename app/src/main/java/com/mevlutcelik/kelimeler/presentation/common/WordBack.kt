@@ -182,17 +182,16 @@ private fun TableCellView(cell: TableCell, modifier: Modifier) {
                 color = if (cell.isCurrent) PrimaryMint else OnSurface,
                 fontWeight = if (cell.isCurrent) FontWeight.Bold else null,
             )
-            else -> {
-                Text(
-                    cell.text,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (cell.isHeader || cell.isMuted) OnSurfaceMuted else OnSurface,
-                    fontWeight = if (cell.isHeader) FontWeight.SemiBold else null,
-                    textAlign = TextAlign.Center,
-                )
-                cell.sub?.let { Text(it, style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp), color = OnSurfaceMuted, textAlign = TextAlign.Center) }
-            }
+            else -> Text(
+                cell.text,
+                style = MaterialTheme.typography.bodySmall,
+                color = if (cell.isHeader || cell.isMuted) OnSurfaceMuted else OnSurface,
+                fontWeight = if (cell.isHeader) FontWeight.SemiBold else null,
+                textAlign = TextAlign.Center,
+            )
         }
+        // Alt yazı her hücre türünde gösterilir (ör. işaret isimleri tablosunda Arapça şeklin altındaki "231 defa").
+        cell.sub?.let { Text(it, style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp), color = OnSurfaceMuted, textAlign = TextAlign.Center) }
     }
 }
 
