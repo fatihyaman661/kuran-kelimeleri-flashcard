@@ -164,10 +164,13 @@
     <string name="section_about">Hakkında</string>
     <string name="about_version">Sürüm %1$s</string>
     <string name="about_sources">Kaynaklar</string>
-    <string name="source_tanzil">Kur\'an metni: Tanzil Project (Creative Commons Attribution 3.0). Metin değiştirilmeden kullanılmıştır.</string>
-    <string name="source_corpus">Morfoloji verisi: Quranic Arabic Corpus (GNU General Public License).</string>
+    <string name="source_tanzil">Kur\'an metni: Tanzil Project, Tanzil Quran Text (Uthmani 1.0.2), CC BY-ND 3.0. Metin değiştirilmeden kullanılmıştır.</string>
+    <string name="source_corpus">Morfoloji verisi: Quranic Arabic Corpus (GNU GPL), mustafa0x/quran-morphology sürümü.</string>
+    <string name="source_meal">Meal: Elmalılı Muhammed Hamdi Yazır, Hak Dini Kur\'an Dili (sadeleştirilmiş).</string>
+    <string name="source_mufredat">Kelime açıklamaları: Râğıb el-İsfahânî, el-Müfredât fî Garîbi\'l-Kur\'ân (thk. Safvân Adnân ed-Dâvûdî).</string>
+    <string name="source_font">Yazı tipleri: Amiri ve Amiri Quran (Khaled Hosny), SIL Open Font License 1.1.</string>
     <string name="source_fsrs">Zamanlama: FSRS (Free Spaced Repetition Scheduler).</string>
-    <string name="source_font">Yazı tipi: Amiri (SIL Open Font License 1.1).</string>
+    <string name="source_ai">Türkçe anlamlar, çekim bilgileri ve el-Müfredât çevirileri yapay zekâ (Claude) ile hazırlanmıştır.</string>
     <string name="about_license">Uygulama GNU GPLv3 lisanslıdır.</string>
     <string name="about_source_code">Kaynak kodu (GitHub)</string>
     <string name="about_privacy">Gizlilik politikası</string>

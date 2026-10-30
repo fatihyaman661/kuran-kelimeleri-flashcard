@@ -252,7 +252,10 @@ private fun AboutSection() {
         Text(stringResource(R.string.about_version, BuildConfig.VERSION_NAME), style = MaterialTheme.typography.bodyLarge)
         Spacer(Modifier.height(10.dp))
         Text(stringResource(R.string.about_sources), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
-        listOf(R.string.source_tanzil, R.string.source_corpus, R.string.source_fsrs, R.string.source_font).forEach {
+        listOf(
+            R.string.source_tanzil, R.string.source_corpus, R.string.source_meal, R.string.source_mufredat,
+            R.string.source_font, R.string.source_fsrs, R.string.source_ai,
+        ).forEach {
             Text(stringResource(it), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted, modifier = Modifier.padding(top = 4.dp))
         }
         Spacer(Modifier.height(10.dp))
