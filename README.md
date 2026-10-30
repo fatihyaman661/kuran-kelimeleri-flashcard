@@ -1,6 +1,6 @@
 # Kur'an Kelimeleri Flashcard
 
-Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yöntemiyle öğrenmek için Android uygulaması.
+Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yöntemiyle öğrenmek için mobil uygulama.
 
 > 🚧 Geliştirme aşamasında.
 
@@ -16,9 +16,7 @@ Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASAR
 
 ## Teknoloji
 
-- [Expo](https://expo.dev) / React Native, TypeScript
-- [ts-fsrs](https://github.com/open-spaced-repetition/ts-fsrs)
-- Cihazda SQLite
+- [FSRS](https://github.com/open-spaced-repetition) aralıklı tekrar algoritması
 - Senkron: Cloudflare Pages Functions + D1
 - Deste verisi üretimi: Python
 

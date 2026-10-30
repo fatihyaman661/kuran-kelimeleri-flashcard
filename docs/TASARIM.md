@@ -4,26 +4,19 @@ Bu dosya projede şimdiye kadar alınan kararları ve planlanan özellikleri top
 
 ## Amaç
 
-Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelimeleri) aralıklı tekrarla çalıştıran bir Android uygulaması. Çıkış noktası: AnkiWeb'de paylaşılan destenin her güncellemesi yayına girmeden önce bir gün bekliyor; deste güncellemelerinin anında kullanıcıya ulaşması isteniyor.
-
-## Platform
-
-- **Expo / React Native, TypeScript.**
-- **Önce Android.** iOS şimdilik hedef değil (Apple Developer ücreti yıllık 99 USD). Kod iOS'u engellemeyecek şekilde yazılmalı. iPhone ve masaüstü kullanıcıları AnkiWeb'deki desteyi kullanmaya devam eder.
-- **Dağıtım:** Google Play. Hesap yeni bir kişisel geliştirici hesabıysa üretime çıkmadan önce en az 12 testçiyle 14 gün kesintisiz kapalı test şartı var; takvim buna göre planlanmalı.
-- **Derleme:** Android derlemesi (.aab / test için .apk) GitHub Actions ile yapılacak.
+Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelimeleri) aralıklı tekrarla çalıştıran bir mobil uygulama. Çıkış noktası: AnkiWeb'de paylaşılan destenin her güncellemesi yayına girmeden önce bir gün bekliyor; deste güncellemelerinin anında kullanıcıya ulaşması isteniyor.
 
 ## Deste verisi
 
 - Kaynak: `data/kelimeler.apkg` (4.858 kart). Bu dosya destenin **güncel hali** olarak tutulur.
 - `.apkg` → JSON dönüştürme aracı Python ile yazılacak ve repoda duracak. Deste her güncellendiğinde bu araç çalıştırılıp JSON yeniden üretilir.
 - **Her kelimenin kimliği sabittir** (Anki not GUID'i). Kullanıcı ilerlemesi bu kimliğe bağlıdır; kimlikler sürümler arasında asla değişmemeli.
-- Uygulama desteyi GitHub'dan çeker. Kelime/içerik güncellemeleri uygulama güncellemesi ve Play incelemesi beklemeden kullanıcıya ulaşır. Güncellemede yeni kelimeler eklenir, değişenlerin içeriği güncellenir, ilerleme korunur.
+- Uygulama desteyi GitHub'dan çeker. Kelime/içerik güncellemeleri uygulama güncellemesi ve mağaza incelemesi beklemeden kullanıcıya ulaşır. Güncellemede yeni kelimeler eklenir, değişenlerin içeriği güncellenir, ilerleme korunur.
 - Kartlarda Arapça yazı için Amiri / Amiri Quran fontları kullanılıyor (deste içinde gömülü).
 
 ## Zamanlama: FSRS
 
-- Kütüphane: [`ts-fsrs`](https://github.com/open-spaced-repetition/ts-fsrs).
+- Kütüphane: seçilen platformun dilindeki [open-spaced-repetition](https://github.com/open-spaced-repetition) uygulaması (ör. TypeScript için `ts-fsrs`).
 - Hedef hatırlama oranı (desired retention) kullanıcı tarafından ayarlanabilir, varsayılan 0.90.
 - İlk sürümde varsayılan FSRS parametreleri kullanılır. Kişiye özel parametre optimizasyonu sonradan eklenebilir; bunun için tekrar kayıtlarının **baştan eksiksiz tutulması şart**.
 - Günlük yeni kart limiti ayarlanabilir.
@@ -33,7 +26,6 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Kart durumu değil, tekrar kayıtları saklanır:** `{id, kart_id, zaman, cevap (1–4)}`. Kayıtlar güncellenmez, sadece yeni kayıt eklenir.
 - Kart durumu (zorluk, kararlılık, sonraki tekrar tarihi) bu kayıtlar FSRS'ten geçirilerek hesaplanır; performans için cihazda önbelleğe alınabilir.
 - Bu yapı sayesinde senkron çakışmasızdır: iki cihazın kayıtları `id`'ye göre birleştirilir.
-- Cihazda depolama: SQLite.
 - Uygulama tamamen çevrimdışı çalışabilmeli.
 
 ## Senkron ve yedek
@@ -55,7 +47,6 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 
 - **Kullanıcının kart eklemesi yok.** Uygulama tek, özenle hazırlanmış bir deste etrafında kurulu. Gerekirse ileride ana desteden tamamen ayrı bir "kendi kartlarım" destesi olarak eklenebilir.
 - Google Drive senkronu.
-- iOS sürümü.
 
 ## Planlanan küçük özellikler
 
@@ -66,7 +57,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 
 ## Lisans ve kaynaklar
 
-- Repo GPLv3. Kullanılan kütüphaneler (Expo, React Native, ts-fsrs) MIT lisanslı ve uyumlu.
+- Repo GPLv3. Eklenecek kütüphanelerin lisansı GPLv3 ile uyumlu olmalı (FSRS kütüphaneleri genelde MIT, uyumlu).
 - Tanzil metni değiştirilmeden kullanılmalı ve kaynak gösterilmeli (CC BY 3.0).
 - Quranic Arabic Corpus verisi GPL; kaynak gösterilmeli.
 
