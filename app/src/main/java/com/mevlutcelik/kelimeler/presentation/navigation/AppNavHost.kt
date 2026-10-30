@@ -144,7 +144,7 @@ fun KelimelerApp(navController: NavHostController = rememberNavController()) {
 private fun DrawerContent(route: String?, onSelect: (Destination) -> Unit) {
     ModalDrawerSheet(drawerContainerColor = SurfaceDim, modifier = Modifier.fillMaxHeight()) {
         Column(Modifier.fillMaxHeight()) {
-            HeroBackground(RoundedCornerShape(24.dp), Modifier.padding(12.dp).fillMaxWidth()) {
+            HeroBackground(RoundedCornerShape(24.dp), Modifier.padding(12.dp).fillMaxWidth(), skylineBias = 1f) {
                 Row(Modifier.padding(horizontal = 16.dp, vertical = 22.dp), verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         painter = painterResource(R.drawable.ic_launcher_foreground),
