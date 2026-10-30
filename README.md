@@ -30,7 +30,7 @@ Desteyi Anki'de kullanmak isteyenler için AnkiWeb'deki paylaşılan deste yayı
 
 ## Kaynaklar
 
-- **Kur'an metni:** [Tanzil Project](https://tanzil.net) — Creative Commons Attribution 3.0. Metin değiştirilmeden kullanılmıştır.
+- **Kur'an metni:** [Tanzil Project](https://tanzil.net) — Tanzil Quran Text (Uthmani, sürüm 1.0.2), Creative Commons Attribution-NoDerivs 3.0 (CC BY-ND 3.0). Metin değiştirilmeden kullanılmıştır.
 - **Morfoloji verisi:** [Quranic Arabic Corpus](https://corpus.quran.com) — GNU General Public License. Düzeltilmiş ve Arapça harfe çevrilmiş sürümü [mustafa0x/quran-morphology](https://github.com/mustafa0x/quran-morphology) kullanılmıştır.
 - **Meal:** Elmalılı Muhammed Hamdi Yazır, *Hak Dini Kur'an Dili* meali (sadeleştirilmiş). Metin [fawazahmed0/quran-api](https://github.com/fawazahmed0/quran-api) üzerinden (`tur-elmallsadelesti1`) alınmıştır.
 - **Kelime açıklamaları:** Râğıb el-İsfahânî, *el-Müfredât fî Garîbi'l-Kur'ân*, thk. Safvân Adnân ed-Dâvûdî, Dâru'l-Kalem / ed-Dâru'ş-Şâmiyye, Dımaşk–Beyrut, 1412 h.
