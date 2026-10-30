@@ -11,6 +11,8 @@ Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yönt
 - **Çevrimdışı çalışma:** Tekrarlar internet olmadan yapılabilir
 - **Senkron ve yedek:** Google hesabıyla giriş yaparak ilerlemeyi cihazlar arasında senkronlama; ilerlemeyi dosya olarak dışa/içe aktarma
 - **Anki'den geçiş:** Anki'deki çalışma geçmişini içe aktarma
+- **Askıya alma:** Bilinen kelimeyi (ال, و, مِن gibi) çalışmadan çıkarma; ilerlemede bilinen kelime sayılır
+- **Bugünkü sınırı artırma:** Günlük yeni kelime sınırını yalnızca o gün için +10 / +25 / +50 artırma
 - **İlerleme:** Öğrenilen kelime yüzdesi, Kur'an metnindeki kelime geçişlerinin ne kadarının tanındığı (metin kapsamı), son 30 günün tekrar grafiği ve çalışma serisi
 
 Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASARIM.md)

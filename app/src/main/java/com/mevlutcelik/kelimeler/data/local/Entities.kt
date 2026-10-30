@@ -28,6 +28,9 @@ data class WordEntity(
 /**
  * Tekrar kaydı. Kayıtlar yalnızca eklenir; kart durumu bunlardan hesaplanır, senkron da bunları
  * kimliğe göre birleştirir. [synced] kaydın sunucuya gönderilip gönderilmediğini tutar.
+ *
+ * [rating] 1–4 ise cevaptır (FSRS notu). [SUSPEND] ve [UNSUSPEND] cevap değil olaydır: askıya alma da
+ * aynı kayıtlarla taşındığı için yedek, senkron ve "geri al" onu da ayrıca bir şey yapmadan kapsar.
  */
 @Entity(tableName = "reviews", indices = [Index("wordId"), Index("reviewedAt"), Index("synced")])
 data class ReviewEntity(
@@ -37,6 +40,32 @@ data class ReviewEntity(
     val rating: Int,
     val durationMs: Long,
     val synced: Boolean = false,
+) {
+    companion object {
+        const val SUSPEND = -1
+        const val UNSUSPEND = -2
+
+        fun isAnswer(rating: Int) = rating in 1..4
+
+        /** Bu sürümün tanıdığı kayıt; yedekten ya da sunucudan gelen başka değerler atlanır. */
+        fun isKnown(rating: Int) = isAnswer(rating) || rating == SUSPEND || rating == UNSUSPEND
+
+        /** Zaman sırasındaki kayıtlara göre kelime askıdaysa son askıya alma anı, değilse null. */
+        fun suspendedSince(records: List<ReviewEntity>): Long? =
+            records.lastOrNull { it.rating == SUSPEND || it.rating == UNSUSPEND }
+                ?.takeIf { it.rating == SUSPEND }
+                ?.reviewedAt
+    }
+}
+
+/**
+ * Askıdaki kelimeler: çalışmaya gelmez, ilerlemede bilinen kelime sayılır. Tekrar kayıtlarındaki son
+ * askıya alma olayından türetilen önbellek; [since] o olayın zamanı.
+ */
+@Entity(tableName = "suspended")
+data class SuspendedEntity(
+    @PrimaryKey val wordId: String,
+    val since: Long,
 )
 
 /** Tekrar kayıtlarından türetilen önbellek: kuyruk sorguları hızlı olsun diye tutulur. */
@@ -80,6 +109,7 @@ data class WordListRow(
     val searchText: String,
     val phase: Int?,
     val due: Long?,
+    val suspended: Boolean,
 )
 
 data class LearnedTotals(val words: Int, val frequency: Long)

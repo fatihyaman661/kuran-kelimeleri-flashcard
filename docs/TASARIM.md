@@ -27,11 +27,12 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
   - Alternatif: [java-fsrs](https://github.com/open-spaced-repetition/java-fsrs) (MIT, Maven Central). `FSRS-Kotlin` deposunun lisansı olmadığı için kullanılamaz.
 - Hedef hatırlama oranı (desired retention) kullanıcı tarafından ayarlanabilir, varsayılan 0.90.
 - İlk sürümde varsayılan FSRS parametreleri kullanılır. Kişiye özel parametre optimizasyonu sonradan eklenebilir; bunun için tekrar kayıtlarının **baştan eksiksiz tutulması şart**.
-- Günlük yeni kart limiti ayarlanabilir.
+- Günlük yeni kart limiti ayarlanabilir. Ayrıca yalnızca o gün için artırılabilir (ana sayfada ve oturum sonunda "Bugün daha fazla yeni kelime": +10 / +25 / +50); ertesi gün sınır yine ayardaki değer olur.
 
 ## Veri modeli
 
 - **Kart durumu değil, tekrar kayıtları saklanır:** `{id, kart_id, zaman, cevap (1–4)}`. Kayıtlar güncellenmez, sadece yeni kayıt eklenir.
+- Askıya alma da aynı kayıtlarla tutulur: cevap alanında `-1` askıya al, `-2` askıdan çıkar. Böylece yedek, senkron ve "geri al" askıya almayı da kapsar; FSRS yalnızca 1–4 cevaplarını görür. Askı durumu son olaydan türetilip `suspended` tablosunda önbelleğe alınır.
 - Kart durumu (zorluk, kararlılık, sonraki tekrar tarihi) bu kayıtlar FSRS'ten geçirilerek hesaplanır; performans için cihazda önbelleğe alınabilir.
 - Bu yapı sayesinde senkron çakışmasızdır: iki cihazın kayıtları `id`'ye göre birleştirilir.
 - Uygulama tamamen çevrimdışı çalışabilmeli.
@@ -60,7 +61,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 
 ## Planlanan küçük özellikler
 
-- **Kartı askıya alma:** "Bu kelimeyi biliyorum, gösterme" (özellikle ال, و, مِن gibi baştaki sık kelimeler için).
+- **Kartı askıya alma:** "Bu kelimeyi biliyorum, gösterme" (özellikle ال, و, مِن gibi baştaki sık kelimeler için). *(Yapıldı: çalışma ekranının üst çubuğu ve kelime sayfası. Askıdaki kelime çalışmaya gelmez; ilerleme yüzdesinde ve metin kapsamında bilinen kelime sayılır, listede ayrı "Askıda" filtresi var.)*
 - **Kişisel not:** Kullanıcının bir karta kendi notunu eklemesi.
 - **Hata bildirme:** Karttaki bir hatayı geliştiriciye iletme.
 - **Hakkında ekranı:** Kaynaklar ve lisanslar (Tanzil, Quranic Arabic Corpus, GPLv3). *(Yapıldı: Ayarlar → Hakkında.)*

@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 
-enum class WordFilter { All, New, Learning, Learned }
+enum class WordFilter { All, New, Learning, Learned, Suspended }
 
 data class WordRowUi(
     val id: String,
@@ -30,6 +30,7 @@ data class WordRowUi(
     val phase: Phase,
     /** Tekrara kalan süre; vakti geldiyse 0, hiç çalışılmadıysa null. */
     val dueIn: Long?,
+    val suspended: Boolean,
 )
 
 data class WordListUiState(
@@ -58,8 +59,8 @@ class WordListViewModel @Inject constructor(
         val ui = matching.map { it.toUi(now) }
         WordListUiState(
             loading = false,
-            rows = ui.filter { filter.matches(it.phase) },
-            counts = WordFilter.entries.associateWith { f -> ui.count { f.matches(it.phase) } },
+            rows = ui.filter { filter.matches(it) },
+            counts = WordFilter.entries.associateWith { f -> ui.count { f.matches(it) } },
         )
     }
         .flowOn(Dispatchers.Default)
@@ -73,11 +74,13 @@ class WordListViewModel @Inject constructor(
         _filter.value = value
     }
 
-    private fun WordFilter.matches(phase: Phase) = when (this) {
+    /** Askıdaki kelime yalnızca "Tümü" ve "Askıda" altında görünür. */
+    private fun WordFilter.matches(row: WordRowUi) = when (this) {
         WordFilter.All -> true
-        WordFilter.New -> phase == Phase.New
-        WordFilter.Learning -> phase == Phase.Learning || phase == Phase.Relearning
-        WordFilter.Learned -> phase == Phase.Review
+        WordFilter.Suspended -> row.suspended
+        WordFilter.New -> !row.suspended && row.phase == Phase.New
+        WordFilter.Learning -> !row.suspended && (row.phase == Phase.Learning || row.phase == Phase.Relearning)
+        WordFilter.Learned -> !row.suspended && row.phase == Phase.Review
     }
 
     private fun WordListRow.toUi(now: Long): WordRowUi {
@@ -89,7 +92,7 @@ class WordListViewModel @Inject constructor(
                 else -> it - now
             }
         }
-        return WordRowUi(id, rank, vocalized, meaning, phase, dueIn)
+        return WordRowUi(id, rank, vocalized, meaning, phase, dueIn, suspended)
     }
 
     private companion object {

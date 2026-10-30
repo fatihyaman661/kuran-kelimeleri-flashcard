@@ -34,6 +34,7 @@ import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.TouchApp
+import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -48,7 +49,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -70,6 +73,7 @@ import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.data.study.CardKind
 import com.mevlutcelik.kelimeler.data.study.StudyCard
 import com.mevlutcelik.kelimeler.presentation.common.MihrabFrame
+import com.mevlutcelik.kelimeler.presentation.common.MoreNewWordsDialog
 import com.mevlutcelik.kelimeler.presentation.common.MosqueSkyline
 import com.mevlutcelik.kelimeler.presentation.common.StatusDot
 import com.mevlutcelik.kelimeler.presentation.common.WordBack
@@ -104,7 +108,7 @@ fun StudyScreen(
             .background(Background)
             .systemBarsPadding(),
     ) {
-        TopBar(state, onBack, viewModel::undo)
+        TopBar(state, onBack, viewModel::undo, viewModel::suspendCurrent)
         val card = state.card
         Box(
             Modifier
@@ -115,7 +119,7 @@ fun StudyScreen(
         ) {
             when {
                 state.loading -> CircularProgressIndicator(color = PrimaryMint)
-                card == null -> Finished(state, onBack)
+                card == null -> Finished(state, onBack, viewModel::addNewToday)
                 else -> key(card.word.id, card.state?.reps) {
                     FlipCard(card, state.revealed, viewModel::reveal)
                 }
@@ -139,7 +143,7 @@ fun StudyScreen(
 }
 
 @Composable
-private fun TopBar(state: StudyUiState, onBack: () -> Unit, onUndo: () -> Unit) {
+private fun TopBar(state: StudyUiState, onBack: () -> Unit, onUndo: () -> Unit, onSuspend: () -> Unit) {
     val remaining = state.counts.new + state.counts.learning + state.counts.review
     val total = state.reviewedInSession + remaining
     val progress by animateFloatAsState(
@@ -168,7 +172,10 @@ private fun TopBar(state: StudyUiState, onBack: () -> Unit, onUndo: () -> Unit) 
                 CountChip(state.counts.review, PrimaryMint, kind == CardKind.Review)
             }
         }
-        IconButton(onClick = onUndo, enabled = state.reviewedInSession > 0) {
+        IconButton(onClick = onSuspend, enabled = state.card != null && !state.loading) {
+            Icon(Icons.Outlined.PauseCircle, contentDescription = stringResource(R.string.study_suspend))
+        }
+        IconButton(onClick = onUndo, enabled = state.undoable > 0) {
             Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = stringResource(R.string.study_undo))
         }
     }
@@ -307,8 +314,17 @@ private fun RatingBar(intervals: Map<Rating, Long>, onAnswer: (Rating) -> Unit) 
 }
 
 @Composable
-private fun Finished(state: StudyUiState, onBack: () -> Unit) {
+private fun Finished(state: StudyUiState, onBack: () -> Unit, onMoreNew: (Int) -> Unit) {
     val context = LocalContext.current
+    var askMoreNew by remember { mutableStateOf(false) }
+    if (askMoreNew) {
+        MoreNewWordsDialog(
+            newPerDay = state.newPerDay,
+            bonusToday = state.bonusNewToday,
+            onPick = { askMoreNew = false; onMoreNew(it) },
+            onDismiss = { askMoreNew = false },
+        )
+    }
     val pop = remember { Animatable(0.4f) }
     LaunchedEffect(Unit) { pop.animateTo(1f, spring(dampingRatio = Spring.DampingRatioMediumBouncy)) }
     Box(Modifier.fillMaxSize()) {
@@ -346,6 +362,16 @@ private fun Finished(state: StudyUiState, onBack: () -> Unit) {
                 )
             }
             Spacer(Modifier.height(28.dp))
+            if (state.canAddNew) {
+                Button(
+                    onClick = { askMoreNew = true },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryMint, contentColor = OnMint),
+                ) {
+                    Text(stringResource(R.string.more_new_button))
+                }
+                Spacer(Modifier.height(10.dp))
+            }
             OutlinedButton(
                 onClick = onBack,
                 shape = RoundedCornerShape(16.dp),

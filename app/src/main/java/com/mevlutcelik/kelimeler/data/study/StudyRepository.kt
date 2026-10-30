@@ -12,6 +12,8 @@ import com.mevlutcelik.kelimeler.data.local.CardStateDao
 import com.mevlutcelik.kelimeler.data.local.CardStateEntity
 import com.mevlutcelik.kelimeler.data.local.ReviewDao
 import com.mevlutcelik.kelimeler.data.local.ReviewEntity
+import com.mevlutcelik.kelimeler.data.local.SuspendedDao
+import com.mevlutcelik.kelimeler.data.local.SuspendedEntity
 import com.mevlutcelik.kelimeler.data.local.WordDao
 import com.mevlutcelik.kelimeler.data.local.WordEntity
 import com.mevlutcelik.kelimeler.data.settings.SettingsRepository
@@ -41,9 +43,15 @@ data class StudyOverview(
     val nextLearningDue: Long?,
     val learnedWords: Int,
     val learningWords: Int,
+    val suspendedWords: Int,
     val totalWords: Int,
-    val learnedFrequency: Long,
+    /** Öğrenilen ve askıdaki (bilinen) kelimelerin metindeki toplam geçişi. */
+    val knownFrequency: Long,
     val totalFrequency: Long,
+    /** Hiç görülmemiş, askıda olmayan kelime sayısı; bugünkü sınır artırılabilir mi diye bakılır. */
+    val unseenWords: Int,
+    val newPerDay: Int,
+    val bonusNewToday: Int,
     val reviewsToday: Int,
     val correctToday: Int,
     val newToday: Int,
@@ -54,7 +62,8 @@ data class StudyOverview(
 }
 
 sealed interface UndoResult {
-    data class Undone(val wordId: String) : UndoResult
+    /** [answer]: geri alınan kayıt bir cevap mıydı (değilse askıya alma). */
+    data class Undone(val wordId: String, val answer: Boolean) : UndoResult
     data object Nothing : UndoResult
     /** Son tekrar sunucuya gönderilmiş; geri almak cihazlar arasında tutarsızlık yaratır. */
     data object AlreadySynced : UndoResult
@@ -67,6 +76,7 @@ class StudyRepository @Inject constructor(
     private val wordDao: WordDao,
     private val stateDao: CardStateDao,
     private val reviewDao: ReviewDao,
+    private val suspendedDao: SuspendedDao,
     private val settings: SettingsRepository,
     private val clock: DayClock,
     private val json: Json,
@@ -76,26 +86,33 @@ class StudyRepository @Inject constructor(
     private fun todayStart(now: Long) = clock.startOfDay(clock.dayOf(now))
 
     private suspend fun newLeftToday(now: Long): Int {
-        val limit = settings.currentStudy().newPerDay
+        val limit = settings.currentStudy().newLimit(clock.dayOf(now))
         return (limit - stateDao.introducedSince(todayStart(now))).coerceAtLeast(0)
     }
 
     suspend fun overview(now: Long = System.currentTimeMillis()): StudyOverview {
         val learned = stateDao.learned()
+        val suspended = suspendedDao.totals()
+        val unseen = wordDao.newCount()
+        val study = settings.currentStudy()
         val today = reviewDao.totalsSince(todayStart(now))
         val todayIndex = clock.dayOf(now)
         val firstDay = todayIndex - ACTIVITY_DAYS + 1
         val perDay = reviewDao.timesSince(clock.startOfDay(firstDay)).groupingBy { clock.dayOf(it) }.eachCount()
         return StudyOverview(
-            newAvailable = minOf(newLeftToday(now), wordDao.newCount()),
+            newAvailable = minOf(newLeftToday(now), unseen),
             learningDue = stateDao.learningDueCount(now + LEARN_AHEAD_MS),
             reviewDue = stateDao.reviewDueCount(now),
             nextLearningDue = stateDao.nextLearningDue(),
             learnedWords = learned.words,
             learningWords = stateDao.learningCount(),
+            suspendedWords = suspended.words,
             totalWords = wordDao.activeIds().size,
-            learnedFrequency = learned.frequency,
+            knownFrequency = learned.frequency + suspended.frequency,
             totalFrequency = wordDao.totalFrequency(),
+            unseenWords = unseen,
+            newPerDay = study.newPerDay,
+            bonusNewToday = study.bonusFor(todayIndex),
             reviewsToday = today.total,
             correctToday = today.correct,
             newToday = stateDao.introducedSince(todayStart(now)),
@@ -149,6 +166,31 @@ class StudyRepository @Inject constructor(
         }
     }
 
+    /**
+     * Kelimeyi askıya alır ya da askıdan çıkarır. Askıdaki kelime çalışmaya gelmez; ilerlemesi
+     * saklanır ve askıdan çıkınca kaldığı yerden devam eder. Durum zaten istenen gibiyse kayıt eklenmez.
+     */
+    suspend fun setSuspended(wordId: String, suspended: Boolean, now: Long = System.currentTimeMillis()) {
+        db.withTransaction {
+            if ((suspendedDao.get(wordId) != null) == suspended) return@withTransaction
+            reviewDao.insert(
+                ReviewEntity(
+                    id = UUID.randomUUID().toString(),
+                    wordId = wordId,
+                    reviewedAt = now,
+                    rating = if (suspended) ReviewEntity.SUSPEND else ReviewEntity.UNSUSPEND,
+                    durationMs = 0,
+                ),
+            )
+            rebuild(wordId)
+        }
+    }
+
+    /** Yalnızca bugün için yeni kelime sınırını [amount] kadar artırır. */
+    suspend fun addNewToday(amount: Int, now: Long = System.currentTimeMillis()) {
+        settings.addBonusNew(clock.dayOf(now), amount)
+    }
+
     suspend fun undoLast(): UndoResult {
         val last = reviewDao.latest() ?: return UndoResult.Nothing
         if (last.synced) return UndoResult.AlreadySynced
@@ -156,7 +198,7 @@ class StudyRepository @Inject constructor(
             reviewDao.delete(last.id)
             rebuild(last.wordId)
         }
-        return UndoResult.Undone(last.wordId)
+        return UndoResult.Undone(last.wordId, ReviewEntity.isAnswer(last.rating))
     }
 
     /**
@@ -164,23 +206,29 @@ class StudyRepository @Inject constructor(
      * durumunu kayıtlardan yeniden hesaplar. Eklenen kayıt sayısını döner.
      */
     suspend fun mergeReviews(reviews: List<ReviewEntity>): Int {
-        if (reviews.isEmpty()) return 0
+        // Daha yeni bir sürümün yazdığı, bu sürümün tanımadığı kayıtlar atlanır.
+        val known = reviews.filter { ReviewEntity.isKnown(it.rating) }
+        if (known.isEmpty()) return 0
         return db.withTransaction {
-            val inserted = reviewDao.insertAll(reviews)
-            val changed = reviews.filterIndexed { i, _ -> inserted[i] != -1L }
+            val inserted = reviewDao.insertAll(known)
+            val changed = known.filterIndexed { i, _ -> inserted[i] != -1L }
             changed.mapTo(HashSet()) { it.wordId }.forEach { rebuild(it) }
             changed.size
         }
     }
 
     private suspend fun rebuild(wordId: String) {
-        val reviews = reviewDao.forWord(wordId)
-        if (reviews.isEmpty()) {
+        val records = reviewDao.forWord(wordId)
+        val suspendedSince = ReviewEntity.suspendedSince(records)
+        if (suspendedSince != null) suspendedDao.upsert(SuspendedEntity(wordId, suspendedSince)) else suspendedDao.delete(wordId)
+
+        val answers = records.filter { ReviewEntity.isAnswer(it.rating) }
+        if (answers.isEmpty()) {
             stateDao.delete(wordId)
             return
         }
-        val card = scheduler().replay(reviews.map { it.reviewedAt to Rating.of(it.rating) }, seed(wordId, 0))
-        stateDao.upsert(CardStateEntity.of(wordId, card, reviews.first().reviewedAt))
+        val card = scheduler().replay(answers.map { it.reviewedAt to Rating.of(it.rating) }, seed(wordId, 0))
+        stateDao.upsert(CardStateEntity.of(wordId, card, answers.first().reviewedAt))
     }
 
     /** Fuzz tohumu kelimeye ve tekrar sayısına bağlı: önizleme, cevap ve yeniden hesaplama aynı sonucu verir. */

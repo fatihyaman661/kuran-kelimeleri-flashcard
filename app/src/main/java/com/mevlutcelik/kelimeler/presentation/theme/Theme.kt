@@ -101,6 +101,9 @@ object KelimelerColors {
     val ProgressTrack = Color(0xFF333333)
     val HeroBorder = Color(0xFF0E4A33)
     val Highlight = PrimaryMint
+
+    /** Askıdaki kelime: diğer durum renklerinden ayrı, sakin bir gri. */
+    val Suspended = Color(0xFF9AA3AD)
 }
 
 @Composable

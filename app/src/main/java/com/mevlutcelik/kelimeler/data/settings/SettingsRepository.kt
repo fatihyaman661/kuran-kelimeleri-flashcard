@@ -14,11 +14,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
+/**
+ * [bonusNew]: yalnızca [bonusNewDay] gününe (DayClock günü) eklenen yeni kelime; ertesi gün sınır
+ * yine [newPerDay] olur (Anki'deki "bugünkü yeni kart sınırını artır").
+ */
 data class StudySettings(
     val desiredRetention: Float = DEFAULT_RETENTION,
     val newPerDay: Int = DEFAULT_NEW_PER_DAY,
+    val bonusNewDay: Long = -1,
+    val bonusNew: Int = 0,
 ) {
     fun fsrs() = FsrsParameters(desiredRetention = desiredRetention.toDouble())
+
+    fun bonusFor(day: Long) = if (day == bonusNewDay) bonusNew else 0
+
+    fun newLimit(day: Long) = newPerDay + bonusFor(day)
 
     companion object {
         const val DEFAULT_RETENTION = 0.90f
@@ -26,6 +36,7 @@ data class StudySettings(
         const val MIN_RETENTION = 0.80f
         const val MAX_RETENTION = 0.97f
         const val MAX_NEW_PER_DAY = 100
+        const val MAX_BONUS_NEW = 500
     }
 }
 
@@ -41,6 +52,8 @@ class SettingsRepository @Inject constructor(
         StudySettings(
             desiredRetention = it[RETENTION] ?: StudySettings.DEFAULT_RETENTION,
             newPerDay = it[NEW_PER_DAY] ?: StudySettings.DEFAULT_NEW_PER_DAY,
+            bonusNewDay = it[BONUS_NEW_DAY] ?: -1,
+            bonusNew = it[BONUS_NEW] ?: 0,
         )
     }
 
@@ -58,6 +71,15 @@ class SettingsRepository @Inject constructor(
 
     suspend fun setNewPerDay(value: Int) {
         store.edit { it[NEW_PER_DAY] = value.coerceIn(0, StudySettings.MAX_NEW_PER_DAY) }
+    }
+
+    /** [day] için yeni kelime sınırına [amount] ekler; başka bir günden kalan ek sıfırlanır. */
+    suspend fun addBonusNew(day: Long, amount: Int) {
+        store.edit {
+            val current = if (it[BONUS_NEW_DAY] == day) it[BONUS_NEW] ?: 0 else 0
+            it[BONUS_NEW_DAY] = day
+            it[BONUS_NEW] = (current + amount).coerceIn(0, StudySettings.MAX_BONUS_NEW)
+        }
     }
 
     suspend fun setDeckVersion(version: String, checkedAt: Long) {
@@ -98,6 +120,8 @@ class SettingsRepository @Inject constructor(
     private companion object {
         val RETENTION = floatPreferencesKey("desired_retention")
         val NEW_PER_DAY = intPreferencesKey("new_per_day")
+        val BONUS_NEW_DAY = longPreferencesKey("bonus_new_day")
+        val BONUS_NEW = intPreferencesKey("bonus_new")
         val DECK_VERSION = stringPreferencesKey("deck_version")
         val DECK_CHECKED_AT = longPreferencesKey("deck_checked_at")
         val SYNC_TOKEN = stringPreferencesKey("sync_token")

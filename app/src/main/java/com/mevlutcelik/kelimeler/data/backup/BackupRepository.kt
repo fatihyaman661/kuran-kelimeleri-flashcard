@@ -111,6 +111,8 @@ class BackupRepository @Inject constructor(
 
     companion object {
         const val FORMAT = "kuran-kelimeleri-yedek"
-        const val VERSION = 1
+
+        /** 2: kayıtlar askıya alma olaylarını da içerir; 1'i okuyamayan sürüm yoktur, 2'yi eski sürüm reddeder. */
+        const val VERSION = 2
     }
 }
