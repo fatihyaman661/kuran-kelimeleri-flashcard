@@ -174,7 +174,8 @@ private fun StreakChip(days: Int) {
 @Composable
 private fun TodayHero(overview: StudyOverview, onStudy: () -> Unit) {
     val context = LocalContext.current
-    HeroBackground(RoundedCornerShape(28.dp), Modifier.fillMaxWidth()) {
+    // Cami, butonun altındaki şeride sığsın; sağdaki ayete de yer kalsın.
+    HeroBackground(RoundedCornerShape(28.dp), Modifier.fillMaxWidth(), skylineBias = -1f, skylineMaxHeight = 58.dp) {
         Column(Modifier.padding(22.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SectionLabel(stringResource(R.string.home_today_session), color = PrimaryMint)

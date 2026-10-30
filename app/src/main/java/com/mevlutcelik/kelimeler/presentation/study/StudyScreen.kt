@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -68,7 +69,8 @@ import com.mevlutcelik.fsrs.Rating
 import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.data.study.CardKind
 import com.mevlutcelik.kelimeler.data.study.StudyCard
-import com.mevlutcelik.kelimeler.presentation.common.GeometricPattern
+import com.mevlutcelik.kelimeler.presentation.common.MihrabFrame
+import com.mevlutcelik.kelimeler.presentation.common.MosqueSkyline
 import com.mevlutcelik.kelimeler.presentation.common.StatusDot
 import com.mevlutcelik.kelimeler.presentation.common.WordBack
 import com.mevlutcelik.kelimeler.presentation.common.shortDuration
@@ -241,7 +243,7 @@ private fun Front(card: StudyCard) {
         CardKind.Review -> R.string.kind_review to PrimaryMint
     }
     Box(Modifier.fillMaxSize()) {
-        GeometricPattern(Modifier.matchParentSize(), color = PrimaryMint.copy(alpha = 0.04f), cell = 56.dp)
+        MihrabFrame(Modifier.align(Alignment.Center).fillMaxWidth(0.82f).fillMaxHeight(0.74f))
         Surface(
             modifier = Modifier.align(Alignment.TopCenter).padding(top = 22.dp),
             shape = RoundedCornerShape(50),
@@ -310,7 +312,7 @@ private fun Finished(state: StudyUiState, onBack: () -> Unit) {
     val pop = remember { Animatable(0.4f) }
     LaunchedEffect(Unit) { pop.animateTo(1f, spring(dampingRatio = Spring.DampingRatioMediumBouncy)) }
     Box(Modifier.fillMaxSize()) {
-        GeometricPattern(Modifier.matchParentSize(), color = PrimaryMint.copy(alpha = 0.05f), cell = 56.dp)
+        MosqueSkyline(Modifier.matchParentSize(), color = PrimaryMint.copy(alpha = 0.06f), maxHeightFraction = 0.3f)
         Column(
             Modifier.fillMaxSize().padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,

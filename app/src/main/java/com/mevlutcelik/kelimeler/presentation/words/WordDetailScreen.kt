@@ -85,8 +85,12 @@ fun WordDetailScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Column(Modifier.widthIn(max = 640.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                HeroBackground(RoundedCornerShape(28.dp), Modifier.fillMaxWidth()) {
-                    Column(Modifier.fillMaxWidth().padding(vertical = 24.dp, horizontal = 20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                // Alttaki boşluk camiye ayrıldı; silüet yazının arkasına girmesin.
+                HeroBackground(RoundedCornerShape(28.dp), Modifier.fillMaxWidth(), skylineMaxHeight = 46.dp) {
+                    Column(
+                        Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 24.dp, bottom = 62.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
                         Text(word.vocalized, style = ArabicStyles.Headword, color = PrimaryMint)
                         Text(word.category, style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted, textAlign = TextAlign.Center)
                         Spacer(Modifier.height(14.dp))
