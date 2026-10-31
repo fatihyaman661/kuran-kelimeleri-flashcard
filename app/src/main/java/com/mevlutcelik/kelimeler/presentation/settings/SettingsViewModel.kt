@@ -12,6 +12,7 @@ import com.mevlutcelik.kelimeler.data.deck.DeckRepository
 import com.mevlutcelik.kelimeler.data.local.ReviewDao
 import com.mevlutcelik.kelimeler.data.local.WordDao
 import com.mevlutcelik.kelimeler.data.settings.DeckInfo
+import com.mevlutcelik.kelimeler.data.settings.DisplaySettings
 import com.mevlutcelik.kelimeler.data.settings.NewOrder
 import com.mevlutcelik.kelimeler.data.settings.SettingsRepository
 import com.mevlutcelik.kelimeler.data.settings.StudySettings
@@ -62,6 +63,15 @@ class SettingsViewModel @Inject constructor(
     ) { study, deckInfo, count, (account, unsynced, syncState) ->
         SettingsUiState(study, deckInfo, count, sync.isConfigured, account, unsynced, syncState)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState(syncConfigured = sync.isConfigured))
+
+    val display: StateFlow<DisplaySettings> = settings.display
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), DisplaySettings())
+
+    fun setArabicScale(value: Float) = viewModelScope.launch { settings.setArabicScale(value) }
+
+    fun setLatinScale(value: Float) = viewModelScope.launch { settings.setLatinScale(value) }
+
+    fun resetDisplay() = viewModelScope.launch { settings.resetDisplay() }
 
     private val _deckNotice = MutableStateFlow<Notice?>(null)
     val deckNotice: StateFlow<Notice?> = _deckNotice.asStateFlow()

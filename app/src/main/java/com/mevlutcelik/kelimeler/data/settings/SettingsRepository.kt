@@ -52,6 +52,19 @@ data class StudySettings(
     }
 }
 
+/** Yazı boyutu çarpanları: Arapça (kelime, ayet, el-Müfredât) ve Latin harfli bütün diğer yazılar. */
+data class DisplaySettings(
+    val arabicScale: Float = 1f,
+    val latinScale: Float = 1f,
+) {
+    companion object {
+        const val MIN_ARABIC = 0.8f
+        const val MAX_ARABIC = 1.6f
+        const val MIN_LATIN = 0.85f
+        const val MAX_LATIN = 1.3f
+    }
+}
+
 data class DeckInfo(val version: String?, val checkedAt: Long)
 
 data class SyncAccount(val token: String, val email: String, val cursor: Long, val lastSyncAt: Long)
@@ -68,6 +81,10 @@ class SettingsRepository @Inject constructor(
             bonusNew = it[BONUS_NEW] ?: 0,
             newOrder = NewOrder.of(it[NEW_ORDER]),
         )
+    }
+
+    val display: Flow<DisplaySettings> = store.data.map {
+        DisplaySettings(arabicScale = it[ARABIC_SCALE] ?: 1f, latinScale = it[LATIN_SCALE] ?: 1f)
     }
 
     val deck: Flow<DeckInfo> = store.data.map { DeckInfo(it[DECK_VERSION], it[DECK_CHECKED_AT] ?: 0L) }
@@ -96,6 +113,21 @@ class SettingsRepository @Inject constructor(
             val current = if (it[BONUS_NEW_DAY] == day) it[BONUS_NEW] ?: 0 else 0
             it[BONUS_NEW_DAY] = day
             it[BONUS_NEW] = (current + amount).coerceIn(0, StudySettings.MAX_BONUS_NEW)
+        }
+    }
+
+    suspend fun setArabicScale(value: Float) {
+        store.edit { it[ARABIC_SCALE] = value.coerceIn(DisplaySettings.MIN_ARABIC, DisplaySettings.MAX_ARABIC) }
+    }
+
+    suspend fun setLatinScale(value: Float) {
+        store.edit { it[LATIN_SCALE] = value.coerceIn(DisplaySettings.MIN_LATIN, DisplaySettings.MAX_LATIN) }
+    }
+
+    suspend fun resetDisplay() {
+        store.edit {
+            it.remove(ARABIC_SCALE)
+            it.remove(LATIN_SCALE)
         }
     }
 
@@ -140,6 +172,8 @@ class SettingsRepository @Inject constructor(
         val BONUS_NEW_DAY = longPreferencesKey("bonus_new_day")
         val BONUS_NEW = intPreferencesKey("bonus_new")
         val NEW_ORDER = stringPreferencesKey("new_order")
+        val ARABIC_SCALE = floatPreferencesKey("arabic_scale")
+        val LATIN_SCALE = floatPreferencesKey("latin_scale")
         val DECK_VERSION = stringPreferencesKey("deck_version")
         val DECK_CHECKED_AT = longPreferencesKey("deck_checked_at")
         val SYNC_TOKEN = stringPreferencesKey("sync_token")

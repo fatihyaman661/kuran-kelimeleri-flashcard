@@ -19,6 +19,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Her kelimenin kimliği sabittir** (Anki not GUID'i). Kullanıcı ilerlemesi bu kimliğe bağlıdır; kimlikler sürümler arasında asla değişmemeli.
 - Uygulama desteyi GitHub'dan çeker. Kelime/içerik güncellemeleri uygulama güncellemesi ve mağaza incelemesi beklemeden kullanıcıya ulaşır. Güncellemede yeni kelimeler eklenir, değişenlerin içeriği güncellenir, ilerleme korunur.
 - Kartlarda Arapça yazı için Amiri / Amiri Quran fontları kullanılıyor (deste içinde gömülü).
+- Yazı boyutu Arapça (%80–160) ve Latin harfli yazı (%85–130) için ayrı ayarlanır. Latin çarpanı yazı ölçeğine (fontScale) uygulanır, Arapça stiller (`ArabicStyles`) kendi çarpanıyla ölçeklenir; yeni Arapça metin eklerken bu stiller ya da `ArabicStyles.span` kullanılmalı.
 
 ## Zamanlama: FSRS
 

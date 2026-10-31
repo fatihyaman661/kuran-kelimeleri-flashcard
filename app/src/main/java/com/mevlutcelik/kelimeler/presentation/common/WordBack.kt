@@ -45,7 +45,6 @@ import com.mevlutcelik.kelimeler.data.deck.WordDetails
 import com.mevlutcelik.kelimeler.data.deck.WordForm
 import com.mevlutcelik.kelimeler.data.local.WordEntity
 import com.mevlutcelik.kelimeler.presentation.theme.AccentGold
-import com.mevlutcelik.kelimeler.presentation.theme.AmiriFamily
 import com.mevlutcelik.kelimeler.presentation.theme.ArabicStyles
 import com.mevlutcelik.kelimeler.presentation.theme.KelimelerColors
 import com.mevlutcelik.kelimeler.presentation.theme.LearnCoral
@@ -113,7 +112,7 @@ fun metaLine(word: WordEntity): AnnotatedString {
     return buildAnnotatedString {
         if (!word.root.isNullOrBlank()) {
             append("$rootLabel: ")
-            withStyle(SpanStyle(fontFamily = AmiriFamily, fontSize = 17.sp, color = OnSurface)) { append(word.root) }
+            withStyle(ArabicStyles.span(17.sp, OnSurface)) { append(word.root) }
             append(" · ")
         }
         append(meta)
@@ -178,7 +177,7 @@ private fun TableCellView(cell: TableCell, modifier: Modifier) {
         when {
             cell.isArabic -> Text(
                 cell.text,
-                style = ArabicStyles.Form.copy(fontSize = 21.sp, lineHeight = 34.sp, textAlign = TextAlign.Center),
+                style = ArabicStyles.TableCell,
                 color = if (cell.isCurrent) PrimaryMint else OnSurface,
                 fontWeight = if (cell.isCurrent) FontWeight.Bold else null,
             )
@@ -232,7 +231,7 @@ private fun ExampleView(example: Example) {
         example.form?.let { form ->
             Text(
                 buildAnnotatedString {
-                    withStyle(SpanStyle(fontFamily = AmiriFamily, fontSize = 16.sp)) { append(form.ar) }
+                    withStyle(ArabicStyles.span(16.sp)) { append(form.ar) }
                     append(" · ${form.label}")
                 },
                 style = MaterialTheme.typography.bodySmall,
