@@ -51,6 +51,7 @@ import com.mevlutcelik.kelimeler.presentation.common.StatusDot
 import com.mevlutcelik.kelimeler.presentation.common.label
 import com.mevlutcelik.kelimeler.presentation.common.shortDuration
 import com.mevlutcelik.kelimeler.presentation.theme.ArabicStyles
+import com.mevlutcelik.kelimeler.presentation.theme.HardAmber
 import com.mevlutcelik.kelimeler.presentation.theme.KelimelerColors
 import com.mevlutcelik.kelimeler.presentation.theme.LearnCoral
 import com.mevlutcelik.kelimeler.presentation.theme.NewBlue
@@ -131,6 +132,7 @@ private fun WordFilter.label() = when (this) {
     WordFilter.New -> R.string.filter_new
     WordFilter.Learning -> R.string.filter_learning
     WordFilter.Learned -> R.string.filter_learned
+    WordFilter.Leech -> R.string.filter_leech
     WordFilter.Suspended -> R.string.filter_suspended
 }
 
@@ -157,16 +159,23 @@ private fun WordRow(row: WordRowUi, onClick: () -> Unit) {
             Text(row.meaning, style = MaterialTheme.typography.bodyLarge, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Spacer(Modifier.height(2.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                StatusDot(if (row.suspended) KelimelerColors.Suspended else row.phase.color())
-                Spacer(Modifier.width(6.dp))
-                Text(
-                    text = when {
-                        row.suspended -> stringResource(R.string.filter_suspended)
-                        row.phase == Phase.New -> stringResource(row.phase.label())
-                        row.dueIn == 0L -> stringResource(R.string.state_due_now)
-                        row.dueIn != null -> stringResource(R.string.state_due_in, context.shortDuration(row.dueIn))
-                        else -> stringResource(row.phase.label())
+                StatusDot(
+                    when {
+                        row.suspended -> KelimelerColors.Suspended
+                        row.leech -> HardAmber
+                        else -> row.phase.color()
                     },
+                )
+                Spacer(Modifier.width(6.dp))
+                val status = when {
+                    row.suspended -> stringResource(R.string.filter_suspended)
+                    row.phase == Phase.New -> stringResource(row.phase.label())
+                    row.dueIn == 0L -> stringResource(R.string.state_due_now)
+                    row.dueIn != null -> stringResource(R.string.state_due_in, context.shortDuration(row.dueIn))
+                    else -> stringResource(row.phase.label())
+                }
+                Text(
+                    text = if (row.leech) stringResource(R.string.state_leech) + " · " + status else status,
                     style = MaterialTheme.typography.bodySmall,
                     color = OnSurfaceMuted,
                 )

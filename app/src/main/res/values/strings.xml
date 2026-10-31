@@ -66,6 +66,12 @@
     <string name="study_undone">Son cevap geri alındı</string>
     <string name="study_unsuspend_undone">Askıya alma geri alındı</string>
     <string name="study_suspend">Bu kelimeyi askıya al</string>
+    <string name="leech_badge">Zorlanıyor</string>
+    <string name="leech_hint_show">Ayette gör</string>
+    <string name="leech_hint_hide">İpucunu gizle</string>
+    <string name="leech_title">Bu kelimeyi %1$d kez unuttun</string>
+    <string name="leech_body">Aynı kelime tekrar tekrar unutuluyorsa kartı farklı bir yoldan dene: önce kartın önündeki "Ayette gör" ile kelimeyi bağlamında hatırlamaya çalış, aşağıdaki örneklere ve el-Müfredât açıklamasına göz at. Kelimeyi zaten biliyorsan askıya alabilirsin; istediğin zaman kelime sayfasından geri alırsın.</string>
+    <string name="leech_suspend">Biliyorum, askıya al</string>
     <string name="study_suspended">Kelime askıya alındı. Geri almak için ↶ düğmesine dokun.</string>
     <string name="study_undo_synced">Senkronlanmış bir cevap geri alınamaz</string>
     <string name="study_nothing_to_undo">Geri alınacak cevap yok</string>
@@ -104,6 +110,8 @@
     <string name="filter_learning">Öğreniliyor</string>
     <string name="filter_learned">Öğrenildi</string>
     <string name="filter_suspended">Askıda</string>
+    <string name="filter_leech">Zorlanan</string>
+    <string name="state_leech">Zorlanıyor</string>
     <string name="words_empty">Sonuç bulunamadı</string>
     <string name="state_due_now">Bugün</string>
     <string name="state_due_in">%1$s sonra</string>
@@ -119,6 +127,7 @@
     <string name="word_never">Bu kelime henüz çalışılmadı.</string>
     <string name="word_suspend">Askıya al</string>
     <string name="word_unsuspend">Askıdan çıkar</string>
+    <string name="word_leech_note">Bu kelimeyi %1$d kez unuttun. Ayetlerdeki örneklere göz atmak hatırlamayı kolaylaştırabilir; zaten biliyorsan askıya alabilirsin.</string>
     <string name="word_suspended_note">Bu kelime askıda: çalışmaya gelmez, ilerlemede bildiğin kelimeler arasında sayılır.</string>
     <string name="word_suspended_done">Askıya alındı: çalışmaya gelmeyecek, bildiğin kelimeler arasında sayılacak.</string>
     <string name="word_unsuspended_done">Askıdan çıkarıldı: kelime yeniden çalışmaya gelecek.</string>
@@ -130,11 +139,28 @@
     <string name="phase_relearning">Yeniden öğreniliyor</string>
 
     <!-- Ayarlar -->
+    <string name="section_display">Görünüm</string>
+    <string name="display_arabic">Arapça yazı</string>
+    <string name="display_arabic_body">Kelimeler, ayetler, çekim tabloları ve el-Müfredât metni.</string>
+    <string name="display_latin">Latin harfli yazı</string>
+    <string name="display_latin_body">Anlamlar, mealler, açıklamalar ve menüler.</string>
+    <string name="display_preview">Önizleme</string>
+    <string name="display_preview_ar">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ</string>
+    <string name="display_preview_tr">Rahmân ve Rahîm olan Allah\'ın adıyla.</string>
+    <string name="display_reset">Varsayılana dön</string>
     <string name="section_study">Çalışma</string>
     <string name="retention_title">Hedef hatırlama oranı</string>
     <string name="retention_body">Bir kelimenin tekrarı geldiğinde onu hatırlama olasılığın. Yükseldikçe tekrarlar sıklaşır ve günlük yük artar.</string>
     <string name="new_per_day_title">Günlük yeni kelime</string>
     <string name="new_per_day_body">Her gün çalışmaya eklenecek en fazla yeni kelime.</string>
+    <string name="new_order_title">Yeni kelimelerin sırası</string>
+    <string name="new_order_body">Vakti gelen öğrenme adımları her zaman önce gösterilir.</string>
+    <string name="new_order_mixed">Tekrarlarla karışık</string>
+    <string name="new_order_mixed_body">Yeni kelimeler tekrarların arasına eşit aralıkla serpiştirilir.</string>
+    <string name="new_order_after">Tekrarlardan sonra</string>
+    <string name="new_order_after_body">Önce vakti gelen tekrarlar biter, sonra yeni kelimeler gelir.</string>
+    <string name="new_order_before">Tekrarlardan önce</string>
+    <string name="new_order_before_body">Önce bugünün yeni kelimeleri, sonra tekrarlar.</string>
     <string name="decrease">Azalt</string>
     <string name="increase">Artır</string>
 
@@ -149,7 +175,6 @@
 
     <string name="section_sync">Senkron</string>
     <string name="sync_body">Google hesabınla giriş yaptığında ilerlemen cihazların arasında senkronlanır. Sunucuda yalnızca tekrar kayıtların ve Google hesap kimliğin tutulur.</string>
-    <string name="sync_not_configured">Bu derlemede senkron sunucusu tanımlı değil.</string>
     <string name="sync_sign_in">Google ile giriş yap</string>
     <string name="sync_sign_out">Çıkış yap</string>
     <string name="sync_now">Şimdi senkronla</string>
