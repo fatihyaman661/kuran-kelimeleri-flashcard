@@ -108,16 +108,40 @@ private val dayFormat = DateTimeFormatter.ofPattern("d MMMM", Locale.forLanguage
  */
 @Composable
 fun DailyReviewsChart(days: List<DayCount>, modifier: Modifier = Modifier) {
+    DayBarChart(
+        days = days,
+        summary = { total -> stringResource(R.string.home_activity_total, total) },
+        description = { total, peak -> stringResource(R.string.home_activity_description, total, peak) },
+        startLabel = LocalDate.ofEpochDay(days.first().day).format(dayFormat),
+        endLabel = stringResource(R.string.home_activity_today),
+        modifier = modifier,
+    )
+}
+
+/**
+ * Günlük sütun grafiği: bir sütuna dokununca o günün sayısı üstteki satırda görünür. Son 30 gün
+ * (ana sayfa) ve gelecek 30 günün tekrar tahmini (istatistik) bunu kullanır.
+ */
+@Composable
+fun DayBarChart(
+    days: List<DayCount>,
+    summary: @Composable (total: Int) -> String,
+    description: @Composable (total: Int, peak: Int) -> String,
+    startLabel: String,
+    endLabel: String,
+    modifier: Modifier = Modifier,
+    colors: List<Color> = listOf(PrimaryMint, PrimaryMintDark),
+) {
     var selected by remember(days) { mutableStateOf<Int?>(null) }
     val total = days.sumOf { it.reviews }
     val peak = days.maxOfOrNull { it.reviews } ?: 0
     val scaleMax = niceCeiling(peak)
-    val description = stringResource(R.string.home_activity_description, total, peak)
+    val descriptionText = description(total, peak)
 
     Column(modifier) {
         val pick = selected
         Text(
-            if (pick == null) stringResource(R.string.home_activity_total, total)
+            if (pick == null) summary(total)
             else stringResource(R.string.home_activity_day, LocalDate.ofEpochDay(days[pick].day).format(dayFormat), days[pick].reviews),
             style = MaterialTheme.typography.bodyLarge,
         )
@@ -127,7 +151,7 @@ fun DailyReviewsChart(days: List<DayCount>, modifier: Modifier = Modifier) {
                 Modifier
                     .weight(1f)
                     .height(112.dp)
-                    .semantics { contentDescription = description }
+                    .semantics { contentDescription = descriptionText }
                     .pointerInput(days) {
                         detectTapGestures { offset ->
                             val index = (offset.x / (size.width.toFloat() / days.size)).toInt().coerceIn(days.indices)
@@ -153,7 +177,7 @@ fun DailyReviewsChart(days: List<DayCount>, modifier: Modifier = Modifier) {
                         topLeftCornerRadius = CornerRadius(radius), topRightCornerRadius = CornerRadius(radius),
                     )
                     val dimmed = selected != null && selected != i
-                    val brush = Brush.verticalGradient(listOf(PrimaryMint, PrimaryMintDark), startY = bar.top, endY = bar.bottom)
+                    val brush = Brush.verticalGradient(colors, startY = bar.top, endY = bar.bottom)
                     drawPath(Path().apply { addRoundRect(bar) }, brush, alpha = if (dimmed) 0.35f else 1f)
                 }
             }
@@ -168,9 +192,9 @@ fun DailyReviewsChart(days: List<DayCount>, modifier: Modifier = Modifier) {
         }
         Spacer(Modifier.height(4.dp))
         Row(Modifier.fillMaxWidth()) {
-            AxisLabel(LocalDate.ofEpochDay(days.first().day).format(dayFormat))
+            AxisLabel(startLabel)
             Spacer(Modifier.weight(1f))
-            AxisLabel(stringResource(R.string.home_activity_today))
+            AxisLabel(endLabel)
         }
     }
 }

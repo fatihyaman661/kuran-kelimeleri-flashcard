@@ -19,6 +19,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Her kelimenin kimliği sabittir** (Anki not GUID'i). Kullanıcı ilerlemesi bu kimliğe bağlıdır; kimlikler sürümler arasında asla değişmemeli.
 - Uygulama desteyi GitHub'dan çeker. Kelime/içerik güncellemeleri uygulama güncellemesi ve mağaza incelemesi beklemeden kullanıcıya ulaşır. Güncellemede yeni kelimeler eklenir, değişenlerin içeriği güncellenir, ilerleme korunur.
 - Kartlarda Arapça yazı için Amiri / Amiri Quran fontları kullanılıyor (deste içinde gömülü).
+- Yazı boyutu Arapça (%80–160) ve Latin harfli yazı (%85–130) için ayrı ayarlanır. Latin çarpanı yazı ölçeğine (fontScale) uygulanır, Arapça stiller (`ArabicStyles`) kendi çarpanıyla ölçeklenir; yeni Arapça metin eklerken bu stiller ya da `ArabicStyles.span` kullanılmalı.
 
 ## Zamanlama: FSRS
 
@@ -28,6 +29,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - Hedef hatırlama oranı (desired retention) kullanıcı tarafından ayarlanabilir, varsayılan 0.90.
 - İlk sürümde varsayılan FSRS parametreleri kullanılır. Kişiye özel parametre optimizasyonu sonradan eklenebilir; bunun için tekrar kayıtlarının **baştan eksiksiz tutulması şart**.
 - Günlük yeni kart limiti ayarlanabilir. Ayrıca yalnızca o gün için artırılabilir (ana sayfada ve oturum sonunda "Bugün daha fazla yeni kelime": +10 / +25 / +50); ertesi gün sınır yine ayardaki değer olur.
+- Kart sırası (Anki'deki "Yeni/tekrar sırası"): vakti gelen öğrenme adımları her zaman önce; sonra yeni kelimeler ile tekrarlar ayara göre **tekrarlarla karışık** (varsayılan, az olan tür çok olanın arasına eşit aralıkla serpiştirilir), **tekrarlardan sonra** ya da **tekrarlardan önce**.
 
 ## Veri modeli
 
@@ -65,6 +67,14 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Kişisel not:** Kullanıcının bir karta kendi notunu eklemesi.
 - **Hata bildirme:** Karttaki bir hatayı geliştiriciye iletme.
 - **Hakkında ekranı:** Kaynaklar ve lisanslar (Tanzil, Quranic Arabic Corpus, GPLv3). *(Yapıldı: Ayarlar → Hakkında.)*
+
+## İstatistik
+
+- Yeni veri tutulmaz; hepsi tekrar kayıtlarından ve kart durumlarından hesaplanır (`StatsRepository`).
+- Çalışma takvimi: son 53 hafta, renk o günkü tekrar sayısına göre (en yoğun güne göre dört kademe). Seri, bugün çalışılmadıysa dünden sayılır.
+- Tahmin (Anki'deki "Future Due"): askıda olmayan kartların vadeleri gün gün sayılır, vakti geçmişler bugüne eklenir. Cevaplar ve yeni kelimeler simüle edilmez; FSRS simülasyonu (Anki'nin gelişmiş tahmini gibi) sonraki adım olabilir.
+- Tahmini bitiş: görülmemiş kelime sayısı ÷ günlük yeni kelime sınırı.
+- Kalıcı kelime: FSRS kararlılığı 21 günü geçen öğrenilmiş kelime (Anki'deki "olgun" kart).
 
 ## Lisans ve kaynaklar
 

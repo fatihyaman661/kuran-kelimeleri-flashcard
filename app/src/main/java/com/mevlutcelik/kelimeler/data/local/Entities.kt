@@ -115,3 +115,5 @@ data class WordListRow(
 data class LearnedTotals(val words: Int, val frequency: Long)
 
 data class ReviewTotals(val total: Int, val correct: Int)
+
+data class AnswerRow(val reviewedAt: Long, val rating: Int)

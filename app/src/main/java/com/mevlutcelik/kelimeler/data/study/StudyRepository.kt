@@ -16,6 +16,7 @@ import com.mevlutcelik.kelimeler.data.local.SuspendedDao
 import com.mevlutcelik.kelimeler.data.local.SuspendedEntity
 import com.mevlutcelik.kelimeler.data.local.WordDao
 import com.mevlutcelik.kelimeler.data.local.WordEntity
+import com.mevlutcelik.kelimeler.data.settings.NewOrder
 import com.mevlutcelik.kelimeler.data.settings.SettingsRepository
 import java.util.UUID
 import javax.inject.Inject
@@ -57,6 +58,8 @@ data class StudyOverview(
     val newToday: Int,
     /** Son 30 günün tekrar sayıları, eskiden yeniye; son eleman bugün. */
     val daily: List<DayCount>,
+    /** Kesintisiz çalışılan gün sayısı; bugün çalışılmadıysa dünden sayılır. */
+    val streak: Int,
 ) {
     val hasWork get() = newAvailable + learningDue + reviewDue > 0
 }
@@ -117,16 +120,24 @@ class StudyRepository @Inject constructor(
             correctToday = today.correct,
             newToday = stateDao.introducedSince(todayStart(now)),
             daily = (firstDay..todayIndex).map { DayCount(it, perDay[it] ?: 0) },
+            streak = currentStreak(reviewDao.timesSince(0).mapTo(HashSet()) { clock.dayOf(it) }, todayIndex),
         )
     }
 
     /**
-     * Sıradaki kart: vakti gelmiş öğrenme/tekrar kartları, sonra günlük sınır dahilinde yeni kelime,
-     * hiçbiri yoksa 20 dakika içinde açılacak öğrenme kartı (Anki'deki "önden öğrenme").
+     * Sıradaki kart: vakti gelmiş öğrenme adımları her zaman önce (Anki'de de gün içi öğrenme
+     * bekletilmez). Sonra vakti gelmiş tekrarlar ile günlük sınır dahilindeki yeni kelimeler ayardaki
+     * sıraya göre ([NewOrder], [pickNew]). Hiçbiri yoksa 20 dakika içinde açılacak öğrenme kartı
+     * (Anki'deki "önden öğrenme").
      */
-    suspend fun nextCard(now: Long = System.currentTimeMillis()): StudyCard? {
-        stateDao.nextDue(now)?.let { return load(it.wordId, it, now) }
-        if (newLeftToday(now) > 0) wordDao.nextNew()?.let { return load(it.id, null, now, it) }
+    suspend fun nextCard(now: Long = System.currentTimeMillis(), mix: QueueMix = QueueMix()): StudyCard? {
+        stateDao.nextLearning(now)?.let { return load(it.wordId, it, now) }
+        val newLeft = minOf(newLeftToday(now), wordDao.newCount())
+        if (pickNew(settings.currentStudy().newOrder, stateDao.reviewDueCount(now), newLeft, mix)) {
+            wordDao.nextNew()?.let { return load(it.id, null, now, it) }
+        }
+        stateDao.nextReview(now)?.let { return load(it.wordId, it, now) }
+        if (newLeft > 0) wordDao.nextNew()?.let { return load(it.id, null, now, it) }
         stateDao.nextLearning(now + LEARN_AHEAD_MS)?.let { return load(it.wordId, it, now) }
         return null
     }

@@ -151,15 +151,8 @@ private fun Header(overview: StudyOverview?) {
             )
             Text(stringResource(greeting), style = MaterialTheme.typography.titleLarge)
         }
-        overview?.let { StreakChip(streak(it)) }
+        overview?.let { StreakChip(it.streak) }
     }
-}
-
-/** Bugünden (bugün henüz çalışılmadıysa dünden) geriye kesintisiz çalışılan gün sayısı. */
-private fun streak(overview: StudyOverview): Int {
-    val days = overview.daily.map { it.reviews > 0 }.reversed()
-    val start = if (days.firstOrNull() == true) 0 else 1
-    return days.drop(start).takeWhile { it }.size
 }
 
 @Composable
@@ -251,7 +244,7 @@ private fun TodayHero(overview: StudyOverview, onStudy: () -> Unit, onMoreNew: (
             // Süs: inen ilk ayetin başı, desenin üstünde sessiz bir imza gibi.
             Text(
                 stringResource(R.string.home_hero_verse),
-                style = ArabicStyles.Inline.copy(fontSize = 20.sp),
+                style = ArabicStyles.Signature,
                 color = PrimaryMint.copy(alpha = 0.55f),
                 modifier = Modifier.align(Alignment.End),
             )

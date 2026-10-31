@@ -25,6 +25,9 @@ interface WordDao {
     @Query("SELECT COUNT(*) FROM words WHERE retired = 0")
     fun observeActiveCount(): Flow<Int>
 
+    @Query("SELECT COUNT(*) FROM words WHERE retired = 0")
+    suspend fun activeCount(): Int
+
     @Query("SELECT COALESCE(SUM(frequency), 0) FROM words WHERE retired = 0")
     suspend fun totalFrequency(): Long
 
@@ -66,13 +69,13 @@ interface CardStateDao {
     @Query("SELECT * FROM card_states WHERE wordId = :wordId")
     fun observe(wordId: String): Flow<CardStateEntity?>
 
-    /** Vakti gelmiş kart: önce öğrenme adımındakiler, sonra tekrarlar, en eski vadeli önce. */
+    /** Vakti gelmiş tekrar kartı (öğrenme adımları hariç), en eski vadeli önce. */
     @Query(
         """SELECT s.* FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.due <= :until
-           ORDER BY CASE WHEN s.phase = 2 THEN 1 ELSE 0 END, s.due LIMIT 1""",
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase = 2 AND s.due <= :until
+           ORDER BY s.due LIMIT 1""",
     )
-    suspend fun nextDue(until: Long): CardStateEntity?
+    suspend fun nextReview(until: Long): CardStateEntity?
 
     @Query(
         """SELECT s.* FROM card_states s JOIN words w ON w.id = s.wordId
@@ -107,6 +110,23 @@ interface CardStateDao {
 
     @Query("SELECT COUNT(*) FROM card_states WHERE introducedAt >= :since")
     suspend fun introducedSince(since: Long): Int
+
+    @Query("SELECT introducedAt FROM card_states WHERE introducedAt >= :since")
+    suspend fun introducedTimesSince(since: Long): List<Long>
+
+    /** Tahmin grafiği için: [until]'den önce vakti gelen, askıda olmayan kartların vadeleri. */
+    @Query(
+        """SELECT s.due FROM card_states s JOIN words w ON w.id = s.wordId
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.due < :until""",
+    )
+    suspend fun dueTimesBefore(until: Long): List<Long>
+
+    /** Kararlılığı [days] günü geçmiş (kalıcı) öğrenilmiş kelime sayısı. */
+    @Query(
+        """SELECT COUNT(*) FROM card_states s JOIN words w ON w.id = s.wordId
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase = 2 AND s.stability >= :days""",
+    )
+    suspend fun matureCount(days: Double): Int
 
     @Query(
         """SELECT COUNT(*) AS words, COALESCE(SUM(w.frequency), 0) AS frequency
@@ -160,6 +180,9 @@ interface ReviewDao {
 
     @Query("SELECT reviewedAt FROM reviews WHERE reviewedAt >= :since AND rating > 0")
     suspend fun timesSince(since: Long): List<Long>
+
+    @Query("SELECT reviewedAt, rating FROM reviews WHERE reviewedAt >= :since AND rating > 0")
+    suspend fun answersSince(since: Long): List<AnswerRow>
 
     @Query(
         """SELECT COUNT(*) AS total, COALESCE(SUM(CASE WHEN rating > 1 THEN 1 ELSE 0 END), 0) AS correct
