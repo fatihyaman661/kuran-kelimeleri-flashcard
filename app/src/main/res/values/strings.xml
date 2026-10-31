@@ -135,6 +135,14 @@
     <string name="retention_body">Bir kelimenin tekrarı geldiğinde onu hatırlama olasılığın. Yükseldikçe tekrarlar sıklaşır ve günlük yük artar.</string>
     <string name="new_per_day_title">Günlük yeni kelime</string>
     <string name="new_per_day_body">Her gün çalışmaya eklenecek en fazla yeni kelime.</string>
+    <string name="new_order_title">Yeni kelimelerin sırası</string>
+    <string name="new_order_body">Vakti gelen öğrenme adımları her zaman önce gösterilir.</string>
+    <string name="new_order_mixed">Tekrarlarla karışık</string>
+    <string name="new_order_mixed_body">Yeni kelimeler tekrarların arasına eşit aralıkla serpiştirilir.</string>
+    <string name="new_order_after">Tekrarlardan sonra</string>
+    <string name="new_order_after_body">Önce vakti gelen tekrarlar biter, sonra yeni kelimeler gelir.</string>
+    <string name="new_order_before">Tekrarlardan önce</string>
+    <string name="new_order_before_body">Önce bugünün yeni kelimeleri, sonra tekrarlar.</string>
     <string name="decrease">Azalt</string>
     <string name="increase">Artır</string>
 

@@ -12,6 +12,7 @@ import com.mevlutcelik.kelimeler.data.deck.DeckRepository
 import com.mevlutcelik.kelimeler.data.local.ReviewDao
 import com.mevlutcelik.kelimeler.data.local.WordDao
 import com.mevlutcelik.kelimeler.data.settings.DeckInfo
+import com.mevlutcelik.kelimeler.data.settings.NewOrder
 import com.mevlutcelik.kelimeler.data.settings.SettingsRepository
 import com.mevlutcelik.kelimeler.data.settings.StudySettings
 import com.mevlutcelik.kelimeler.data.settings.SyncAccount
@@ -74,6 +75,8 @@ class SettingsViewModel @Inject constructor(
     fun setRetention(value: Float) = viewModelScope.launch { settings.setRetention(value) }
 
     fun setNewPerDay(value: Int) = viewModelScope.launch { settings.setNewPerDay(value) }
+
+    fun setNewOrder(value: NewOrder) = viewModelScope.launch { settings.setNewOrder(value) }
 
     fun checkDeck() {
         if (_checking.value) return

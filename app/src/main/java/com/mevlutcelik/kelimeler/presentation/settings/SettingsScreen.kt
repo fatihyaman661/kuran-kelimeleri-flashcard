@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -34,6 +36,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -46,15 +50,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mevlutcelik.kelimeler.BuildConfig
 import com.mevlutcelik.kelimeler.R
+import com.mevlutcelik.kelimeler.data.settings.NewOrder
 import com.mevlutcelik.kelimeler.data.settings.StudySettings
 import com.mevlutcelik.kelimeler.data.sync.SyncState
 import com.mevlutcelik.kelimeler.presentation.common.ContentCard
@@ -81,7 +88,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            StudySection(state.study, viewModel::setRetention, viewModel::setNewPerDay)
+            StudySection(state.study, viewModel::setRetention, viewModel::setNewPerDay, viewModel::setNewOrder)
             DeckSection(state, viewModel)
             SyncSection(state, viewModel)
             BackupSection(viewModel)
@@ -92,7 +99,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
 }
 
 @Composable
-private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onNewPerDay: (Int) -> Unit) {
+private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onNewPerDay: (Int) -> Unit, onNewOrder: (NewOrder) -> Unit) {
     // Kaydırırken her adımda DataStore'a yazmamak için değer bırakılınca kaydedilir.
     var retention by remember(study.desiredRetention) { mutableFloatStateOf(study.desiredRetention) }
     ContentCard {
@@ -130,6 +137,35 @@ private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onN
             )
             OutlinedIconButton(onClick = { onNewPerDay(study.newPerDay + 5) }, enabled = study.newPerDay < StudySettings.MAX_NEW_PER_DAY, border = BorderStroke(1.dp, KelimelerColors.CardBorder)) {
                 Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.increase))
+            }
+        }
+
+        Spacer(Modifier.height(18.dp))
+        Text(stringResource(R.string.new_order_title), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+        Text(stringResource(R.string.new_order_body), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+        Spacer(Modifier.height(6.dp))
+        Column(Modifier.selectableGroup()) {
+            listOf(
+                Triple(NewOrder.Mixed, R.string.new_order_mixed, R.string.new_order_mixed_body),
+                Triple(NewOrder.AfterReviews, R.string.new_order_after, R.string.new_order_after_body),
+                Triple(NewOrder.BeforeReviews, R.string.new_order_before, R.string.new_order_before_body),
+            ).forEach { (order, title, body) ->
+                val selected = study.newOrder == order
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .selectable(selected = selected, onClick = { onNewOrder(order) }, role = Role.RadioButton)
+                        .padding(vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    RadioButton(selected = selected, onClick = null, colors = RadioButtonDefaults.colors(selectedColor = PrimaryMint))
+                    Spacer(Modifier.width(10.dp))
+                    Column {
+                        Text(stringResource(title), style = MaterialTheme.typography.bodyLarge)
+                        Text(stringResource(body), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+                    }
+                }
             }
         }
     }
