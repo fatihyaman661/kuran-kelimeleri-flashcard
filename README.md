@@ -16,6 +16,7 @@ Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yönt
 - **Yazı boyutu:** Arapça ve Latin harfli yazı için ayrı ayrı büyütme/küçültme (Ayarlar → Görünüm)
 - **Bugünkü sınırı artırma:** Günlük yeni kelime sınırını yalnızca o gün için +10 / +25 / +50 artırma
 - **İlerleme:** Öğrenilen kelime yüzdesi, Kur'an metnindeki kelime geçişlerinin ne kadarının tanındığı (metin kapsamı), son 30 günün tekrar grafiği ve çalışma serisi
+- **İstatistik:** Son bir yılın çalışma takvimi (ısı haritası), en uzun seri, önümüzdeki 30 günün tekrar tahmini, tahmini bitiş ve kalıcı kelime sayısı
 
 Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASARIM.md)
 

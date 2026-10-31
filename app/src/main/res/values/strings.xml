@@ -5,6 +5,7 @@
     <string name="nav_today">Bugün</string>
     <string name="nav_words">Kelimeler</string>
     <string name="nav_settings">Ayarlar</string>
+    <string name="nav_stats">İstatistik</string>
     <string name="back">Geri</string>
     <string name="nav_menu_open">Menüyü aç</string>
     <string name="nav_menu_subtitle">Aralıklı tekrarla Kur\'an kelimeleri</string>
@@ -128,6 +129,30 @@
     <string name="phase_learning">Öğreniliyor</string>
     <string name="phase_review">Öğrenildi</string>
     <string name="phase_relearning">Yeniden öğreniliyor</string>
+
+    <!-- İstatistik -->
+    <string name="stats_subtitle">Çalışma takvimi ve tahminler</string>
+    <string name="stats_calendar_title">Çalışma takvimi</string>
+    <string name="stats_calendar_description">Son bir yılın her günü için bir kare; renk koyulaştıkça o gün daha çok tekrar yapılmış.</string>
+    <string name="stats_day_detail">%1$s · %2$d tekrar · %3$d yeni · %%%4$d doğru</string>
+    <string name="stats_day_empty">%1$s · çalışılmadı</string>
+    <string name="stats_less">Az</string>
+    <string name="stats_more">Çok</string>
+    <string name="stats_current_streak">Şu anki seri</string>
+    <string name="stats_longest_streak">En uzun seri</string>
+    <string name="stats_active_days">Çalışılan gün</string>
+    <string name="stats_total_reviews">Toplam tekrar</string>
+    <string name="stats_days">%1$d gün</string>
+    <string name="stats_forecast_title">Önümüzdeki 30 gün</string>
+    <string name="stats_forecast_total">30 günde %1$d tekrar</string>
+    <string name="stats_forecast_description">Önümüzdeki 30 günün günlük tekrar tahmini. Toplam %1$d, en yoğun günde %2$d tekrar.</string>
+    <string name="stats_forecast_note">Vakti geçmiş tekrarlar bugüne sayılır. Yeni kelimeler ve vereceğin cevaplar hesaba katılmadığı için gerçek yük biraz farklı olur.</string>
+    <string name="stats_finish_title">Tahmini bitiş</string>
+    <string name="stats_finish_body">Günde %1$d yeni kelimeyle kalan %2$d kelimenin hepsini yaklaşık %3$s sonra, %4$s civarında görmüş olursun.</string>
+    <string name="stats_finish_none">Günlük yeni kelime sınırın 0. Ayarlar\'dan artırınca tahmini bitiş burada görünür.</string>
+    <string name="stats_finish_done">Bütün kelimeleri en az bir kez gördün.</string>
+    <string name="stats_mature_title">Kalıcı kelimeler</string>
+    <string name="stats_mature_body">%1$d kelimenin kararlılığı 21 günü geçti. Kararlılık, bir kelimeyi hatırlama olasılığının %%90\'a inmesi için geçen süredir.</string>
 
     <!-- Ayarlar -->
     <string name="section_display">Görünüm</string>

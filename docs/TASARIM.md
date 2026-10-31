@@ -68,6 +68,14 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Hata bildirme:** Karttaki bir hatayı geliştiriciye iletme.
 - **Hakkında ekranı:** Kaynaklar ve lisanslar (Tanzil, Quranic Arabic Corpus, GPLv3). *(Yapıldı: Ayarlar → Hakkında.)*
 
+## İstatistik
+
+- Yeni veri tutulmaz; hepsi tekrar kayıtlarından ve kart durumlarından hesaplanır (`StatsRepository`).
+- Çalışma takvimi: son 53 hafta, renk o günkü tekrar sayısına göre (en yoğun güne göre dört kademe). Seri, bugün çalışılmadıysa dünden sayılır.
+- Tahmin (Anki'deki "Future Due"): askıda olmayan kartların vadeleri gün gün sayılır, vakti geçmişler bugüne eklenir. Cevaplar ve yeni kelimeler simüle edilmez; FSRS simülasyonu (Anki'nin gelişmiş tahmini gibi) sonraki adım olabilir.
+- Tahmini bitiş: görülmemiş kelime sayısı ÷ günlük yeni kelime sınırı.
+- Kalıcı kelime: FSRS kararlılığı 21 günü geçen öğrenilmiş kelime (Anki'deki "olgun" kart).
+
 ## Lisans ve kaynaklar
 
 - Repo GPLv3. Eklenecek kütüphanelerin lisansı GPLv3 ile uyumlu olmalı (FSRS kütüphaneleri genelde MIT, uyumlu).

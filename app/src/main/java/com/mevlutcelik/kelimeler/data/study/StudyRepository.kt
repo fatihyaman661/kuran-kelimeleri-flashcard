@@ -58,6 +58,8 @@ data class StudyOverview(
     val newToday: Int,
     /** Son 30 günün tekrar sayıları, eskiden yeniye; son eleman bugün. */
     val daily: List<DayCount>,
+    /** Kesintisiz çalışılan gün sayısı; bugün çalışılmadıysa dünden sayılır. */
+    val streak: Int,
 ) {
     val hasWork get() = newAvailable + learningDue + reviewDue > 0
 }
@@ -118,6 +120,7 @@ class StudyRepository @Inject constructor(
             correctToday = today.correct,
             newToday = stateDao.introducedSince(todayStart(now)),
             daily = (firstDay..todayIndex).map { DayCount(it, perDay[it] ?: 0) },
+            streak = currentStreak(reviewDao.timesSince(0).mapTo(HashSet()) { clock.dayOf(it) }, todayIndex),
         )
     }
 
