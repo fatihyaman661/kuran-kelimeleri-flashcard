@@ -66,13 +66,13 @@ interface CardStateDao {
     @Query("SELECT * FROM card_states WHERE wordId = :wordId")
     fun observe(wordId: String): Flow<CardStateEntity?>
 
-    /** Vakti gelmiş kart: önce öğrenme adımındakiler, sonra tekrarlar, en eski vadeli önce. */
+    /** Vakti gelmiş tekrar kartı (öğrenme adımları hariç), en eski vadeli önce. */
     @Query(
         """SELECT s.* FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.due <= :until
-           ORDER BY CASE WHEN s.phase = 2 THEN 1 ELSE 0 END, s.due LIMIT 1""",
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase = 2 AND s.due <= :until
+           ORDER BY s.due LIMIT 1""",
     )
-    suspend fun nextDue(until: Long): CardStateEntity?
+    suspend fun nextReview(until: Long): CardStateEntity?
 
     @Query(
         """SELECT s.* FROM card_states s JOIN words w ON w.id = s.wordId
