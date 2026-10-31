@@ -166,7 +166,6 @@
 
     <string name="section_sync">Senkron</string>
     <string name="sync_body">Google hesabınla giriş yaptığında ilerlemen cihazların arasında senkronlanır. Sunucuda yalnızca tekrar kayıtların ve Google hesap kimliğin tutulur.</string>
-    <string name="sync_not_configured">Bu derlemede senkron sunucusu tanımlı değil.</string>
     <string name="sync_sign_in">Google ile giriş yap</string>
     <string name="sync_sign_out">Çıkış yap</string>
     <string name="sync_now">Şimdi senkronla</string>

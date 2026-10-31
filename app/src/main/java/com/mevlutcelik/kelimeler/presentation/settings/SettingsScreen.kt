@@ -282,6 +282,8 @@ private fun DeckSection(state: SettingsUiState, viewModel: SettingsViewModel) {
 
 @Composable
 private fun SyncSection(state: SettingsUiState, viewModel: SettingsViewModel) {
+    // Sunucusu tanımlı olmayan derlemede (Play sürümü dahil) senkron bölümü hiç gösterilmez.
+    if (!state.syncConfigured) return
     val context = LocalContext.current
     val syncError by viewModel.syncError.collectAsStateWithLifecycle()
     val syncNotice by viewModel.syncNotice.collectAsStateWithLifecycle()
@@ -309,7 +311,6 @@ private fun SyncSection(state: SettingsUiState, viewModel: SettingsViewModel) {
         Spacer(Modifier.height(12.dp))
         val account = state.account
         when {
-            !state.syncConfigured -> Text(stringResource(R.string.sync_not_configured), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
             account == null -> {
                 PrimaryButton(stringResource(R.string.sync_sign_in), onClick = { viewModel.signIn(context) })
                 if (syncError) NoticeText(Notice(R.string.sync_failed))
