@@ -109,6 +109,7 @@ data class WordListRow(
     val searchText: String,
     val phase: Int?,
     val due: Long?,
+    val lapses: Int?,
     val suspended: Boolean,
 )
 

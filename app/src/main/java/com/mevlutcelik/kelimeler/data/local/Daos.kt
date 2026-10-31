@@ -44,7 +44,7 @@ interface WordDao {
     suspend fun newCount(): Int
 
     @Query(
-        """SELECT w.id, w.rank, w.vocalized, w.meaning, w.searchText, s.phase, s.due,
+        """SELECT w.id, w.rank, w.vocalized, w.meaning, w.searchText, s.phase, s.due, s.lapses,
                   EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id) AS suspended
            FROM words w LEFT JOIN card_states s ON s.wordId = w.id
            WHERE w.retired = 0 ORDER BY w.rank""",

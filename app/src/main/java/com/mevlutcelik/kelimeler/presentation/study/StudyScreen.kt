@@ -14,6 +14,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -45,6 +46,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -72,6 +74,8 @@ import com.mevlutcelik.fsrs.Rating
 import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.data.study.CardKind
 import com.mevlutcelik.kelimeler.data.study.StudyCard
+import com.mevlutcelik.kelimeler.data.study.isLeech
+import com.mevlutcelik.kelimeler.presentation.common.ExampleVerse
 import com.mevlutcelik.kelimeler.presentation.common.MihrabFrame
 import com.mevlutcelik.kelimeler.presentation.common.MoreNewWordsDialog
 import com.mevlutcelik.kelimeler.presentation.common.MosqueSkyline
@@ -121,7 +125,7 @@ fun StudyScreen(
                 state.loading -> CircularProgressIndicator(color = PrimaryMint)
                 card == null -> Finished(state, onBack, viewModel::addNewToday)
                 else -> key(card.word.id, card.state?.reps) {
-                    FlipCard(card, state.revealed, viewModel::reveal)
+                    FlipCard(card, state.revealed, viewModel::reveal, viewModel::suspendCurrent)
                 }
             }
         }
@@ -197,7 +201,7 @@ private fun CountChip(value: Int, color: Color, current: Boolean) {
 
 /** Dokununca 3B dönerek arka yüzü gösteren kart. */
 @Composable
-private fun FlipCard(card: StudyCard, revealed: Boolean, onReveal: () -> Unit) {
+private fun FlipCard(card: StudyCard, revealed: Boolean, onReveal: () -> Unit, onSuspend: () -> Unit) {
     val rotation by animateFloatAsState(if (revealed) 180f else 0f, tween(520, easing = FastOutSlowInEasing), label = "flip")
     Box(
         Modifier
@@ -221,6 +225,7 @@ private fun FlipCard(card: StudyCard, revealed: Boolean, onReveal: () -> Unit) {
                         .padding(horizontal = 20.dp, vertical = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    card.state?.lapses?.takeIf(::isLeech)?.let { LeechBanner(it, onSuspend) }
                     WordBack(card.word, card.details)
                 }
             }
@@ -249,28 +254,67 @@ private fun Front(card: StudyCard) {
         CardKind.Learning -> R.string.kind_learning to LearnCoral
         CardKind.Review -> R.string.kind_review to PrimaryMint
     }
+    val leech = isLeech(card.state?.lapses)
+    // Zorlanan kelimede ipucu: ilk örnek ayetin Arapçası, meal olmadan (anlamı ele vermesin).
+    val hint = card.details.examples.firstOrNull()?.takeIf { leech }
+    var showHint by remember { mutableStateOf(false) }
     Box(Modifier.fillMaxSize()) {
         MihrabFrame(Modifier.align(Alignment.Center).fillMaxWidth(0.82f).fillMaxHeight(0.74f))
-        Surface(
-            modifier = Modifier.align(Alignment.TopCenter).padding(top = 22.dp),
-            shape = RoundedCornerShape(50),
-            color = color.copy(alpha = 0.14f),
-            contentColor = OnSurface,
-        ) {
-            Row(Modifier.padding(horizontal = 12.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
-                StatusDot(color)
-                Spacer(Modifier.width(6.dp))
-                Text(stringResource(label), style = MaterialTheme.typography.labelLarge)
-            }
+        Row(Modifier.align(Alignment.TopCenter).padding(top = 22.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Chip(stringResource(label), color)
+            if (leech) Chip(stringResource(R.string.leech_badge), HardAmber)
         }
         Column(Modifier.align(Alignment.Center).padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(card.word.word, style = ArabicStyles.CardWord)
             Text(card.word.type, style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted, textAlign = TextAlign.Center)
+            if (hint != null) {
+                Spacer(Modifier.height(12.dp))
+                if (showHint) {
+                    ExampleVerse(hint, Modifier.fillMaxWidth(), ArabicStyles.Verse.copy(textAlign = TextAlign.Center))
+                }
+                TextButton(onClick = { showHint = !showHint }) {
+                    Text(stringResource(if (showHint) R.string.leech_hint_hide else R.string.leech_hint_show), color = HardAmber)
+                }
+            }
         }
         Row(Modifier.align(Alignment.BottomCenter).padding(bottom = 22.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Filled.TouchApp, contentDescription = null, tint = KelimelerColors.NavInactive, modifier = Modifier.size(16.dp))
             Spacer(Modifier.width(6.dp))
             Text(stringResource(R.string.study_tap_to_reveal), style = MaterialTheme.typography.bodySmall, color = KelimelerColors.NavInactive)
+        }
+    }
+}
+
+@Composable
+private fun Chip(text: String, color: Color) {
+    Surface(shape = RoundedCornerShape(50), color = color.copy(alpha = 0.14f), contentColor = OnSurface) {
+        Row(Modifier.padding(horizontal = 12.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+            StatusDot(color)
+            Spacer(Modifier.width(6.dp))
+            Text(text, style = MaterialTheme.typography.labelLarge)
+        }
+    }
+}
+
+/** Zorlanan kelime: askıya almak kullanıcının seçimi; uygulama yalnızca durumu söyler ve yol gösterir. */
+@Composable
+private fun LeechBanner(lapses: Int, onSuspend: () -> Unit) {
+    Surface(
+        shape = RoundedCornerShape(18.dp),
+        color = HardAmber.copy(alpha = 0.10f),
+        contentColor = OnSurface,
+        border = BorderStroke(1.dp, HardAmber.copy(alpha = 0.35f)),
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+    ) {
+        Column(Modifier.padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 4.dp)) {
+            Text(stringResource(R.string.leech_title, lapses), style = MaterialTheme.typography.titleMedium, color = HardAmber)
+            Spacer(Modifier.height(4.dp))
+            Text(stringResource(R.string.leech_body), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+            TextButton(onClick = onSuspend, contentPadding = PaddingValues(horizontal = 0.dp)) {
+                Icon(Icons.Outlined.PauseCircle, contentDescription = null, tint = HardAmber, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(6.dp))
+                Text(stringResource(R.string.leech_suspend), color = HardAmber)
+            }
         }
     }
 }

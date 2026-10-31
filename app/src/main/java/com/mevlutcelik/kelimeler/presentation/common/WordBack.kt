@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -214,8 +215,9 @@ private fun Examples(examples: List<Example>, initial: Int) {
     }
 }
 
+/** Örnek ayetin Arapçası, kelime vurgulu. Zorlanan kelimede kartın önünde meal olmadan ipucu olarak da kullanılır. */
 @Composable
-private fun ExampleView(example: Example) {
+fun ExampleVerse(example: Example, modifier: Modifier = Modifier, style: TextStyle = ArabicStyles.Verse) {
     val verse = remember(example) {
         buildAnnotatedString {
             append(example.ar)
@@ -226,8 +228,13 @@ private fun ExampleView(example: Example) {
             }
         }
     }
+    Text(verse, style = style, modifier = modifier)
+}
+
+@Composable
+private fun ExampleView(example: Example) {
     Column(Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 6.dp)) {
-        Text(verse, style = ArabicStyles.Verse, modifier = Modifier.fillMaxWidth())
+        ExampleVerse(example, Modifier.fillMaxWidth())
         example.form?.let { form ->
             Text(
                 buildAnnotatedString {

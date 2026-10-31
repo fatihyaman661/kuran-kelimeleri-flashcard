@@ -64,6 +64,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 ## Planlanan küçük özellikler
 
 - **Kartı askıya alma:** "Bu kelimeyi biliyorum, gösterme" (özellikle ال, و, مِن gibi baştaki sık kelimeler için). *(Yapıldı: çalışma ekranının üst çubuğu ve kelime sayfası. Askıdaki kelime çalışmaya gelmez; ilerleme yüzdesinde ve metin kapsamında bilinen kelime sayılır, listede ayrı "Askıda" filtresi var.)*
+- **Zorlanan kelimeler (leech):** 8 kez unutulan kelime işaretlenir, otomatik askıya alınmaz. Kartın önünde "Zorlanıyor" rozeti ve meal olmadan ayet ipucu, arkasında açıklama ve "Biliyorum, askıya al" seçeneği; listede "Zorlanan" filtresi. *(Yapıldı.)*
 - **Kişisel not:** Kullanıcının bir karta kendi notunu eklemesi.
 - **Hata bildirme:** Karttaki bir hatayı geliştiriciye iletme.
 - **Hakkında ekranı:** Kaynaklar ve lisanslar (Tanzil, Quranic Arabic Corpus, GPLv3). *(Yapıldı: Ayarlar → Hakkında.)*
