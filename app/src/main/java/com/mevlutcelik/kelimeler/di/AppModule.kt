@@ -40,6 +40,7 @@ object AppModule {
     @Provides fun wordDao(db: AppDatabase) = db.wordDao()
     @Provides fun cardStateDao(db: AppDatabase) = db.cardStateDao()
     @Provides fun reviewDao(db: AppDatabase) = db.reviewDao()
+    @Provides fun suspendedDao(db: AppDatabase) = db.suspendedDao()
 
     @Provides
     @Singleton

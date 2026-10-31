@@ -31,18 +31,21 @@ interface WordDao {
     @Query(
         """SELECT w.* FROM words w WHERE w.retired = 0
            AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)
+           AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id)
            ORDER BY w.rank LIMIT 1""",
     )
     suspend fun nextNew(): WordEntity?
 
     @Query(
         """SELECT COUNT(*) FROM words w WHERE w.retired = 0
-           AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)""",
+           AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)
+           AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id)""",
     )
     suspend fun newCount(): Int
 
     @Query(
-        """SELECT w.id, w.rank, w.vocalized, w.meaning, w.searchText, s.phase, s.due
+        """SELECT w.id, w.rank, w.vocalized, w.meaning, w.searchText, s.phase, s.due,
+                  EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id) AS suspended
            FROM words w LEFT JOIN card_states s ON s.wordId = w.id
            WHERE w.retired = 0 ORDER BY w.rank""",
     )
@@ -66,39 +69,39 @@ interface CardStateDao {
     /** Vakti gelmiş kart: önce öğrenme adımındakiler, sonra tekrarlar, en eski vadeli önce. */
     @Query(
         """SELECT s.* FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND s.due <= :until
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.due <= :until
            ORDER BY CASE WHEN s.phase = 2 THEN 1 ELSE 0 END, s.due LIMIT 1""",
     )
     suspend fun nextDue(until: Long): CardStateEntity?
 
     @Query(
         """SELECT s.* FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND s.phase IN (1, 3) AND s.due <= :until
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase IN (1, 3) AND s.due <= :until
            ORDER BY s.due LIMIT 1""",
     )
     suspend fun nextLearning(until: Long): CardStateEntity?
 
     @Query(
         """SELECT MIN(s.due) FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND s.phase IN (1, 3)""",
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase IN (1, 3)""",
     )
     suspend fun nextLearningDue(): Long?
 
     @Query(
         """SELECT COUNT(*) FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND s.phase = 2 AND s.due <= :until""",
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase = 2 AND s.due <= :until""",
     )
     suspend fun reviewDueCount(until: Long): Int
 
     @Query(
         """SELECT COUNT(*) FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND s.phase IN (1, 3) AND s.due <= :until""",
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase IN (1, 3) AND s.due <= :until""",
     )
     suspend fun learningDueCount(until: Long): Int
 
     @Query(
         """SELECT COUNT(*) FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND s.phase IN (1, 3)""",
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase IN (1, 3)""",
     )
     suspend fun learningCount(): Int
 
@@ -108,7 +111,7 @@ interface CardStateDao {
     @Query(
         """SELECT COUNT(*) AS words, COALESCE(SUM(w.frequency), 0) AS frequency
            FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND s.phase = 2""",
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase = 2""",
     )
     suspend fun learned(): LearnedTotals
 }
@@ -155,12 +158,34 @@ interface ReviewDao {
     @Query("SELECT COUNT(*) FROM reviews")
     suspend fun count(): Int
 
-    @Query("SELECT reviewedAt FROM reviews WHERE reviewedAt >= :since")
+    @Query("SELECT reviewedAt FROM reviews WHERE reviewedAt >= :since AND rating > 0")
     suspend fun timesSince(since: Long): List<Long>
 
     @Query(
         """SELECT COUNT(*) AS total, COALESCE(SUM(CASE WHEN rating > 1 THEN 1 ELSE 0 END), 0) AS correct
-           FROM reviews WHERE reviewedAt >= :since""",
+           FROM reviews WHERE reviewedAt >= :since AND rating > 0""",
     )
     suspend fun totalsSince(since: Long): ReviewTotals
+}
+
+@Dao
+interface SuspendedDao {
+    @Upsert
+    suspend fun upsert(entity: SuspendedEntity)
+
+    @Query("DELETE FROM suspended WHERE wordId = :wordId")
+    suspend fun delete(wordId: String)
+
+    @Query("SELECT * FROM suspended WHERE wordId = :wordId")
+    suspend fun get(wordId: String): SuspendedEntity?
+
+    @Query("SELECT * FROM suspended WHERE wordId = :wordId")
+    fun observe(wordId: String): Flow<SuspendedEntity?>
+
+    @Query(
+        """SELECT COUNT(*) AS words, COALESCE(SUM(w.frequency), 0) AS frequency
+           FROM suspended x JOIN words w ON w.id = x.wordId
+           WHERE w.retired = 0""",
+    )
+    suspend fun totals(): LearnedTotals
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocalFireDepartment
@@ -39,8 +41,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,6 +63,7 @@ import com.mevlutcelik.kelimeler.data.study.StudyOverview
 import com.mevlutcelik.kelimeler.presentation.common.ContentCard
 import com.mevlutcelik.kelimeler.presentation.common.HeroBackground
 import com.mevlutcelik.kelimeler.presentation.common.IconBadge
+import com.mevlutcelik.kelimeler.presentation.common.MoreNewWordsDialog
 import com.mevlutcelik.kelimeler.presentation.common.SectionLabel
 import com.mevlutcelik.kelimeler.presentation.common.StatusDot
 import com.mevlutcelik.kelimeler.presentation.common.percent
@@ -111,7 +118,7 @@ fun HomeScreen(
             AnimatedVisibility(state.deckChange != null, exit = fadeOut() + shrinkVertically()) {
                 state.deckChange?.let { DeckChangeBanner(it, viewModel::dismissDeckChange) }
             }
-            TodayHero(overview, onStudy)
+            TodayHero(overview, onStudy, viewModel::addNewToday)
             ProgressCard(overview)
             ActivityCard(overview)
             Spacer(Modifier.height(8.dp))
@@ -172,8 +179,17 @@ private fun StreakChip(days: Int) {
 }
 
 @Composable
-private fun TodayHero(overview: StudyOverview, onStudy: () -> Unit) {
+private fun TodayHero(overview: StudyOverview, onStudy: () -> Unit, onMoreNew: (Int) -> Unit) {
     val context = LocalContext.current
+    var askMoreNew by remember { mutableStateOf(false) }
+    if (askMoreNew) {
+        MoreNewWordsDialog(
+            newPerDay = overview.newPerDay,
+            bonusToday = overview.bonusNewToday,
+            onPick = { askMoreNew = false; onMoreNew(it) },
+            onDismiss = { askMoreNew = false },
+        )
+    }
     // Cami, butonun altındaki şeride sığsın; sağdaki ayete de yer kalsın.
     HeroBackground(RoundedCornerShape(28.dp), Modifier.fillMaxWidth(), skylineBias = -1f, skylineMaxHeight = 58.dp) {
         Column(Modifier.padding(22.dp)) {
@@ -220,7 +236,18 @@ private fun TodayHero(overview: StudyOverview, onStudy: () -> Unit) {
                     }
                 }
             }
-            Spacer(Modifier.height(16.dp))
+            if (overview.unseenWords > 0) {
+                TextButton(
+                    onClick = { askMoreNew = true },
+                    modifier = Modifier.padding(top = 6.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp),
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = null, tint = PrimaryMint, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(6.dp))
+                    Text(stringResource(R.string.more_new_button), color = PrimaryMint, style = MaterialTheme.typography.labelLarge)
+                }
+            }
+            Spacer(Modifier.height(10.dp))
             // Süs: inen ilk ayetin başı, desenin üstünde sessiz bir imza gibi.
             Text(
                 stringResource(R.string.home_hero_verse),
@@ -256,9 +283,11 @@ private fun CounterTile(value: Int, label: String, color: Color, modifier: Modif
 
 @Composable
 private fun ProgressCard(overview: StudyOverview) {
-    val learnedRatio = if (overview.totalWords == 0) 0f else overview.learnedWords.toFloat() / overview.totalWords
-    val coverage = if (overview.totalFrequency == 0L) 0f else overview.learnedFrequency.toFloat() / overview.totalFrequency
-    val newWords = (overview.totalWords - overview.learnedWords - overview.learningWords).coerceAtLeast(0)
+    // Askıdaki kelimeler "biliyorum, gösterme" anlamına geldiği için bilinen kelime sayılır.
+    val known = overview.learnedWords + overview.suspendedWords
+    val learnedRatio = if (overview.totalWords == 0) 0f else known.toFloat() / overview.totalWords
+    val coverage = if (overview.totalFrequency == 0L) 0f else overview.knownFrequency.toFloat() / overview.totalFrequency
+    val newWords = (overview.totalWords - known - overview.learningWords).coerceAtLeast(0)
     ContentCard {
         SectionLabel(stringResource(R.string.home_progress_title))
         Spacer(Modifier.height(16.dp))
@@ -267,6 +296,9 @@ private fun ProgressCard(overview: StudyOverview) {
             Spacer(Modifier.width(20.dp))
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 StateRow(PrimaryMint, stringResource(R.string.filter_learned), overview.learnedWords)
+                if (overview.suspendedWords > 0) {
+                    StateRow(KelimelerColors.Suspended, stringResource(R.string.filter_suspended), overview.suspendedWords)
+                }
                 StateRow(LearnCoral, stringResource(R.string.filter_learning), overview.learningWords)
                 StateRow(NewBlue, stringResource(R.string.filter_new), newWords)
             }

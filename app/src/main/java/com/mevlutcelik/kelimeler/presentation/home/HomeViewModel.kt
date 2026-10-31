@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 data class HomeUiState(
     val ready: Boolean = false,
@@ -52,4 +53,9 @@ class HomeViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState())
 
     fun dismissDeckChange() = startup.dismissDeckChange()
+
+    /** Ayar değişince [overview] kendiliğinden yenilenir. */
+    fun addNewToday(amount: Int) {
+        viewModelScope.launch { study.addNewToday(amount) }
+    }
 }

@@ -1,10 +1,13 @@
 package com.mevlutcelik.kelimeler.presentation.words
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,12 +20,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.PauseCircle
+import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +57,7 @@ import com.mevlutcelik.kelimeler.presentation.common.label
 import com.mevlutcelik.kelimeler.presentation.common.percent
 import com.mevlutcelik.kelimeler.presentation.common.relativeTime
 import com.mevlutcelik.kelimeler.presentation.theme.HardAmber
+import com.mevlutcelik.kelimeler.presentation.theme.KelimelerColors
 import com.mevlutcelik.kelimeler.presentation.theme.LearnCoral
 import com.mevlutcelik.kelimeler.presentation.theme.NewBlue
 import com.mevlutcelik.kelimeler.presentation.theme.OnSurfaceMuted
@@ -64,12 +72,32 @@ fun WordDetailScreen(
     viewModel: WordDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.messages.collect { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+    }
     Column(Modifier.fillMaxSize().navigationBarsPadding()) {
         Row(Modifier.fillMaxWidth().statusBarsPadding().padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBack) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
             }
             state.word?.let { Text("#${it.rank}", style = MaterialTheme.typography.titleMedium, color = OnSurfaceMuted) }
+            Spacer(Modifier.weight(1f))
+            if (state.word != null) {
+                TextButton(onClick = viewModel::toggleSuspended) {
+                    Icon(
+                        if (state.suspended) Icons.Outlined.PlayCircle else Icons.Outlined.PauseCircle,
+                        contentDescription = null,
+                        tint = if (state.suspended) PrimaryMint else OnSurfaceMuted,
+                        modifier = Modifier.size(20.dp),
+                    )
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        stringResource(if (state.suspended) R.string.word_unsuspend else R.string.word_suspend),
+                        color = if (state.suspended) PrimaryMint else OnSurfaceMuted,
+                    )
+                }
+            }
         }
         val word = state.word
         val details = state.details
@@ -107,7 +135,7 @@ fun WordDetailScreen(
                 ContentCard {
                     WordBack(word, details, initialExamples = 5, mufredatExpanded = true, showHeader = false)
                 }
-                ProgressCard(state.state, state.retrievability, state.reviews)
+                ProgressCard(state.state, state.retrievability, state.reviews, state.suspended)
                 Spacer(Modifier.height(16.dp))
             }
         }
@@ -115,32 +143,44 @@ fun WordDetailScreen(
 }
 
 @Composable
-private fun ProgressCard(cardState: CardStateEntity?, retrievability: Double?, reviews: List<ReviewEntity>) {
+private fun ProgressCard(cardState: CardStateEntity?, retrievability: Double?, reviews: List<ReviewEntity>, suspended: Boolean) {
     ContentCard {
         SectionLabel(stringResource(R.string.word_progress_title))
         Spacer(Modifier.height(10.dp))
-        if (cardState == null) {
-            Text(stringResource(R.string.word_never), color = OnSurfaceMuted)
-            return@ContentCard
+        if (suspended) {
+            Row(Modifier.padding(bottom = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Outlined.PauseCircle, contentDescription = null, tint = KelimelerColors.Suspended, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(10.dp))
+                Text(stringResource(R.string.word_suspended_note), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
+            }
         }
-        val context = LocalContext.current
         val turkish = Locale.forLanguageTag("tr")
-        InfoRow(stringResource(R.string.word_state), stringResource(Phase.of(cardState.phase).label()))
-        InfoRow(stringResource(R.string.word_next), context.relativeTime(cardState.due))
-        InfoRow(stringResource(R.string.word_stability), String.format(turkish, "%.1f g", cardState.stability))
-        InfoRow(stringResource(R.string.word_difficulty), String.format(turkish, "%.1f / 10", cardState.difficulty))
-        retrievability?.let { InfoRow(stringResource(R.string.word_retrievability), percent(it.toFloat())) }
-        InfoRow(stringResource(R.string.word_reps), "${cardState.reps} / ${cardState.lapses}")
+        if (cardState == null) {
+            if (!suspended) Text(stringResource(R.string.word_never), color = OnSurfaceMuted)
+        } else {
+            val context = LocalContext.current
+            InfoRow(stringResource(R.string.word_state), stringResource(Phase.of(cardState.phase).label()))
+            // Askıdaki kelimenin tekrarı gelmez; tarih yerine durum yazılır.
+            InfoRow(stringResource(R.string.word_next), if (suspended) stringResource(R.string.filter_suspended) else context.relativeTime(cardState.due))
+            InfoRow(stringResource(R.string.word_stability), String.format(turkish, "%.1f g", cardState.stability))
+            InfoRow(stringResource(R.string.word_difficulty), String.format(turkish, "%.1f / 10", cardState.difficulty))
+            retrievability?.let { InfoRow(stringResource(R.string.word_retrievability), percent(it.toFloat())) }
+            InfoRow(stringResource(R.string.word_reps), "${cardState.reps} / ${cardState.lapses}")
+        }
 
         if (reviews.isNotEmpty()) {
             Spacer(Modifier.height(14.dp))
             SectionLabel(stringResource(R.string.word_history))
             val format = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, turkish)
             reviews.forEach { review ->
-                val rating = Rating.of(review.rating)
+                val (label, color) = when {
+                    ReviewEntity.isAnswer(review.rating) -> Rating.of(review.rating).let { it.label() to it.color() }
+                    review.rating == ReviewEntity.SUSPEND -> R.string.history_suspended to KelimelerColors.Suspended
+                    else -> R.string.history_unsuspended to KelimelerColors.Suspended
+                }
                 Row(Modifier.fillMaxWidth().padding(vertical = 3.dp)) {
                     Text(format.format(Date(review.reviewedAt)), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted, modifier = Modifier.weight(1f))
-                    Text(stringResource(rating.label()), style = MaterialTheme.typography.bodySmall, color = rating.color())
+                    Text(stringResource(label), style = MaterialTheme.typography.bodySmall, color = color)
                 }
             }
         }

@@ -30,7 +30,13 @@ data class StudyUiState(
     /** Her cevap için bir sonraki tekrara kalan süre; tekrar kartlarında gün sayısına yuvarlanmış. */
     val intervals: Map<Rating, Long> = emptyMap(),
     val reviewedInSession: Int = 0,
+    /** Bu oturumda geri alınabilecek işlem sayısı (cevaplar ve askıya almalar). */
+    val undoable: Int = 0,
     val nextLearningDue: Long? = null,
+    /** Destede hiç görülmemiş kelime kaldıysa oturum sonunda bugünkü sınır artırılabilir. */
+    val canAddNew: Boolean = false,
+    val newPerDay: Int = 0,
+    val bonusNewToday: Int = 0,
 )
 
 @HiltViewModel
@@ -65,6 +71,9 @@ class StudyViewModel @Inject constructor(
                     counts = StudyCounts(overview.newAvailable, overview.learningDue, overview.reviewDue),
                     intervals = card?.let { c -> intervals(c, now) }.orEmpty(),
                     nextLearningDue = overview.nextLearningDue,
+                    canAddNew = overview.unseenWords > 0,
+                    newPerDay = overview.newPerDay,
+                    bonusNewToday = overview.bonusNewToday,
                 )
             }
             shownAt = System.currentTimeMillis()
@@ -87,7 +96,29 @@ class StudyViewModel @Inject constructor(
         viewModelScope.launch {
             val now = System.currentTimeMillis()
             study.answer(card, rating, now, now - shownAt)
-            _state.update { it.copy(reviewedInSession = it.reviewedInSession + 1) }
+            _state.update { it.copy(reviewedInSession = it.reviewedInSession + 1, undoable = it.undoable + 1) }
+            loadNext()
+        }
+    }
+
+    /** Gösterilen kelimeyi askıya alır; "geri al" bunu da geri alır. */
+    fun suspendCurrent() {
+        val card = _state.value.card ?: return
+        if (busy) return
+        busy = true
+        viewModelScope.launch {
+            study.setSuspended(card.word.id, true)
+            _state.update { it.copy(undoable = it.undoable + 1) }
+            _messages.send(R.string.study_suspended)
+            loadNext()
+        }
+    }
+
+    fun addNewToday(amount: Int) {
+        if (busy) return
+        busy = true
+        viewModelScope.launch {
+            study.addNewToday(amount)
             loadNext()
         }
     }
@@ -96,10 +127,15 @@ class StudyViewModel @Inject constructor(
         if (busy) return
         busy = true
         viewModelScope.launch {
-            @StringRes val message = when (study.undoLast()) {
+            @StringRes val message = when (val result = study.undoLast()) {
                 is UndoResult.Undone -> {
-                    _state.update { it.copy(reviewedInSession = (it.reviewedInSession - 1).coerceAtLeast(0)) }
-                    R.string.study_undone
+                    _state.update {
+                        it.copy(
+                            reviewedInSession = if (result.answer) (it.reviewedInSession - 1).coerceAtLeast(0) else it.reviewedInSession,
+                            undoable = (it.undoable - 1).coerceAtLeast(0),
+                        )
+                    }
+                    if (result.answer) R.string.study_undone else R.string.study_unsuspend_undone
                 }
                 UndoResult.AlreadySynced -> R.string.study_undo_synced
                 UndoResult.Nothing -> R.string.study_nothing_to_undo

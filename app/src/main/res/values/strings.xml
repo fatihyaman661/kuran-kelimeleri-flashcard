@@ -44,6 +44,11 @@
     <string name="home_today_reviews">Bugün %1$d tekrar · %2$d yeni kelime</string>
     <string name="home_today_accuracy">Doğru oranı %%%1$d</string>
     <string name="home_deck_updated">Deste güncellendi: %1$d yeni kelime eklendi.</string>
+    <string name="more_new_button">Bugün daha fazla yeni kelime</string>
+    <string name="more_new_title">Bugünkü sınırı artır</string>
+    <string name="more_new_body">Günlük yeni kelime sınırın %1$d. Bugün için kaç kelime eklensin? Yarın sınır yine %1$d olur.</string>
+    <string name="more_new_body_bonus">Günlük yeni kelime sınırın %1$d, bugün +%2$d eklendi. Bugün için kaç kelime daha eklensin? Yarın sınır yine %1$d olur.</string>
+    <string name="more_new_option">+%1$d</string>
     <string name="home_deck_updated_removed">Deste güncellendi: %1$d yeni kelime eklendi, %2$d kelime çıkarıldı.</string>
     <string name="dismiss">Kapat</string>
 
@@ -57,8 +62,11 @@
     <string name="rating_hard">Zor</string>
     <string name="rating_good">İyi</string>
     <string name="rating_easy">Kolay</string>
-    <string name="study_undo">Son cevabı geri al</string>
+    <string name="study_undo">Son işlemi geri al</string>
     <string name="study_undone">Son cevap geri alındı</string>
+    <string name="study_unsuspend_undone">Askıya alma geri alındı</string>
+    <string name="study_suspend">Bu kelimeyi askıya al</string>
+    <string name="study_suspended">Kelime askıya alındı. Geri almak için ↶ düğmesine dokun.</string>
     <string name="study_undo_synced">Senkronlanmış bir cevap geri alınamaz</string>
     <string name="study_nothing_to_undo">Geri alınacak cevap yok</string>
     <string name="study_finished_title">Tebrikler!</string>
@@ -95,6 +103,7 @@
     <string name="filter_new">Yeni</string>
     <string name="filter_learning">Öğreniliyor</string>
     <string name="filter_learned">Öğrenildi</string>
+    <string name="filter_suspended">Askıda</string>
     <string name="words_empty">Sonuç bulunamadı</string>
     <string name="state_due_now">Bugün</string>
     <string name="state_due_in">%1$s sonra</string>
@@ -108,6 +117,13 @@
     <string name="word_reps">Tekrar / unutma</string>
     <string name="word_history">Geçmiş</string>
     <string name="word_never">Bu kelime henüz çalışılmadı.</string>
+    <string name="word_suspend">Askıya al</string>
+    <string name="word_unsuspend">Askıdan çıkar</string>
+    <string name="word_suspended_note">Bu kelime askıda: çalışmaya gelmez, ilerlemede bildiğin kelimeler arasında sayılır.</string>
+    <string name="word_suspended_done">Askıya alındı: çalışmaya gelmeyecek, bildiğin kelimeler arasında sayılacak.</string>
+    <string name="word_unsuspended_done">Askıdan çıkarıldı: kelime yeniden çalışmaya gelecek.</string>
+    <string name="history_suspended">Askıya alındı</string>
+    <string name="history_unsuspended">Askıdan çıkarıldı</string>
     <string name="phase_new">Yeni</string>
     <string name="phase_learning">Öğreniliyor</string>
     <string name="phase_review">Öğrenildi</string>

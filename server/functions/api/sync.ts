@@ -2,6 +2,8 @@ import { Env, HttpError, handle, json, requireUser } from "../../lib/common";
 
 const MAX_PUSH = 500;
 const PAGE = 1000;
+/** 1–4 cevaplar (Tekrar, Zor, İyi, Kolay); -1 askıya alma, -2 askıdan çıkarma. */
+const RATINGS = new Set([1, 2, 3, 4, -1, -2]);
 
 interface Review {
   id: string;
@@ -18,7 +20,7 @@ function parseReview(value: unknown): Review {
     typeof r.id === "string" && r.id.length > 0 && r.id.length <= 64 &&
     typeof r.wordId === "string" && r.wordId.length > 0 && r.wordId.length <= 64 &&
     Number.isSafeInteger(r.reviewedAt) &&
-    Number.isInteger(r.rating) && (r.rating as number) >= 1 && (r.rating as number) <= 4;
+    Number.isInteger(r.rating) && RATINGS.has(r.rating as number);
   if (!valid) throw new HttpError(400, "invalid review");
   const durationMs = Number.isSafeInteger(r.durationMs) ? Math.max(0, r.durationMs as number) : 0;
   return { id: r.id!, wordId: r.wordId!, reviewedAt: r.reviewedAt!, rating: r.rating!, durationMs };

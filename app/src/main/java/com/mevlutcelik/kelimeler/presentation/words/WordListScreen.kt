@@ -131,6 +131,7 @@ private fun WordFilter.label() = when (this) {
     WordFilter.New -> R.string.filter_new
     WordFilter.Learning -> R.string.filter_learning
     WordFilter.Learned -> R.string.filter_learned
+    WordFilter.Suspended -> R.string.filter_suspended
 }
 
 @Composable
@@ -156,10 +157,11 @@ private fun WordRow(row: WordRowUi, onClick: () -> Unit) {
             Text(row.meaning, style = MaterialTheme.typography.bodyLarge, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Spacer(Modifier.height(2.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                StatusDot(row.phase.color())
+                StatusDot(if (row.suspended) KelimelerColors.Suspended else row.phase.color())
                 Spacer(Modifier.width(6.dp))
                 Text(
                     text = when {
+                        row.suspended -> stringResource(R.string.filter_suspended)
                         row.phase == Phase.New -> stringResource(row.phase.label())
                         row.dueIn == 0L -> stringResource(R.string.state_due_now)
                         row.dueIn != null -> stringResource(R.string.state_due_in, context.shortDuration(row.dueIn))
