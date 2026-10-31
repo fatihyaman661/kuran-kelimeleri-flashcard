@@ -130,11 +130,28 @@
     <string name="phase_relearning">Yeniden öğreniliyor</string>
 
     <!-- Ayarlar -->
+    <string name="section_display">Görünüm</string>
+    <string name="display_arabic">Arapça yazı</string>
+    <string name="display_arabic_body">Kelimeler, ayetler, çekim tabloları ve el-Müfredât metni.</string>
+    <string name="display_latin">Latin harfli yazı</string>
+    <string name="display_latin_body">Anlamlar, mealler, açıklamalar ve menüler.</string>
+    <string name="display_preview">Önizleme</string>
+    <string name="display_preview_ar">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ</string>
+    <string name="display_preview_tr">Rahmân ve Rahîm olan Allah\'ın adıyla.</string>
+    <string name="display_reset">Varsayılana dön</string>
     <string name="section_study">Çalışma</string>
     <string name="retention_title">Hedef hatırlama oranı</string>
     <string name="retention_body">Bir kelimenin tekrarı geldiğinde onu hatırlama olasılığın. Yükseldikçe tekrarlar sıklaşır ve günlük yük artar.</string>
     <string name="new_per_day_title">Günlük yeni kelime</string>
     <string name="new_per_day_body">Her gün çalışmaya eklenecek en fazla yeni kelime.</string>
+    <string name="new_order_title">Yeni kelimelerin sırası</string>
+    <string name="new_order_body">Vakti gelen öğrenme adımları her zaman önce gösterilir.</string>
+    <string name="new_order_mixed">Tekrarlarla karışık</string>
+    <string name="new_order_mixed_body">Yeni kelimeler tekrarların arasına eşit aralıkla serpiştirilir.</string>
+    <string name="new_order_after">Tekrarlardan sonra</string>
+    <string name="new_order_after_body">Önce vakti gelen tekrarlar biter, sonra yeni kelimeler gelir.</string>
+    <string name="new_order_before">Tekrarlardan önce</string>
+    <string name="new_order_before_body">Önce bugünün yeni kelimeleri, sonra tekrarlar.</string>
     <string name="decrease">Azalt</string>
     <string name="increase">Artır</string>
 

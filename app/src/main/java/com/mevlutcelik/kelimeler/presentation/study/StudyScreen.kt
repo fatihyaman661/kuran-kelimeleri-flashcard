@@ -264,7 +264,7 @@ private fun Front(card: StudyCard) {
             }
         }
         Column(Modifier.align(Alignment.Center).padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(card.word.word, style = ArabicStyles.Headword.copy(fontSize = 64.sp, lineHeight = 110.sp))
+            Text(card.word.word, style = ArabicStyles.CardWord)
             Text(card.word.type, style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted, textAlign = TextAlign.Center)
         }
         Row(Modifier.align(Alignment.BottomCenter).padding(bottom = 22.dp), verticalAlignment = Alignment.CenterVertically) {

@@ -7,6 +7,7 @@ import com.mevlutcelik.fsrs.DayClock
 import com.mevlutcelik.fsrs.Phase
 import com.mevlutcelik.fsrs.Rating
 import com.mevlutcelik.kelimeler.R
+import com.mevlutcelik.kelimeler.data.study.QueueMix
 import com.mevlutcelik.kelimeler.data.study.StudyCard
 import com.mevlutcelik.kelimeler.data.study.StudyRepository
 import com.mevlutcelik.kelimeler.data.study.UndoResult
@@ -53,6 +54,7 @@ class StudyViewModel @Inject constructor(
 
     private var shownAt = 0L
     private var busy = false
+    private var mix = QueueMix()
 
     init {
         loadNext()
@@ -61,7 +63,7 @@ class StudyViewModel @Inject constructor(
     private fun loadNext() {
         viewModelScope.launch {
             val now = System.currentTimeMillis()
-            val card = study.nextCard(now)
+            val card = study.nextCard(now, mix)
             val overview = study.overview(now)
             _state.update {
                 it.copy(
@@ -96,6 +98,7 @@ class StudyViewModel @Inject constructor(
         viewModelScope.launch {
             val now = System.currentTimeMillis()
             study.answer(card, rating, now, now - shownAt)
+            mix = mix.after(card.kind)
             _state.update { it.copy(reviewedInSession = it.reviewedInSession + 1, undoable = it.undoable + 1) }
             loadNext()
         }
