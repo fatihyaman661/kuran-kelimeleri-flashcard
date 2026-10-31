@@ -28,6 +28,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - Hedef hatırlama oranı (desired retention) kullanıcı tarafından ayarlanabilir, varsayılan 0.90.
 - İlk sürümde varsayılan FSRS parametreleri kullanılır. Kişiye özel parametre optimizasyonu sonradan eklenebilir; bunun için tekrar kayıtlarının **baştan eksiksiz tutulması şart**.
 - Günlük yeni kart limiti ayarlanabilir. Ayrıca yalnızca o gün için artırılabilir (ana sayfada ve oturum sonunda "Bugün daha fazla yeni kelime": +10 / +25 / +50); ertesi gün sınır yine ayardaki değer olur.
+- Kart sırası (Anki'deki "Yeni/tekrar sırası"): vakti gelen öğrenme adımları her zaman önce; sonra yeni kelimeler ile tekrarlar ayara göre **tekrarlarla karışık** (varsayılan, az olan tür çok olanın arasına eşit aralıkla serpiştirilir), **tekrarlardan sonra** ya da **tekrarlardan önce**.
 
 ## Veri modeli
 

@@ -14,6 +14,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
+/** Yeni kelimelerin vakti gelmiş tekrarlara göre sırası (Anki'deki "Yeni/tekrar sırası"). */
+enum class NewOrder(val key: String) {
+    Mixed("mixed"),
+    AfterReviews("after"),
+    BeforeReviews("before");
+
+    companion object {
+        fun of(key: String?) = entries.firstOrNull { it.key == key } ?: Mixed
+    }
+}
+
 /**
  * [bonusNew]: yalnızca [bonusNewDay] gününe (DayClock günü) eklenen yeni kelime; ertesi gün sınır
  * yine [newPerDay] olur (Anki'deki "bugünkü yeni kart sınırını artır").
@@ -23,6 +34,7 @@ data class StudySettings(
     val newPerDay: Int = DEFAULT_NEW_PER_DAY,
     val bonusNewDay: Long = -1,
     val bonusNew: Int = 0,
+    val newOrder: NewOrder = NewOrder.Mixed,
 ) {
     fun fsrs() = FsrsParameters(desiredRetention = desiredRetention.toDouble())
 
@@ -54,6 +66,7 @@ class SettingsRepository @Inject constructor(
             newPerDay = it[NEW_PER_DAY] ?: StudySettings.DEFAULT_NEW_PER_DAY,
             bonusNewDay = it[BONUS_NEW_DAY] ?: -1,
             bonusNew = it[BONUS_NEW] ?: 0,
+            newOrder = NewOrder.of(it[NEW_ORDER]),
         )
     }
 
@@ -71,6 +84,10 @@ class SettingsRepository @Inject constructor(
 
     suspend fun setNewPerDay(value: Int) {
         store.edit { it[NEW_PER_DAY] = value.coerceIn(0, StudySettings.MAX_NEW_PER_DAY) }
+    }
+
+    suspend fun setNewOrder(value: NewOrder) {
+        store.edit { it[NEW_ORDER] = value.key }
     }
 
     /** [day] için yeni kelime sınırına [amount] ekler; başka bir günden kalan ek sıfırlanır. */
@@ -122,6 +139,7 @@ class SettingsRepository @Inject constructor(
         val NEW_PER_DAY = intPreferencesKey("new_per_day")
         val BONUS_NEW_DAY = longPreferencesKey("bonus_new_day")
         val BONUS_NEW = intPreferencesKey("bonus_new")
+        val NEW_ORDER = stringPreferencesKey("new_order")
         val DECK_VERSION = stringPreferencesKey("deck_version")
         val DECK_CHECKED_AT = longPreferencesKey("deck_checked_at")
         val SYNC_TOKEN = stringPreferencesKey("sync_token")
