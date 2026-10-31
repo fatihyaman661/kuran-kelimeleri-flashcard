@@ -41,7 +41,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Senkron:** Cloudflare Pages Functions + D1. Giriş Google hesabıyla; sunucu tarafında Google ID token'ı doğrulanır, ayrı şifre sistemi yok.
 - **Yedek:** İlerlemeyi JSON olarak dışa/içe aktarma.
 - İlk sürümde Google Drive entegrasyonu yok.
-- Sunucuda e-posta ya da ad tutulmaz; kullanıcı Google hesap kimliğinin (`sub`) SHA-256 özetiyle tanınır, oturum jetonlarının da yalnızca özeti saklanır. Aydınlatma metni / gizlilik politikası: `server/public/gizlilik.html`.
+- Sunucuda e-posta ya da ad tutulmaz; kullanıcı Google hesap kimliğinin (`sub`) SHA-256 özetiyle tanınır, oturum jetonlarının da yalnızca özeti saklanır. Aydınlatma metni / gizlilik politikası: https://mevlut-celik.github.io/kuran-kelimeleri/gizlilik.html (senkron yayına alınınca bu bölüm eklenir).
 - Google Play gereği uygulamada "Sunucudaki verilerimi sil" var (`DELETE /api/account`).
 - Android'in otomatik yedeği yalnızca ilerleme dosyasını (`files/auto-backup/progress.json`) yedekler; yeniden kurulumda ilerleme buradan döner.
 

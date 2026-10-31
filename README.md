@@ -30,7 +30,7 @@ Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASAR
 | `fsrs/` | FSRS-6 zamanlayıcısı (saf Kotlin/JVM, birim testli) |
 | `scripts/build_deck.py` | `data/kelimeler.apkg` → `data/deck.db.gz` + `data/deck-version.json` |
 | `data/` | Anki destesi ve uygulamanın okuduğu deste dosyaları |
-| `server/` | Senkron sunucusu (Cloudflare Pages Functions + D1) ve gizlilik politikası sayfası |
+| `server/` | Senkron sunucusu (Cloudflare Pages Functions + D1) |
 | `docs/` | Tasarım kararları |
 
 ## Derleme
@@ -85,11 +85,21 @@ Sunucu tanımlanmamış bir derlemede uygulama tamamen çevrimdışı çalışı
    ```
 
 Sunucuda e-posta ya da ad tutulmaz; kullanıcı Google hesap kimliğinin SHA-256 özetiyle tanınır. Kullanıcılar uygulamadan
-"Sunucudaki verilerimi sil" ile bütün kayıtlarını silebilir. Gizlilik politikası `server/public/gizlilik.html` olarak
-aynı adreste yayınlanır; Play Console'a bu adres verilir.
+"Sunucudaki verilerimi sil" ile bütün kayıtlarını silebilir. Senkron yayına alınmadan önce gizlilik politikasına
+(aşağıda) bu bölüm eklenmelidir.
 
 Bunlara ek olarak Android'in otomatik yedeği yalnızca ilerleme dosyasını (`files/auto-backup/progress.json`) Google
 hesabına yedekler; uygulama yeniden kurulduğunda ilerleme buradan geri gelir.
+
+## Tanıtım sayfası ve gizlilik politikası
+
+- Tanıtım: https://mevlut-celik.github.io/kuran-kelimeleri/
+- Gizlilik politikası: https://mevlut-celik.github.io/kuran-kelimeleri/gizlilik.html (Play Console'a ve uygulamanın
+  Ayarlar → Hakkında bölümüne bu adres verilir)
+
+Sayfaların kaynağı [mevlut-celik/mevlut-celik.github.io](https://github.com/mevlut-celik/mevlut-celik.github.io)
+deposunun `kuran-kelimeleri/` klasöründedir. Uygulamanın topladığı veri ya da bağlandığı adresler değişirse politika da
+güncellenmelidir.
 
 ## Anki kullanıcıları için
 

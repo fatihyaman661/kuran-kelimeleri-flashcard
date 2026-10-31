@@ -246,6 +246,7 @@ private fun BackupSection(viewModel: SettingsViewModel) {
 private fun AboutSection() {
     val uriHandler = LocalUriHandler.current
     val sourceUrl = stringResource(R.string.source_code_url)
+    val privacyUrl = stringResource(R.string.privacy_url)
     ContentCard {
         SectionTitle(Icons.Filled.Info, stringResource(R.string.section_about))
         Spacer(Modifier.height(10.dp))
@@ -264,11 +265,9 @@ private fun AboutSection() {
             TextButton(onClick = { uriHandler.openUri(sourceUrl) }) {
                 Text(stringResource(R.string.about_source_code), color = PrimaryMint)
             }
-            // Gizlilik politikası senkron sunucusuyla birlikte yayınlanır (server/public/gizlilik.html).
-            if (BuildConfig.SYNC_URL.isNotBlank()) {
-                TextButton(onClick = { uriHandler.openUri(BuildConfig.SYNC_URL + "/gizlilik.html") }) {
-                    Text(stringResource(R.string.about_privacy), color = PrimaryMint)
-                }
+            // Google Play'e verilen adresle aynı; senkron sunucusu olmayan derlemelerde de görünür.
+            TextButton(onClick = { uriHandler.openUri(privacyUrl) }) {
+                Text(stringResource(R.string.about_privacy), color = PrimaryMint)
             }
         }
     }

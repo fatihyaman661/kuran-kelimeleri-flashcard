@@ -175,4 +175,5 @@
     <string name="about_source_code">Kaynak kodu (GitHub)</string>
     <string name="about_privacy">Gizlilik politikası</string>
     <string name="source_code_url">https://github.com/fatihyaman661/kuran-kelimeleri-flashcard</string>
+    <string name="privacy_url">https://mevlut-celik.github.io/kuran-kelimeleri/gizlilik.html</string>
 </resources>
