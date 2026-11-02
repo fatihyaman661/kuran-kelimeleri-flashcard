@@ -151,15 +151,8 @@ private fun Header(overview: StudyOverview?) {
             )
             Text(stringResource(greeting), style = MaterialTheme.typography.titleLarge)
         }
-        overview?.let { StreakChip(streak(it)) }
+        overview?.let { StreakChip(it.streak) }
     }
-}
-
-/** Bugünden (bugün henüz çalışılmadıysa dünden) geriye kesintisiz çalışılan gün sayısı. */
-private fun streak(overview: StudyOverview): Int {
-    val days = overview.daily.map { it.reviews > 0 }.reversed()
-    val start = if (days.firstOrNull() == true) 0 else 1
-    return days.drop(start).takeWhile { it }.size
 }
 
 @Composable

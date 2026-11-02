@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Today
@@ -59,6 +60,7 @@ import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.presentation.common.HeroBackground
 import com.mevlutcelik.kelimeler.presentation.home.HomeScreen
 import com.mevlutcelik.kelimeler.presentation.settings.SettingsScreen
+import com.mevlutcelik.kelimeler.presentation.stats.StatsScreen
 import com.mevlutcelik.kelimeler.presentation.study.StudyScreen
 import com.mevlutcelik.kelimeler.presentation.theme.OnSurface
 import com.mevlutcelik.kelimeler.presentation.theme.OnSurfaceMuted
@@ -72,6 +74,7 @@ object Routes {
     const val TODAY = "today"
     const val WORDS = "words"
     const val SETTINGS = "settings"
+    const val STATS = "stats"
     const val STUDY = "study"
     const val WORD_ARG = "key"
     const val WORD = "word/{$WORD_ARG}"
@@ -86,6 +89,7 @@ object Routes {
 private enum class Destination(val route: String, @StringRes val label: Int, val icon: ImageVector) {
     Today(Routes.TODAY, R.string.nav_today, Icons.Filled.Today),
     Words(Routes.WORDS, R.string.nav_words, Icons.AutoMirrored.Filled.MenuBook),
+    Stats(Routes.STATS, R.string.nav_stats, Icons.Filled.Insights),
     Settings(Routes.SETTINGS, R.string.nav_settings, Icons.Filled.Settings),
 }
 
@@ -140,6 +144,7 @@ fun KelimelerApp(navController: NavHostController = rememberNavController()) {
                     composable(Routes.WORDS) { entry ->
                         WordListScreen(onOpenWord = { id -> entry.ifResumed { navController.navigate(Routes.word(id)) } })
                     }
+                    composable(Routes.STATS) { StatsScreen() }
                     composable(Routes.SETTINGS) { SettingsScreen() }
                     composable(Routes.STUDY) { entry -> StudyScreen(onBack = { entry.ifResumed { navController.popBackStack() } }) }
                     composable(Routes.WORD, arguments = listOf(navArgument(Routes.WORD_ARG) { type = NavType.StringType })) { entry ->
