@@ -34,8 +34,8 @@ android {
         applicationId = "com.mevlutcelik.kelimeler"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 3
+        versionName = "1.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "DECK_BASE_URL", "\"https://raw.githubusercontent.com/fatihyaman661/kuran-kelimeleri-flashcard/main/data/\"")

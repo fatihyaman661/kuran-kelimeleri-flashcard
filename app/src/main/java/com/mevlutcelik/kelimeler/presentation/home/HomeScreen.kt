@@ -261,7 +261,7 @@ private fun CounterTile(value: Int, label: String, color: Color, modifier: Modif
     val animated by animateIntAsState(value, tween(600), label = "counter")
     Column(
         modifier
-            .background(Color.Black.copy(alpha = 0.22f), RoundedCornerShape(18.dp))
+            .background(KelimelerColors.Tile, RoundedCornerShape(18.dp))
             .padding(vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -297,7 +297,7 @@ private fun ProgressCard(overview: StudyOverview) {
             }
         }
         Spacer(Modifier.height(20.dp))
-        Surface(shape = RoundedCornerShape(18.dp), color = Color.Black.copy(alpha = 0.2f), contentColor = OnSurface) {
+        Surface(shape = RoundedCornerShape(18.dp), color = KelimelerColors.Tile, contentColor = OnSurface) {
             Column(Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconBadge(Icons.Filled.Update, size = 32.dp)
@@ -349,7 +349,7 @@ private fun ActivityCard(overview: StudyOverview) {
 private fun MiniStat(value: String, label: String, modifier: Modifier = Modifier) {
     Column(
         modifier
-            .background(Color.Black.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+            .background(KelimelerColors.Tile, RoundedCornerShape(16.dp))
             .padding(horizontal = 12.dp, vertical = 10.dp),
     ) {
         Text(value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)

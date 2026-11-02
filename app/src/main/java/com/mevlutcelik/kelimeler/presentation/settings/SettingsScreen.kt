@@ -26,7 +26,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.SaveAlt
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.CloudDownload
-import androidx.compose.material.icons.filled.FormatSize
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
@@ -38,6 +38,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -53,8 +56,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
@@ -68,6 +71,7 @@ import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.data.settings.DisplaySettings
 import com.mevlutcelik.kelimeler.data.settings.NewOrder
 import com.mevlutcelik.kelimeler.data.settings.StudySettings
+import com.mevlutcelik.kelimeler.data.settings.ThemeMode
 import com.mevlutcelik.kelimeler.data.sync.SyncState
 import com.mevlutcelik.kelimeler.presentation.common.ContentCard
 import com.mevlutcelik.kelimeler.presentation.common.ScreenHeader
@@ -101,7 +105,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
         ) {
             StudySection(state.study, viewModel::setRetention, viewModel::setNewPerDay, viewModel::setNewOrder)
             val display by viewModel.display.collectAsStateWithLifecycle()
-            DisplaySection(display, viewModel::setArabicScale, viewModel::setLatinScale, viewModel::resetDisplay)
+            DisplaySection(display, viewModel::setTheme, viewModel::setArabicScale, viewModel::setLatinScale, viewModel::resetDisplay)
             DeckSection(state, viewModel)
             SyncSection(state, viewModel)
             BackupSection(viewModel)
@@ -185,13 +189,23 @@ private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onN
 }
 
 @Composable
-private fun DisplaySection(display: DisplaySettings, onArabic: (Float) -> Unit, onLatin: (Float) -> Unit, onReset: () -> Unit) {
+private fun DisplaySection(
+    display: DisplaySettings,
+    onTheme: (ThemeMode) -> Unit,
+    onArabic: (Float) -> Unit,
+    onLatin: (Float) -> Unit,
+    onReset: () -> Unit,
+) {
     // Kaydırırken önizleme anlık değerle çizilir; ayar bırakınca kaydedilir ve bütün uygulamaya yansır.
     var arabic by remember(display.arabicScale) { mutableFloatStateOf(display.arabicScale) }
     var latin by remember(display.latinScale) { mutableFloatStateOf(display.latinScale) }
     ContentCard {
-        SectionTitle(Icons.Filled.FormatSize, stringResource(R.string.section_display))
+        SectionTitle(Icons.Filled.Palette, stringResource(R.string.section_display))
         Spacer(Modifier.height(12.dp))
+        Text(stringResource(R.string.display_theme), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+        Spacer(Modifier.height(8.dp))
+        ThemePicker(display.theme, onTheme)
+        Spacer(Modifier.height(18.dp))
         ScaleSlider(
             title = stringResource(R.string.display_arabic),
             body = stringResource(R.string.display_arabic_body),
@@ -214,7 +228,7 @@ private fun DisplaySection(display: DisplaySettings, onArabic: (Float) -> Unit, 
         Spacer(Modifier.height(8.dp))
         CompositionLocalProvider(LocalTextScales provides TextScales(arabic, latin)) {
             WithLatinScale(latin) {
-                Surface(shape = RoundedCornerShape(16.dp), color = Color.Black.copy(alpha = 0.2f), contentColor = OnSurface) {
+                Surface(shape = RoundedCornerShape(16.dp), color = KelimelerColors.Tile, contentColor = OnSurface) {
                     Column(Modifier.fillMaxWidth().padding(14.dp)) {
                         Text(stringResource(R.string.display_preview_ar), style = ArabicStyles.Verse, modifier = Modifier.fillMaxWidth())
                         Spacer(Modifier.height(6.dp))
@@ -223,9 +237,37 @@ private fun DisplaySection(display: DisplaySettings, onArabic: (Float) -> Unit, 
                 }
             }
         }
-        if (display != DisplaySettings()) {
+        if (display.scaled) {
             TextButton(onClick = onReset, contentPadding = PaddingValues(horizontal = 0.dp)) {
                 Text(stringResource(R.string.display_reset), color = PrimaryMint)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThemePicker(selected: ThemeMode, onSelect: (ThemeMode) -> Unit) {
+    val options = listOf(
+        ThemeMode.System to R.string.theme_system,
+        ThemeMode.Light to R.string.theme_light,
+        ThemeMode.Dark to R.string.theme_dark,
+    )
+    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+        options.forEachIndexed { index, (mode, label) ->
+            SegmentedButton(
+                selected = selected == mode,
+                onClick = { onSelect(mode) },
+                shape = SegmentedButtonDefaults.itemShape(index, options.size),
+                colors = SegmentedButtonDefaults.colors(
+                    activeContainerColor = PrimaryMint.copy(alpha = 0.14f),
+                    activeContentColor = PrimaryMint,
+                    activeBorderColor = PrimaryMint.copy(alpha = 0.6f),
+                    inactiveContainerColor = Color.Transparent,
+                    inactiveContentColor = OnSurfaceMuted,
+                    inactiveBorderColor = KelimelerColors.CardBorder,
+                ),
+            ) {
+                Text(stringResource(label))
             }
         }
     }
@@ -374,6 +416,7 @@ private fun AboutSection() {
         SectionTitle(Icons.Filled.Info, stringResource(R.string.section_about))
         Spacer(Modifier.height(10.dp))
         Text(stringResource(R.string.about_version, BuildConfig.VERSION_NAME), style = MaterialTheme.typography.bodyLarge)
+        Text(stringResource(R.string.about_developers), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
         Spacer(Modifier.height(10.dp))
         Text(stringResource(R.string.about_sources), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
         listOf(

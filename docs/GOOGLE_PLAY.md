@@ -41,10 +41,11 @@ NASIL ÇALIŞIR
 • el-Müfredât: Râğıb el-İsfahânî'nin Kur'an sözlüğünden kelimeyle ilgili bölüm ve Türkçe çevirisi
 • Çekim tabloları, kök ve Kur'an'da geçme sayıları
 • İlerleme: öğrenilen kelime yüzdesi, metin kapsamı, son 30 günün grafiği ve çalışma serisi
+• İstatistik: miladi ve hicrî aylarla çalışma takvimi, önümüzdeki 30 günün tekrar tahmini ve tahmini bitiş tarihi
 • Bildiğiniz kelimeleri askıya alma
 • Günlük yeni kelime sayısı, hedef hatırlama oranı ve yeni kelimelerin tekrarlara göre sırası ayarlanabilir
 • "Bugün daha fazla yeni kelime" ile o günün sınırını artırma
-• Arapça ve Latin harfli yazı için ayrı yazı boyutu
+• Açık ve koyu tema; Arapça ve Latin harfli yazı için ayrı yazı boyutu
 • Arapça, Türkçe anlam ya da köke göre arama
 • Çevrimdışı çalışır; kelime listesi düzeltilip genişledikçe yenisi uygulama güncellemesi beklemeden iner
 • İlerlemenizi dosyaya yedekleme ve başka bir telefona taşıma
@@ -56,6 +57,8 @@ KAYNAKLAR
 Kur'an metni: Tanzil Project (Uthmani 1.0.2, CC BY-ND 3.0), değiştirilmeden kullanılmıştır. Morfoloji: Quranic Arabic Corpus. Meal: Elmalılı Muhammed Hamdi Yazır, Hak Dini Kur'an Dili (sadeleştirilmiş). Kelime açıklamaları: Râğıb el-İsfahânî, el-Müfredât fî Garîbi'l-Kur'ân. Türkçe anlamlar ve çeviriler yapay zekâ yardımıyla hazırlanmıştır; gördüğünüz hataları bildirirseniz düzeltilir.
 
 Uygulama açık kaynaklıdır (GNU GPLv3): github.com/fatihyaman661/kuran-kelimeleri-flashcard
+
+Fatih Yaman ve Mevlüt Çelik tarafından geliştirilmiştir.
 ```
 
 ### Grafikler (`docs/play/`)
@@ -87,6 +90,14 @@ görüntüler başlıklı 1080×1920 çerçevelere yerleştirildi.
 Senkron (Google ile giriş) yayına alınırsa veri güvenliği formu ve gizlilik politikası yeniden doldurulmalı.
 
 ## Sürüm notları
+
+### 1.1.0 (versionCode 3)
+
+```
+• Açık tema: Ayarlar → Görünüm'den Sistem, Açık veya Koyu seçilebilir.
+• İstatistik ekranı: çalışma takvimi (miladi ve hicrî aylarla), önümüzdeki 30 günün tekrar tahmini ve tahmini bitiş tarihi.
+• Çalışırken açılan kart X tuşuyla ya da geri hareketiyle yeniden kapatılabilir.
+```
 
 ### 1.0.0 (versionCode 1)
 

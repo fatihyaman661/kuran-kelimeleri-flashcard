@@ -52,11 +52,26 @@ data class StudySettings(
     }
 }
 
-/** Yazı boyutu çarpanları: Arapça (kelime, ayet, el-Müfredât) ve Latin harfli bütün diğer yazılar. */
+/** Açık/koyu tema; [System] cihazın ayarına uyar. Uygulama koyu temayla doğduğu için varsayılan koyu. */
+enum class ThemeMode(val key: String) {
+    System("system"),
+    Light("light"),
+    Dark("dark");
+
+    companion object {
+        fun of(key: String?) = entries.firstOrNull { it.key == key } ?: Dark
+    }
+}
+
+/** Tema ve yazı boyutu çarpanları: Arapça (kelime, ayet, el-Müfredât) ve Latin harfli bütün diğer yazılar. */
 data class DisplaySettings(
     val arabicScale: Float = 1f,
     val latinScale: Float = 1f,
+    val theme: ThemeMode = ThemeMode.Dark,
 ) {
+    /** "Varsayılana dön" yalnızca yazı boyutlarını sıfırlar; tema ayrı bir seçim. */
+    val scaled get() = arabicScale != 1f || latinScale != 1f
+
     companion object {
         const val MIN_ARABIC = 0.8f
         const val MAX_ARABIC = 1.6f
@@ -84,7 +99,7 @@ class SettingsRepository @Inject constructor(
     }
 
     val display: Flow<DisplaySettings> = store.data.map {
-        DisplaySettings(arabicScale = it[ARABIC_SCALE] ?: 1f, latinScale = it[LATIN_SCALE] ?: 1f)
+        DisplaySettings(arabicScale = it[ARABIC_SCALE] ?: 1f, latinScale = it[LATIN_SCALE] ?: 1f, theme = ThemeMode.of(it[THEME]))
     }
 
     val deck: Flow<DeckInfo> = store.data.map { DeckInfo(it[DECK_VERSION], it[DECK_CHECKED_AT] ?: 0L) }
@@ -122,6 +137,10 @@ class SettingsRepository @Inject constructor(
 
     suspend fun setLatinScale(value: Float) {
         store.edit { it[LATIN_SCALE] = value.coerceIn(DisplaySettings.MIN_LATIN, DisplaySettings.MAX_LATIN) }
+    }
+
+    suspend fun setTheme(value: ThemeMode) {
+        store.edit { it[THEME] = value.key }
     }
 
     suspend fun resetDisplay() {
@@ -174,6 +193,7 @@ class SettingsRepository @Inject constructor(
         val NEW_ORDER = stringPreferencesKey("new_order")
         val ARABIC_SCALE = floatPreferencesKey("arabic_scale")
         val LATIN_SCALE = floatPreferencesKey("latin_scale")
+        val THEME = stringPreferencesKey("theme")
         val DECK_VERSION = stringPreferencesKey("deck_version")
         val DECK_CHECKED_AT = longPreferencesKey("deck_checked_at")
         val SYNC_TOKEN = stringPreferencesKey("sync_token")

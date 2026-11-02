@@ -56,6 +56,7 @@
     <!-- Çalışma -->
     <string name="study_show_answer">Cevabı göster</string>
     <string name="study_tap_to_reveal">Çevirmek için dokun</string>
+    <string name="study_hide_answer">Kartı kapat</string>
     <string name="kind_new">Yeni kelime</string>
     <string name="kind_learning">Öğreniliyor</string>
     <string name="kind_review">Tekrar</string>
@@ -165,6 +166,10 @@
 
     <!-- Ayarlar -->
     <string name="section_display">Görünüm</string>
+    <string name="display_theme">Tema</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_dark">Koyu</string>
     <string name="display_arabic">Arapça yazı</string>
     <string name="display_arabic_body">Kelimeler, ayetler, çekim tabloları ve el-Müfredât metni.</string>
     <string name="display_latin">Latin harfli yazı</string>
@@ -229,6 +234,7 @@
 
     <string name="section_about">Hakkında</string>
     <string name="about_version">Sürüm %1$s</string>
+    <string name="about_developers">Fatih Yaman ve Mevlüt Çelik tarafından geliştirilmiştir.</string>
     <string name="about_sources">Kaynaklar</string>
     <string name="source_tanzil">Kur\'an metni: Tanzil Project, Tanzil Quran Text (Uthmani 1.0.2), CC BY-ND 3.0. Metin değiştirilmeden kullanılmıştır.</string>
     <string name="source_corpus">Morfoloji verisi: Quranic Arabic Corpus (GNU GPL), mustafa0x/quran-morphology sürümü.</string>
