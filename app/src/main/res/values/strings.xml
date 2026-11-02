@@ -419,6 +419,12 @@
     <string name="placement_cancel">Vazgeç</string>
     <string name="placement_close">Tamam</string>
     <string name="placement_unavailable">Soru havuzu henüz yüklenmedi. İnternete bağlıyken Ayarlar → Deste → Güncellemeleri kontrol et\'e dokunup tekrar dene.</string>
+    <string name="placement_basics_title">Önce harfler ve ekler</string>
+    <string name="placement_basics_body">Bunlar Kur\'an\'da en sık geçen harfler ve zamir ekleri. Hepsini anlamlarıyla biliyor musun?</string>
+    <string name="placement_basics_note">“Evet” dersen ilk %2$d kelimedeki %1$d harf ve ek de, testin sonucundan bağımsız olarak bilinen sayılır. Diğerleri gibi askıya alınmazlar; zamanla tekrar olarak sorulurlar.</string>
+    <string name="placement_basics_yes">Evet, hepsini biliyorum</string>
+    <string name="placement_basics_no">Hayır, bilmediklerim var</string>
+    <string name="placement_effect_basics">Bunun %1$d tanesi kesme noktasının ötesindeki harf ve ekler (“Harfleri biliyorum” dediğin için).</string>
     <string name="placement_question_number">Soru %1$d</string>
     <string name="placement_question_prompt">Bu kelimenin anlamı hangisi?</string>
     <string name="placement_dont_know">Bilmiyorum</string>

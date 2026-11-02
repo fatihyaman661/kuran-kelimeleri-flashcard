@@ -3,6 +3,7 @@ package com.mevlutcelik.kelimeler.presentation.placement
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mevlutcelik.kelimeler.data.local.WordDao
+import com.mevlutcelik.kelimeler.data.local.WordEntity
 import com.mevlutcelik.kelimeler.data.placement.PlacementAnswer
 import com.mevlutcelik.kelimeler.data.placement.PlacementItem
 import com.mevlutcelik.kelimeler.data.placement.PlacementRepository
@@ -25,6 +26,9 @@ sealed interface PlacementStep {
     /** Havuz yok (deste henüz inmemiş) ya da boş. */
     data object Unavailable : PlacementStep
 
+    /** "Bu harfleri ve ekleri biliyor musun?": en sık yapı kelimeleri, sorulardan önce. */
+    data class Basics(val words: List<WordEntity>, val count: Int) : PlacementStep
+
     /** [chosen]: verilen cevap (şık sırası; "Bilmiyorum" için -1); null ise henüz cevaplanmadı. */
     data class Question(val item: PlacementItem, val number: Int, val chosen: Int? = null) : PlacementStep
 
@@ -40,9 +44,17 @@ data class PlacementUiState(
     val maxRank: Int = 0,
     /** Hiç görülmemiş, askıda olmayan kelimelerin sıraları: kesme noktasına göre kaç kelimenin bilinen sayılacağı. */
     val unseenRanks: List<Int> = emptyList(),
+    /** İlk [PlacementViewModel.BASICS_UP_TO] kelimedeki, hiç görülmemiş yapı kelimelerinin sıraları. */
+    val functionRanks: List<Int> = emptyList(),
+    /** Kullanıcı "Harfleri ve ekleri biliyorum" dedi mi. */
+    val knowsBasics: Boolean = false,
     val undone: Int? = null,
 ) {
-    fun placeable(cutoff: Int) = unseenRanks.count { it <= cutoff }
+    /** Kesme noktasına göre bilinen sayılacak kelime sayısı (harf ve ekler dahil). */
+    fun placeable(cutoff: Int) = unseenRanks.count { it <= cutoff } + extraBasics(cutoff)
+
+    /** Kesme noktasının ötesinde kalıp yalnızca "Harfleri biliyorum" yüzünden eklenecek harf ve ekler. */
+    fun extraBasics(cutoff: Int) = if (knowsBasics) functionRanks.count { it > cutoff } else 0
 }
 
 @HiltViewModel
@@ -68,8 +80,27 @@ class PlacementViewModel @Inject constructor(
             _state.update { it.copy(step = PlacementStep.Loading, undone = null) }
             val created = placement.newTest()
             test = created
-            if (created == null) _state.update { it.copy(step = PlacementStep.Unavailable) } else showNext(created)
+            if (created == null) {
+                _state.update { it.copy(step = PlacementStep.Unavailable) }
+                return@launch
+            }
+            val functionRanks = wordDao.unseenFunctionRanksUpTo(BASICS_UP_TO)
+            _state.update { it.copy(functionRanks = functionRanks, knowsBasics = false) }
+            // Harf ve eklerin hepsi zaten çalışılmışsa sormaya gerek yok.
+            if (functionRanks.isEmpty()) {
+                showNext(created)
+            } else {
+                _state.update { it.copy(step = PlacementStep.Basics(wordDao.topFunctionWords(BASICS_SHOWN), functionRanks.size)) }
+            }
         }
+    }
+
+    /** "Bu harfleri ve ekleri biliyor musun?" cevabı; sonra sorular başlar. */
+    fun answerBasics(knows: Boolean) {
+        val running = test ?: return
+        if (_state.value.step !is PlacementStep.Basics) return
+        _state.update { it.copy(knowsBasics = knows) }
+        viewModelScope.launch { showNext(running) }
     }
 
     /** [index]: seçilen şık; -1 "Bilmiyorum". Doğru cevap kısa bir süre gösterilir, sonra sıradaki soru gelir. */
@@ -116,7 +147,7 @@ class PlacementViewModel @Inject constructor(
         val result = _state.value.step as? PlacementStep.Result ?: return
         viewModelScope.launch {
             _state.update { it.copy(step = PlacementStep.Applying) }
-            val placed = study.applyPlacement(result.cutoff)
+            val placed = study.applyPlacement(result.cutoff, if (_state.value.knowsBasics) BASICS_UP_TO else 0)
             _state.update { it.copy(step = PlacementStep.Done(placed, result.cutoff), summary = study.placementSummary()) }
         }
     }
@@ -133,8 +164,13 @@ class PlacementViewModel @Inject constructor(
         _state.update { it.copy(step = PlacementStep.Intro) }
     }
 
-    private companion object {
-        const val FEEDBACK_MS = 550L
-        const val FEEDBACK_WRONG_MS = 1300L
+    companion object {
+        /** "Harfleri ve ekleri biliyorum" denirse bu sıraya kadarki bütün yapı kelimeleri bilinen sayılır. */
+        const val BASICS_UP_TO = 500
+
+        /** Soru ekranında gösterilen en sık yapı kelimesi sayısı. */
+        private const val BASICS_SHOWN = 18
+        private const val FEEDBACK_MS = 550L
+        private const val FEEDBACK_WRONG_MS = 1300L
     }
 }

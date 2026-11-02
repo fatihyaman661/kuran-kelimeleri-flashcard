@@ -107,6 +107,7 @@ fun PlacementScreen(onClose: () -> Unit, viewModel: PlacementViewModel = hiltVie
                 }
                 PlacementStep.Intro -> Intro(state, onStart = viewModel::start, onUndo = viewModel::undo, onClose = onClose)
                 PlacementStep.Unavailable -> Message(stringResource(R.string.placement_unavailable), stringResource(R.string.placement_close), onClose)
+                is PlacementStep.Basics -> BasicsView(step, viewModel::answerBasics)
                 is PlacementStep.Question -> QuestionView(step, viewModel::choose)
                 is PlacementStep.Result -> ResultView(state, step, viewModel::setCutoff, viewModel::apply, onSkip = onClose)
                 is PlacementStep.Done -> DoneView(step, onClose)
@@ -224,6 +225,34 @@ private fun Message(text: String, button: String, onClick: () -> Unit) {
         Spacer(Modifier.height(24.dp))
         Text(text, style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         PrimaryAction(button, onClick)
+    }
+}
+
+// Harf ve ekler -----------------------------------------------------------------------------------
+
+@Composable
+private fun BasicsView(step: PlacementStep.Basics, onAnswer: (Boolean) -> Unit) {
+    PageColumn {
+        Text(stringResource(R.string.placement_basics_title), style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(R.string.placement_basics_body), style = MaterialTheme.typography.bodyMedium)
+        ContentCard {
+            step.words.forEach { word ->
+                Row(Modifier.fillMaxWidth().padding(vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(word.meaning.substringBefore(";").trim(), style = MaterialTheme.typography.bodyMedium)
+                        Text(word.type, style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+                    }
+                    Text(word.vocalized, style = ArabicStyles.Form, modifier = Modifier.padding(start = 12.dp))
+                }
+            }
+        }
+        Text(
+            stringResource(R.string.placement_basics_note, step.count, PlacementViewModel.BASICS_UP_TO),
+            style = MaterialTheme.typography.bodySmall,
+            color = OnSurfaceMuted,
+        )
+        PrimaryAction(stringResource(R.string.placement_basics_yes), onClick = { onAnswer(true) })
+        SecondaryAction(stringResource(R.string.placement_basics_no), onClick = { onAnswer(false) })
     }
 }
 
@@ -349,6 +378,11 @@ private fun ResultView(
                 if (count == 0) stringResource(R.string.placement_effect_none) else stringResource(R.string.placement_effect, count, StudyRepository.PLACEMENT_PER_DAY, days),
                 style = MaterialTheme.typography.bodyMedium,
             )
+            val extra = state.extraBasics(step.cutoff)
+            if (extra > 0) {
+                Spacer(Modifier.height(4.dp))
+                Text(stringResource(R.string.placement_effect_basics, extra), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+            }
         }
         PrimaryAction(stringResource(R.string.placement_apply), onApply, enabled = count > 0)
         SecondaryAction(stringResource(R.string.placement_skip), onSkip)

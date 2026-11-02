@@ -46,14 +46,20 @@ interface WordDao {
     )
     suspend fun newCount(): Int
 
-    /** Seviye testi için: [maxRank]'e kadar hiç görülmemiş, askıda olmayan kelimeler, sondan başa. */
+    /**
+     * Seviye testi için: [maxRank]'e kadar, ayrıca [functionWordsUpTo]'ya kadarki yapı kelimeleri
+     * (fiil, isim ya da özel isim olmayan her tür; 0 ise hiçbiri), hiç görülmemiş ve askıda olmayanlar,
+     * sondan başa.
+     */
     @Query(
-        """SELECT w.id FROM words w WHERE w.retired = 0 AND w.rank <= :maxRank
+        """SELECT w.id FROM words w WHERE w.retired = 0
+           AND (w.rank <= :maxRank OR (w.rank <= :functionWordsUpTo
+                AND NOT (w.type = 'Fiil' OR w.type = 'Özel isim' OR w.type LIKE 'İsim%')))
            AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)
            AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id)
            ORDER BY w.rank DESC""",
     )
-    suspend fun unseenUpTo(maxRank: Int): List<String>
+    suspend fun unseenUpTo(maxRank: Int, functionWordsUpTo: Int): List<String>
 
     @Query(
         """SELECT w.rank FROM words w WHERE w.retired = 0
@@ -62,6 +68,27 @@ interface WordDao {
            ORDER BY w.rank""",
     )
     suspend fun unseenRanks(): List<Int>
+
+    /**
+     * Seviye testindeki "Harfleri ve ekleri biliyorum" için: [maxRank]'e kadar hiç görülmemiş, askıda
+     * olmayan yapı kelimeleri (fiil, isim ya da özel isim olmayan her tür: harfler, zamirler, işaret
+     * isimleri, mevsuller…).
+     */
+    @Query(
+        """SELECT w.rank FROM words w WHERE w.retired = 0 AND w.rank <= :maxRank
+           AND NOT (w.type = 'Fiil' OR w.type = 'Özel isim' OR w.type LIKE 'İsim%')
+           AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)
+           AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id)""",
+    )
+    suspend fun unseenFunctionRanksUpTo(maxRank: Int): List<Int>
+
+    /** En sık yapı kelimeleri: "Harfleri ve ekleri biliyor musun?" ekranında gösterilir. */
+    @Query(
+        """SELECT * FROM words WHERE retired = 0
+           AND NOT (type = 'Fiil' OR type = 'Özel isim' OR type LIKE 'İsim%')
+           ORDER BY rank LIMIT :limit""",
+    )
+    suspend fun topFunctionWords(limit: Int): List<WordEntity>
 
     @Query("SELECT COALESCE(MAX(rank), 0) FROM words WHERE retired = 0")
     suspend fun maxRank(): Int

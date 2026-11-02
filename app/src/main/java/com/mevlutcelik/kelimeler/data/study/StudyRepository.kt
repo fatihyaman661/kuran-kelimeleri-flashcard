@@ -241,10 +241,12 @@ class StudyRepository @Inject constructor(
      * aşamasına [PLACEMENT_STABILITY_DAYS] kararlılıkla girer; ilk tekrarları yarından başlayarak günde
      * en fazla [PLACEMENT_PER_DAY] tane olacak şekilde serpiştirilir. Sıra kesme noktasından geriye
      * doğrudur: testin en çok yanılabileceği kelimeler önce sorulur. Önceki bir testten bekleyen
-     * kelimelerin günleri dolu sayılır. Bilinen sayılan kelime sayısını döner.
+     * kelimelerin günleri dolu sayılır. [functionWordsUpTo] > 0 ise ("Harfleri ve ekleri biliyorum")
+     * o sıraya kadarki bütün yapı kelimeleri de kesme noktasından bağımsız olarak eklenir. Bilinen
+     * sayılan kelime sayısını döner.
      */
-    suspend fun applyPlacement(maxRank: Int, now: Long = System.currentTimeMillis()): Int {
-        val ids = wordDao.unseenUpTo(maxRank)
+    suspend fun applyPlacement(maxRank: Int, functionWordsUpTo: Int = 0, now: Long = System.currentTimeMillis()): Int {
+        val ids = wordDao.unseenUpTo(maxRank, functionWordsUpTo)
         if (ids.isEmpty()) return 0
         val taken = stateDao.pendingPlacementDues().groupingBy { clock.dayOf(it) }.eachCount().toMutableMap()
         val scheduler = scheduler()

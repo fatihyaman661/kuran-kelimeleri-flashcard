@@ -79,7 +79,7 @@ Daha önce Arapça çalışmış kullanıcı baştaki bildiği kelimelerle uğra
 - Uygulama deste yüklenirken havuzu `files/placement.json`'a yazar (veritabanı şeması değişmez). Dosya yoksa (uygulama güncellenmiş, deste değişmemiş) APK'daki desteden okunur.
 - Gözden geçirme listesi: `data/placement-review.md` (betik üretir). Sorunlu soru ya da çeldirici, sırası `data/placement-exclude.txt`'ye yazılıp betik yeniden çalıştırılarak çıkarılır.
 - Sıklık bantları logaritmik: 1–50, 51–100, 101–200, 201–400, 401–800, 801–1600, 1601–3200, 3201+ (Kotlin'deki `PlacementBands` ile aynı olmalı). Her banttan en fazla 20 soru, bant boyunca eşit aralıklı.
-- Soru olmayanlar: harfler, zamirler, işaret isimleri, ism-i mevsuller, özel isimler, anlamı çok uzun ya da ünlemli kelimeler. Bunlar kesme noktasının altındaysa diğer kelimelerle birlikte öğrenilmiş sayılır (ayrıca sorulmaz).
+- Soru olmayanlar: harfler, zamirler, işaret isimleri, ism-i mevsuller, özel isimler, anlamı çok uzun ya da ünlemli kelimeler. Bunlar kesme noktasının altındaysa diğer kelimelerle birlikte öğrenilmiş sayılır. Ayrıca testin başında en sık 18 harf ve ek anlamlarıyla gösterilip "Hepsini biliyor musun?" diye sorulur (öz beyan): "Evet" denirse ilk 500 kelimedeki bütün yapı kelimeleri (fiil, isim ya da özel isim olmayanlar; şu an 115) kesme noktasından bağımsız olarak bilinen sayılır. Harf ve ekleri bilip kelime bilgisi az olan (kesme noktası 0'a yakın çıkan) kullanıcı için.
 - Şık metni anlamın ilk kısmıdır (ilk `;`'ye kadar, parantezler atılmış).
 - Çeldiriciler: şıkkın görünüşüne göre aynı grup ("-mek" ile biten eylemler / sıfatlar / isimler), aynı ya da komşu bant, aynı kökten değil, doğru cevapla ortak anlam kelimesi taşımayan. Seçim kelimenin GUID'iyle tohumlanır; aynı deste aynı havuzu verir.
 
