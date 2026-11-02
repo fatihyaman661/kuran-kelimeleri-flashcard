@@ -5,6 +5,7 @@ import com.mevlutcelik.kelimeler.data.backup.BackupRepository
 import com.mevlutcelik.kelimeler.data.deck.DeckChange
 import com.mevlutcelik.kelimeler.data.deck.DeckCheck
 import com.mevlutcelik.kelimeler.data.deck.DeckRepository
+import com.mevlutcelik.kelimeler.data.glossary.GlossaryRepository
 import com.mevlutcelik.kelimeler.data.sync.SyncRepository
 import com.mevlutcelik.kelimeler.di.ApplicationScope
 import java.util.concurrent.atomic.AtomicBoolean
@@ -18,11 +19,12 @@ import kotlinx.coroutines.launch
 
 /**
  * Açılış sırası: uygulamayla gelen desteyi yükle → yeni kurulumsa Android yedeğinden ilerlemeyi
- * geri getir → (çalışma artık açık) GitHub'da yeni deste var mı bak → girişliyse senkronla.
+ * geri getir → (çalışma artık açık) GitHub'da yeni deste var mı bak → ıstılahatı yenile → girişliyse senkronla.
  */
 @Singleton
 class AppStartup @Inject constructor(
     private val deck: DeckRepository,
+    private val glossary: GlossaryRepository,
     private val backup: BackupRepository,
     private val sync: SyncRepository,
     @ApplicationScope private val scope: CoroutineScope,
@@ -51,6 +53,7 @@ class AppStartup @Inject constructor(
             if (check is DeckCheck.Updated && (check.change.added > 0 || check.change.removed > 0)) {
                 _deckChange.value = check.change
             }
+            glossary.refresh()
             sync.sync()
         }
     }
