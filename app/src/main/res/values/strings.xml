@@ -282,7 +282,7 @@
     <string name="guide_coverage_note">Çubuklar, o kelimelerin Kur\'an metnindeki bütün kelimelerin yüzde kaçını oluşturduğunu gösteriyor. Yani ilk 100 kelimeyi öğrendiğinde okuduğun bir ayetteki her 10 kelimeden yaklaşık %1$d tanesini tanırsın.</string>
     <string name="guide_frequency_title">Kelimeler sıklık sırasıyla gelir</string>
     <string name="guide_frequency_body">Kelimeler, Kur\'an\'da kaç defa geçtiklerine göre sıralandı: 1. kelime en sık geçendir. Yeni kelimeler sana bu sırayla gelir. Böylece emeğin önce en çok karşına çıkacak kelimelere gider.</string>
-    <string name="guide_frequency_note">İlk sıralarda harfler ve ekler (و, مِنْ, zamir ekleri) var; onlar da Kur\'an\'da kelime gibi sayılır ve en çok onları göreceksin. Rehberdeki örnek kelime عَلِمَ (bilmek) ise 48. sırada.</string>
+    <string name="guide_frequency_note">İlk sıralarda harfler ve ekler (و, مِنْ, zamir ekleri) var; onlar da Kur\'an\'da kelime gibi sayılır ve en çok onları göreceksin. Arka arkaya gelip bunaltmasınlar diye bir harf ya da ekten sonra en az 3 başka kelime gelir. Rehberdeki örnek kelime عَلِمَ (bilmek) ise 48. sırada.</string>
     <string name="guide_spacing_title">Aralıklı tekrar nedir?</string>
     <string name="guide_spacing_body">Yeni öğrendiğin bir şeyi zamanla unutursun; ilk günlerde çok hızlı. Ama tam unutmak üzereyken bir kez daha hatırlarsan kelime hafızanda daha sağlam yer eder ve bir sonraki unutma daha yavaş olur. Her tekrardan sonra bir sonraki tekrara kadar daha uzun süre geçebilir.</string>
     <string name="guide_curve_label">Bir kelimeyi hatırlama ihtimalin</string>
