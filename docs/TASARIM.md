@@ -70,6 +70,31 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Hakkında ekranı:** Kaynaklar ve lisanslar (Tanzil, Quranic Arabic Corpus, GPLv3). *(Yapıldı: Ayarlar → Hakkında.)*
 - **Nasıl kullanılır rehberi:** Anki'yi bilmeyen kullanıcılar zorlandığı için eklendi (`presentation/guide/`). İlk açılışta bir kez kendiliğinden açılır (`guide_seen` ayarı), menüde "Nasıl kullanılır" olarak durur. İki bölüm: *Temel bilgiler* (amaç, sıklık sırası, aralıklı tekrar ve unutma eğrisi, kartın akışı, dört buton, butonların altındaki süreler, FSRS ve hedef oran, günlük düzen) ve *Ekranları tanı* (üst çubuk, kartın ön ve arka yüzü, zorlanan kelimeler ve askıya alma, menü). Rehberdeki süreler uydurma değil, uygulamanın kendi FSRS zamanlayıcısıyla (fuzz kapalı) hesaplanır; örnek kelime (عَلِمَ) `GuideSample.kt`'de gömülüdür. Çalışma ekranında bir şey değişirse (buton, simge, kart düzeni) rehberdeki taklidi de güncellenmeli.
 
+## Seviye tespiti (planlanan)
+
+Daha önce Arapça çalışmış kullanıcı baştaki bildiği kelimelerle uğraşmasın diye. İlk açılışta rehberin sonunda ("Daha önce Arapça çalıştın mı?") ve Ayarlar → Çalışma'da sunulur; tekrar yapılabilir ve geri alınabilir.
+
+**Soru havuzu (önceden hazırlanır):**
+- `scripts/build_deck.py` desteyle birlikte bir `placement` tablosu üretir: kelime, doğru anlam ve 3 çeldirici. Havuz yayımlanmadan önce elle gözden geçirilir; sorunlu soru silinir.
+- Sıklık bantları logaritmik: 1–50, 51–100, 101–200, 201–400, 401–800, 801–1600, 1601–3200, 3200+. Her banttan 15–20 soru.
+- Soru olmayanlar: harfler, zamirler, işaret isimleri, ism-i mevsuller (ayrı tek bir "temel harf ve ekler" sorusu), özel isimler, anlamı çok uzun ya da belirsiz kelimeler.
+- Şık metni anlamın ilk kısmıdır (ilk `;`'ye kadar).
+- Çeldiriciler: aynı tür (fiile fiil), aynı ya da komşu bant, aynı kökten değil, doğru cevapla ortak anlam kelimesi taşımayan (ör. جَاءَ / أَتَى ikisi de "gelmek").
+
+**Test (uyarlanabilir):**
+- Kelime kartın önündeki gibi gösterilir (harekesiz + tür); 4 anlam şıkkı ve "Bilmiyorum".
+- 101–200 bandından başlar, her bantta 5 soru: 5'te 4+ doğruysa üst banda, 2 ve altıysa alt banda / bitiş. Bilinen oranın %80'i geçtiği ve geçmediği bantlar bulununca sınırda 5–10 soru daha; kesme noktası iki bant arasında hesaplanır.
+- Puan: doğru +1, "Bilmiyorum" 0, yanlış −⅓ (şans düzeltmesi). Toplam 25–40 soru.
+- Sonuç ekranında "Tahminen ilk N kelimeyi biliyorsun"; kullanıcı N'yi kaydırıcıyla düzeltebilir.
+
+**Bilinen sayılan kelimeler (askıya alınmaz):**
+- Her biri için yeni bir olay türüyle ("seviye testi") kayıt yazılır. Replay bu olayı görünce kartı doğrudan Review aşamasına koyar: **başlangıç kararlılığı 30 gün**, ortalama zorluk.
+- Yeni kelimeler N+1'den başlar; ilerleme ve metin kapsamı bu kelimeleri hemen sayar.
+- İlk tekrarlar serpiştirilir: **bu kelimelerden günde en fazla 3 tanesi** gelir. Sıra kesme noktasına en yakın kelimeden geriye doğrudur (en belirsiz olanlar önce; و, مِنْ gibi en sık kelimeler en sona kalır).
+- İlk tekrarda İyi/Kolay → aralık büyür, normal devam. Tekrar → yeniden öğrenme; testin hatası böyle kendiliğinden düzelir.
+- Geri almak = bu olayları silmek. Kişiye özel FSRS optimizasyonu bu olayları gerçek tekrar saymaz.
+- Güvenilirlik ölçüsü: testle bilinen sayılan kelimelerin ilk tekrarlarındaki "Tekrar" oranı; %15–20'yi geçerse eşik düşürülür.
+
 ## İstatistik
 
 - Yeni veri tutulmaz; hepsi tekrar kayıtlarından ve kart durumlarından hesaplanır (`StatsRepository`).
