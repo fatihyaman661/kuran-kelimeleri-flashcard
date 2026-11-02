@@ -17,6 +17,7 @@ Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yönt
 - **Yazı boyutu:** Arapça ve Latin harfli yazı için ayrı ayrı büyütme/küçültme (Ayarlar → Görünüm)
 - **Bugünkü sınırı artırma:** Günlük yeni kelime sınırını yalnızca o gün için +10 / +25 / +50 artırma
 - **İlerleme:** Öğrenilen kelime yüzdesi, Kur'an metnindeki kelime geçişlerinin ne kadarının tanındığı (metin kapsamı), son 30 günün tekrar grafiği ve çalışma serisi
+- **Istılahat:** Kartlardaki kelime türlerinin ve gramer terimlerinin aranabilir kısa açıklamaları; metin repodan güncellenir
 - **İstatistik:** Son bir yılın çalışma takvimi (ısı haritası), en uzun seri, önümüzdeki 30 günün tekrar tahmini, tahmini bitiş ve kalıcı kelime sayısı
 
 Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASARIM.md)
@@ -64,6 +65,13 @@ python3 scripts/build_deck.py
 Betik `data/deck.db.gz` (gzip'li SQLite) ve `data/deck-version.json` dosyalarını üretir. Bu dosyalar `main`'e gönderilince
 uygulamalar yeni sürümü kendileri indirir (açılışta en fazla 12 saatte bir, ya da Ayarlar → Deste → Güncellemeleri kontrol et);
 yeni bir derleme de aynı dosyayı APK'nın içine koyar, ilk açılışta internet gerekmez. Not GUID'leri sabit kalmalı; ilerleme bunlara bağlı.
+
+## Istılahat
+
+Uygulamadaki **Istılahat** menüsü (kart türlerinin ve gramer terimlerinin kısa açıklamaları) [`data/istilahat.md`](data/istilahat.md)
+dosyasından gelir. Dosya GitHub'da doğrudan düzenlenebilir; biçim dosyanın başındaki yorumda anlatılır. `main`'e gönderilen
+değişiklik uygulamalara açılışta (ya da Ayarlar → Deste → Güncellemeleri kontrol et ile) iner, yeni sürüm gerekmez.
+Yeni bir derleme de dosyayı APK'nın içine koyar. `./gradlew :app:testDebugUnitTest` dosyanın düzgün yazıldığını denetler.
 
 ## Senkron sunucusu (isteğe bağlı)
 

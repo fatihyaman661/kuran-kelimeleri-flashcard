@@ -9,6 +9,7 @@ import com.mevlutcelik.kelimeler.data.backup.BackupRepository
 import com.mevlutcelik.kelimeler.data.backup.InvalidBackupException
 import com.mevlutcelik.kelimeler.data.deck.DeckCheck
 import com.mevlutcelik.kelimeler.data.deck.DeckRepository
+import com.mevlutcelik.kelimeler.data.glossary.GlossaryRepository
 import com.mevlutcelik.kelimeler.data.local.ReviewDao
 import com.mevlutcelik.kelimeler.data.local.WordDao
 import com.mevlutcelik.kelimeler.data.settings.DeckInfo
@@ -50,6 +51,7 @@ data class SettingsUiState(
 class SettingsViewModel @Inject constructor(
     private val settings: SettingsRepository,
     private val deck: DeckRepository,
+    private val glossary: GlossaryRepository,
     private val backup: BackupRepository,
     private val sync: SyncRepository,
     wordDao: WordDao,
@@ -105,6 +107,7 @@ class SettingsViewModel @Inject constructor(
                 DeckCheck.NeedsAppUpdate -> Notice(R.string.deck_needs_app_update)
                 is DeckCheck.Failed -> Notice(R.string.deck_check_failed)
             }
+            glossary.refresh()
             _checking.value = false
         }
     }

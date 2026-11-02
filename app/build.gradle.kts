@@ -87,11 +87,16 @@ android {
     }
 }
 
-// Uygulamayla gelen deste: data/deck.db.gz derleme sırasında assets'e kopyalanır, depoda tek kopya kalır.
+// Uygulamayla gelen deste ve ıstılahat: data/deck.db.gz ile data/istilahat.md derleme sırasında assets'e
+// kopyalanır, depoda tek kopya kalır.
 abstract class BundleDeckTask : DefaultTask() {
     @get:InputFile
     @get:PathSensitive(PathSensitivity.NONE)
     abstract val deck: RegularFileProperty
+
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val glossary: RegularFileProperty
 
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
@@ -102,11 +107,13 @@ abstract class BundleDeckTask : DefaultTask() {
         out.deleteRecursively()
         out.mkdirs()
         deck.get().asFile.copyTo(out.resolve("deck.db.gz"))
+        glossary.get().asFile.copyTo(out.resolve("istilahat.md"))
     }
 }
 
 val bundleDeck = tasks.register<BundleDeckTask>("bundleDeck") {
     deck.set(rootProject.layout.projectDirectory.file("data/deck.db.gz"))
+    glossary.set(rootProject.layout.projectDirectory.file("data/istilahat.md"))
 }
 
 androidComponents {

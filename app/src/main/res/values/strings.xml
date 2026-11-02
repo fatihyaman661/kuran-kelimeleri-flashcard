@@ -6,6 +6,7 @@
     <string name="nav_words">Kelimeler</string>
     <string name="nav_settings">Ayarlar</string>
     <string name="nav_stats">İstatistik</string>
+    <string name="nav_glossary">Istılahat</string>
     <string name="back">Geri</string>
     <string name="nav_menu_open">Menüyü aç</string>
     <string name="nav_menu_subtitle">Aralıklı tekrarla Kur\'an kelimeleri</string>
@@ -115,6 +116,9 @@
     <string name="filter_leech">Zorlanan</string>
     <string name="state_leech">Zorlanıyor</string>
     <string name="words_empty">Sonuç bulunamadı</string>
+
+    <string name="glossary_subtitle">Kartlardaki terimlerin kısa açıklamaları</string>
+    <string name="glossary_search">Terim ara</string>
     <string name="state_due_now">Bugün</string>
     <string name="state_due_in">%1$s sonra</string>
 
