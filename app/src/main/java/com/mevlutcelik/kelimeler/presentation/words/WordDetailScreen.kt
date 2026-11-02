@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material.icons.outlined.PlayCircle
+import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +48,7 @@ import com.mevlutcelik.fsrs.Rating
 import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.data.local.CardStateEntity
 import com.mevlutcelik.kelimeler.data.local.ReviewEntity
+import com.mevlutcelik.kelimeler.data.study.isLeech
 import com.mevlutcelik.kelimeler.presentation.common.ContentCard
 import com.mevlutcelik.kelimeler.presentation.common.SectionLabel
 import com.mevlutcelik.kelimeler.presentation.common.HeroBackground
@@ -152,6 +154,13 @@ private fun ProgressCard(cardState: CardStateEntity?, retrievability: Double?, r
                 Icon(Icons.Outlined.PauseCircle, contentDescription = null, tint = KelimelerColors.Suspended, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(10.dp))
                 Text(stringResource(R.string.word_suspended_note), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
+            }
+        }
+        if (!suspended && isLeech(cardState?.lapses)) {
+            Row(Modifier.padding(bottom = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Outlined.Report, contentDescription = null, tint = HardAmber, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(10.dp))
+                Text(stringResource(R.string.word_leech_note, cardState!!.lapses), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
             }
         }
         val turkish = Locale.forLanguageTag("tr")

@@ -6,6 +6,7 @@ import com.mevlutcelik.fsrs.DayClock
 import com.mevlutcelik.fsrs.Phase
 import com.mevlutcelik.kelimeler.data.local.WordDao
 import com.mevlutcelik.kelimeler.data.local.WordListRow
+import com.mevlutcelik.kelimeler.data.study.isLeech
 import com.mevlutcelik.kelimeler.util.SearchText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -20,7 +21,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 
-enum class WordFilter { All, New, Learning, Learned, Suspended }
+enum class WordFilter { All, New, Learning, Learned, Leech, Suspended }
 
 data class WordRowUi(
     val id: String,
@@ -31,6 +32,8 @@ data class WordRowUi(
     /** Tekrara kalan süre; vakti geldiyse 0, hiç çalışılmadıysa null. */
     val dueIn: Long?,
     val suspended: Boolean,
+    /** Zorlanan kelime (bkz. [isLeech]); askıdaysa işaretlenmez. */
+    val leech: Boolean,
 )
 
 data class WordListUiState(
@@ -81,6 +84,7 @@ class WordListViewModel @Inject constructor(
         WordFilter.New -> !row.suspended && row.phase == Phase.New
         WordFilter.Learning -> !row.suspended && (row.phase == Phase.Learning || row.phase == Phase.Relearning)
         WordFilter.Learned -> !row.suspended && row.phase == Phase.Review
+        WordFilter.Leech -> row.leech
     }
 
     private fun WordListRow.toUi(now: Long): WordRowUi {
@@ -92,7 +96,7 @@ class WordListViewModel @Inject constructor(
                 else -> it - now
             }
         }
-        return WordRowUi(id, rank, vocalized, meaning, phase, dueIn, suspended)
+        return WordRowUi(id, rank, vocalized, meaning, phase, dueIn, suspended, leech = !suspended && isLeech(lapses))
     }
 
     private companion object {

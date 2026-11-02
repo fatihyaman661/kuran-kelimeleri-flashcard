@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,7 +46,6 @@ import com.mevlutcelik.kelimeler.data.deck.WordDetails
 import com.mevlutcelik.kelimeler.data.deck.WordForm
 import com.mevlutcelik.kelimeler.data.local.WordEntity
 import com.mevlutcelik.kelimeler.presentation.theme.AccentGold
-import com.mevlutcelik.kelimeler.presentation.theme.AmiriFamily
 import com.mevlutcelik.kelimeler.presentation.theme.ArabicStyles
 import com.mevlutcelik.kelimeler.presentation.theme.KelimelerColors
 import com.mevlutcelik.kelimeler.presentation.theme.LearnCoral
@@ -113,7 +113,7 @@ fun metaLine(word: WordEntity): AnnotatedString {
     return buildAnnotatedString {
         if (!word.root.isNullOrBlank()) {
             append("$rootLabel: ")
-            withStyle(SpanStyle(fontFamily = AmiriFamily, fontSize = 17.sp, color = OnSurface)) { append(word.root) }
+            withStyle(ArabicStyles.span(17.sp, OnSurface)) { append(word.root) }
             append(" · ")
         }
         append(meta)
@@ -178,7 +178,7 @@ private fun TableCellView(cell: TableCell, modifier: Modifier) {
         when {
             cell.isArabic -> Text(
                 cell.text,
-                style = ArabicStyles.Form.copy(fontSize = 21.sp, lineHeight = 34.sp, textAlign = TextAlign.Center),
+                style = ArabicStyles.TableCell,
                 color = if (cell.isCurrent) PrimaryMint else OnSurface,
                 fontWeight = if (cell.isCurrent) FontWeight.Bold else null,
             )
@@ -215,8 +215,9 @@ private fun Examples(examples: List<Example>, initial: Int) {
     }
 }
 
+/** Örnek ayetin Arapçası, kelime vurgulu. Zorlanan kelimede kartın önünde meal olmadan ipucu olarak da kullanılır. */
 @Composable
-private fun ExampleView(example: Example) {
+fun ExampleVerse(example: Example, modifier: Modifier = Modifier, style: TextStyle = ArabicStyles.Verse) {
     val verse = remember(example) {
         buildAnnotatedString {
             append(example.ar)
@@ -227,12 +228,17 @@ private fun ExampleView(example: Example) {
             }
         }
     }
+    Text(verse, style = style, modifier = modifier)
+}
+
+@Composable
+private fun ExampleView(example: Example) {
     Column(Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 6.dp)) {
-        Text(verse, style = ArabicStyles.Verse, modifier = Modifier.fillMaxWidth())
+        ExampleVerse(example, Modifier.fillMaxWidth())
         example.form?.let { form ->
             Text(
                 buildAnnotatedString {
-                    withStyle(SpanStyle(fontFamily = AmiriFamily, fontSize = 16.sp)) { append(form.ar) }
+                    withStyle(ArabicStyles.span(16.sp)) { append(form.ar) }
                     append(" · ${form.label}")
                 },
                 style = MaterialTheme.typography.bodySmall,

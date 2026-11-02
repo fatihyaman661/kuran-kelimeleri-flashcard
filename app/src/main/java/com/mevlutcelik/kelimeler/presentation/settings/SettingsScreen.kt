@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,6 +26,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.SaveAlt
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.FormatSize
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
@@ -34,11 +37,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -46,26 +53,37 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mevlutcelik.kelimeler.BuildConfig
 import com.mevlutcelik.kelimeler.R
+import com.mevlutcelik.kelimeler.data.settings.DisplaySettings
+import com.mevlutcelik.kelimeler.data.settings.NewOrder
 import com.mevlutcelik.kelimeler.data.settings.StudySettings
 import com.mevlutcelik.kelimeler.data.sync.SyncState
 import com.mevlutcelik.kelimeler.presentation.common.ContentCard
 import com.mevlutcelik.kelimeler.presentation.common.ScreenHeader
 import com.mevlutcelik.kelimeler.presentation.common.IconBadge
+import com.mevlutcelik.kelimeler.presentation.common.SectionLabel
 import com.mevlutcelik.kelimeler.presentation.common.relativeTime
+import com.mevlutcelik.kelimeler.presentation.theme.ArabicStyles
 import com.mevlutcelik.kelimeler.presentation.theme.KelimelerColors
 import com.mevlutcelik.kelimeler.presentation.theme.LearnCoral
+import com.mevlutcelik.kelimeler.presentation.theme.LocalTextScales
 import com.mevlutcelik.kelimeler.presentation.theme.OnMint
+import com.mevlutcelik.kelimeler.presentation.theme.OnSurface
 import com.mevlutcelik.kelimeler.presentation.theme.OnSurfaceMuted
 import com.mevlutcelik.kelimeler.presentation.theme.PrimaryMint
+import com.mevlutcelik.kelimeler.presentation.theme.TextScales
+import com.mevlutcelik.kelimeler.presentation.theme.WithLatinScale
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
@@ -81,7 +99,9 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            StudySection(state.study, viewModel::setRetention, viewModel::setNewPerDay)
+            StudySection(state.study, viewModel::setRetention, viewModel::setNewPerDay, viewModel::setNewOrder)
+            val display by viewModel.display.collectAsStateWithLifecycle()
+            DisplaySection(display, viewModel::setArabicScale, viewModel::setLatinScale, viewModel::resetDisplay)
             DeckSection(state, viewModel)
             SyncSection(state, viewModel)
             BackupSection(viewModel)
@@ -92,7 +112,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
 }
 
 @Composable
-private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onNewPerDay: (Int) -> Unit) {
+private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onNewPerDay: (Int) -> Unit, onNewOrder: (NewOrder) -> Unit) {
     // Kaydırırken her adımda DataStore'a yazmamak için değer bırakılınca kaydedilir.
     var retention by remember(study.desiredRetention) { mutableFloatStateOf(study.desiredRetention) }
     ContentCard {
@@ -132,7 +152,109 @@ private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onN
                 Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.increase))
             }
         }
+
+        Spacer(Modifier.height(18.dp))
+        Text(stringResource(R.string.new_order_title), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+        Text(stringResource(R.string.new_order_body), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+        Spacer(Modifier.height(6.dp))
+        Column(Modifier.selectableGroup()) {
+            listOf(
+                Triple(NewOrder.Mixed, R.string.new_order_mixed, R.string.new_order_mixed_body),
+                Triple(NewOrder.AfterReviews, R.string.new_order_after, R.string.new_order_after_body),
+                Triple(NewOrder.BeforeReviews, R.string.new_order_before, R.string.new_order_before_body),
+            ).forEach { (order, title, body) ->
+                val selected = study.newOrder == order
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .selectable(selected = selected, onClick = { onNewOrder(order) }, role = Role.RadioButton)
+                        .padding(vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    RadioButton(selected = selected, onClick = null, colors = RadioButtonDefaults.colors(selectedColor = PrimaryMint))
+                    Spacer(Modifier.width(10.dp))
+                    Column {
+                        Text(stringResource(title), style = MaterialTheme.typography.bodyLarge)
+                        Text(stringResource(body), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+                    }
+                }
+            }
+        }
     }
+}
+
+@Composable
+private fun DisplaySection(display: DisplaySettings, onArabic: (Float) -> Unit, onLatin: (Float) -> Unit, onReset: () -> Unit) {
+    // Kaydırırken önizleme anlık değerle çizilir; ayar bırakınca kaydedilir ve bütün uygulamaya yansır.
+    var arabic by remember(display.arabicScale) { mutableFloatStateOf(display.arabicScale) }
+    var latin by remember(display.latinScale) { mutableFloatStateOf(display.latinScale) }
+    ContentCard {
+        SectionTitle(Icons.Filled.FormatSize, stringResource(R.string.section_display))
+        Spacer(Modifier.height(12.dp))
+        ScaleSlider(
+            title = stringResource(R.string.display_arabic),
+            body = stringResource(R.string.display_arabic_body),
+            value = arabic,
+            range = DisplaySettings.MIN_ARABIC..DisplaySettings.MAX_ARABIC,
+            onChange = { arabic = it },
+            onDone = { onArabic(arabic) },
+        )
+        Spacer(Modifier.height(14.dp))
+        ScaleSlider(
+            title = stringResource(R.string.display_latin),
+            body = stringResource(R.string.display_latin_body),
+            value = latin,
+            range = DisplaySettings.MIN_LATIN..DisplaySettings.MAX_LATIN,
+            onChange = { latin = it },
+            onDone = { onLatin(latin) },
+        )
+        Spacer(Modifier.height(14.dp))
+        SectionLabel(stringResource(R.string.display_preview))
+        Spacer(Modifier.height(8.dp))
+        CompositionLocalProvider(LocalTextScales provides TextScales(arabic, latin)) {
+            WithLatinScale(latin) {
+                Surface(shape = RoundedCornerShape(16.dp), color = Color.Black.copy(alpha = 0.2f), contentColor = OnSurface) {
+                    Column(Modifier.fillMaxWidth().padding(14.dp)) {
+                        Text(stringResource(R.string.display_preview_ar), style = ArabicStyles.Verse, modifier = Modifier.fillMaxWidth())
+                        Spacer(Modifier.height(6.dp))
+                        Text(stringResource(R.string.display_preview_tr), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
+                    }
+                }
+            }
+        }
+        if (display != DisplaySettings()) {
+            TextButton(onClick = onReset, contentPadding = PaddingValues(horizontal = 0.dp)) {
+                Text(stringResource(R.string.display_reset), color = PrimaryMint)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ScaleSlider(
+    title: String,
+    body: String,
+    value: Float,
+    range: ClosedFloatingPointRange<Float>,
+    onChange: (Float) -> Unit,
+    onDone: () -> Unit,
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+            Text(body, style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+        }
+        Text("%${(value * 100).roundToInt()}", style = MaterialTheme.typography.titleMedium, color = PrimaryMint, fontWeight = FontWeight.SemiBold)
+    }
+    Slider(
+        value = value,
+        // %5'lik adımlar; adım noktaları çizilmesin diye `steps` yerine yuvarlanır.
+        onValueChange = { onChange((it * 20).roundToInt() / 20f) },
+        onValueChangeFinished = onDone,
+        valueRange = range,
+        colors = SliderDefaults.colors(thumbColor = PrimaryMint, activeTrackColor = PrimaryMint, inactiveTrackColor = KelimelerColors.ProgressTrack),
+    )
 }
 
 @Composable
@@ -160,6 +282,8 @@ private fun DeckSection(state: SettingsUiState, viewModel: SettingsViewModel) {
 
 @Composable
 private fun SyncSection(state: SettingsUiState, viewModel: SettingsViewModel) {
+    // Sunucusu tanımlı olmayan derlemede (Play sürümü dahil) senkron bölümü hiç gösterilmez.
+    if (!state.syncConfigured) return
     val context = LocalContext.current
     val syncError by viewModel.syncError.collectAsStateWithLifecycle()
     val syncNotice by viewModel.syncNotice.collectAsStateWithLifecycle()
@@ -187,7 +311,6 @@ private fun SyncSection(state: SettingsUiState, viewModel: SettingsViewModel) {
         Spacer(Modifier.height(12.dp))
         val account = state.account
         when {
-            !state.syncConfigured -> Text(stringResource(R.string.sync_not_configured), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
             account == null -> {
                 PrimaryButton(stringResource(R.string.sync_sign_in), onClick = { viewModel.signIn(context) })
                 if (syncError) NoticeText(Notice(R.string.sync_failed))

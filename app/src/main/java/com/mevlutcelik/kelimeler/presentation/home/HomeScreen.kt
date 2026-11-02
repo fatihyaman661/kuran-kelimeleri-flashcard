@@ -251,7 +251,7 @@ private fun TodayHero(overview: StudyOverview, onStudy: () -> Unit, onMoreNew: (
             // Süs: inen ilk ayetin başı, desenin üstünde sessiz bir imza gibi.
             Text(
                 stringResource(R.string.home_hero_verse),
-                style = ArabicStyles.Inline.copy(fontSize = 20.sp),
+                style = ArabicStyles.Signature,
                 color = PrimaryMint.copy(alpha = 0.55f),
                 modifier = Modifier.align(Alignment.End),
             )
