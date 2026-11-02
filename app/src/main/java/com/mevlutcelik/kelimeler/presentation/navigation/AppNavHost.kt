@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.DrawerValue
@@ -35,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,7 +48,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -58,6 +62,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.presentation.common.HeroBackground
+import com.mevlutcelik.kelimeler.presentation.guide.GuideScreen
+import com.mevlutcelik.kelimeler.presentation.guide.GuideViewModel
 import com.mevlutcelik.kelimeler.presentation.home.HomeScreen
 import com.mevlutcelik.kelimeler.presentation.settings.SettingsScreen
 import com.mevlutcelik.kelimeler.presentation.stats.StatsScreen
@@ -76,6 +82,7 @@ object Routes {
     const val SETTINGS = "settings"
     const val STATS = "stats"
     const val STUDY = "study"
+    const val GUIDE = "guide"
     const val WORD_ARG = "key"
     const val WORD = "word/{$WORD_ARG}"
 
@@ -91,6 +98,7 @@ private enum class Destination(val route: String, @StringRes val label: Int, val
     Words(Routes.WORDS, R.string.nav_words, Icons.AutoMirrored.Filled.MenuBook),
     Stats(Routes.STATS, R.string.nav_stats, Icons.Filled.Insights),
     Settings(Routes.SETTINGS, R.string.nav_settings, Icons.Filled.Settings),
+    Guide(Routes.GUIDE, R.string.nav_guide, Icons.Filled.School),
 }
 
 /**
@@ -120,6 +128,24 @@ fun KelimelerApp(navController: NavHostController = rememberNavController()) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    fun navigateTab(target: String) {
+        navController.navigate(target) {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
+    // İlk açılışta (rehber hiç gösterilmemişse) "Nasıl kullanılır"a yönlendir; ayar okunana kadar bekle.
+    val guide: GuideViewModel = hiltViewModel()
+    val guideSeen by guide.seen.collectAsStateWithLifecycle()
+    LaunchedEffect(guideSeen) {
+        if (guideSeen == false) {
+            guide.markSeen()
+            navigateTab(Routes.GUIDE)
+        }
+    }
+
     CompositionLocalProvider(LocalOpenNavigationDrawer provides { scope.launch { drawerState.open() } }) {
         ModalNavigationDrawer(
             drawerState = drawerState,
@@ -128,11 +154,7 @@ fun KelimelerApp(navController: NavHostController = rememberNavController()) {
             drawerContent = {
                 DrawerContent(route) { destination ->
                     scope.launch { drawerState.close() }
-                    navController.navigate(destination.route) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    navigateTab(destination.route)
                 }
             },
         ) {
@@ -146,6 +168,7 @@ fun KelimelerApp(navController: NavHostController = rememberNavController()) {
                     }
                     composable(Routes.STATS) { StatsScreen() }
                     composable(Routes.SETTINGS) { SettingsScreen() }
+                    composable(Routes.GUIDE) { entry -> GuideScreen(onClose = { entry.ifResumed { navigateTab(Routes.TODAY) } }) }
                     composable(Routes.STUDY) { entry -> StudyScreen(onBack = { entry.ifResumed { navController.popBackStack() } }) }
                     composable(Routes.WORD, arguments = listOf(navArgument(Routes.WORD_ARG) { type = NavType.StringType })) { entry ->
                         WordDetailScreen(onBack = { entry.ifResumed { navController.popBackStack() } })
