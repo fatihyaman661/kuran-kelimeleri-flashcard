@@ -39,6 +39,16 @@ interface WordDao {
     )
     suspend fun nextNew(): WordEntity?
 
+    /** [nextNew] gibi, ama yalnızca fiil, isim ya da özel isim (bkz. data/study/WordKind.kt). */
+    @Query(
+        """SELECT w.* FROM words w WHERE w.retired = 0
+           AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)
+           AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id)
+           AND (w.type = 'Fiil' OR w.type = 'Özel isim' OR w.type LIKE 'İsim%')
+           ORDER BY w.rank LIMIT 1""",
+    )
+    suspend fun nextNewContent(): WordEntity?
+
     @Query(
         """SELECT COUNT(*) FROM words w WHERE w.retired = 0
            AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)
@@ -110,6 +120,13 @@ interface CardStateDao {
 
     @Query("SELECT COUNT(*) FROM card_states WHERE introducedAt >= :since")
     suspend fun introducedSince(since: Long): Int
+
+    /** En son tanıtılan kelimelerin türleri, en yeniden eskiye. */
+    @Query(
+        """SELECT w.type FROM card_states s JOIN words w ON w.id = s.wordId
+           WHERE s.introducedAt > 0 ORDER BY s.introducedAt DESC LIMIT :limit""",
+    )
+    suspend fun recentIntroducedTypes(limit: Int): List<String>
 
     @Query("SELECT introducedAt FROM card_states WHERE introducedAt >= :since")
     suspend fun introducedTimesSince(since: Long): List<Long>

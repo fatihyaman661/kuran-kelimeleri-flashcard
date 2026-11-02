@@ -134,12 +134,21 @@ class StudyRepository @Inject constructor(
         stateDao.nextLearning(now)?.let { return load(it.wordId, it, now) }
         val newLeft = minOf(newLeftToday(now), wordDao.newCount())
         if (pickNew(settings.currentStudy().newOrder, stateDao.reviewDueCount(now), newLeft, mix)) {
-            wordDao.nextNew()?.let { return load(it.id, null, now, it) }
+            nextNewWord()?.let { return load(it.id, null, now, it) }
         }
         stateDao.nextReview(now)?.let { return load(it.wordId, it, now) }
-        if (newLeft > 0) wordDao.nextNew()?.let { return load(it.id, null, now, it) }
+        if (newLeft > 0) nextNewWord()?.let { return load(it.id, null, now, it) }
         stateDao.nextLearning(now + LEARN_AHEAD_MS)?.let { return load(it.wordId, it, now) }
         return null
+    }
+
+    /**
+     * Sıradaki yeni kelime: sıklık sırasıyla, ama bir yapı kelimesinden (harf, zamir eki…) sonra en az
+     * [FUNCTION_WORD_GAP] başka kelime gelir. Başka kelime kalmadıysa yapı kelimeleri sırayla devam eder.
+     */
+    private suspend fun nextNewWord(): WordEntity? {
+        if (functionWordAllowed(stateDao.recentIntroducedTypes(FUNCTION_WORD_GAP))) return wordDao.nextNew()
+        return wordDao.nextNewContent() ?: wordDao.nextNew()
     }
 
     private suspend fun load(wordId: String, state: CardStateEntity?, now: Long, word: WordEntity? = null): StudyCard? {

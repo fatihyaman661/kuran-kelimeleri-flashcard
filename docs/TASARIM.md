@@ -28,7 +28,8 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
   - Alternatif: [java-fsrs](https://github.com/open-spaced-repetition/java-fsrs) (MIT, Maven Central). `FSRS-Kotlin` deposunun lisansı olmadığı için kullanılamaz.
 - Hedef hatırlama oranı (desired retention) kullanıcı tarafından ayarlanabilir, varsayılan 0.90.
 - İlk sürümde varsayılan FSRS parametreleri kullanılır. Kişiye özel parametre optimizasyonu sonradan eklenebilir; bunun için tekrar kayıtlarının **baştan eksiksiz tutulması şart**.
-- Günlük yeni kart limiti ayarlanabilir. Ayrıca yalnızca o gün için artırılabilir (ana sayfada ve oturum sonunda "Bugün daha fazla yeni kelime": +10 / +25 / +50); ertesi gün sınır yine ayardaki değer olur.
+- Günlük yeni kart limiti ayarlanabilir.
+- **Yapı kelimeleri seyreltilir:** Destenin başı harf, zamir eki, işaret ismi ve mevsulle dolu (ilk 50 kartın 40'ı, ilk 100'ün 62'si); arka arkaya gelince yeni başlayanı bunaltıyordu. Yeni kelime seçilirken bir yapı kelimesinden (fiil, isim ya da özel isim olmayan her tür) sonra en az 3 başka kelime gelir: الْ, اللّٰه, قَالَ, كَانَ, وَ, رَبّ… Sıklık sırası korunur; ilk 100'deki yapı kelimeleri yaklaşık 245. yeni kartta biter. Kural `data/study/WordKind.kt`'de, son tanıtılan kelimelerin türüne bakar. Ayrıca yalnızca o gün için artırılabilir (ana sayfada ve oturum sonunda "Bugün daha fazla yeni kelime": +10 / +25 / +50); ertesi gün sınır yine ayardaki değer olur.
 - Kart sırası (Anki'deki "Yeni/tekrar sırası"): vakti gelen öğrenme adımları her zaman önce; sonra yeni kelimeler ile tekrarlar ayara göre **tekrarlarla karışık** (varsayılan, az olan tür çok olanın arasına eşit aralıkla serpiştirilir), **tekrarlardan sonra** ya da **tekrarlardan önce**.
 
 ## Veri modeli
