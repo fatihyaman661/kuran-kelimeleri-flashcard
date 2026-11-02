@@ -21,6 +21,19 @@ Terimler bölüm içinde burada yazıldıkları sırayla gösterilir.
 Kelimenin anlamını taşıyan, çoğunlukla üç harften oluşan çekirdeği. Aynı kökten türeyen kelimeler ortak bir anlam etrafında birleşir.
 **Örnek:** ك ت ب kökünden كَتَبَ (yazdı), كِتَاب (kitap), مَكْتُوب (yazılmış).
 
+### Hareke | اَلْحَرَكَةُ
+Harflerin üstüne ya da altına konup nasıl okunacaklarını gösteren işaretler. Türkçede üstün, esre ve ötre denir:
+- **Fetha (üstün):** ـَ, "e / a" okutur: كَتَبَ
+- **Kesra (esre):** ـِ, "i / ı" okutur: مِنْ
+- **Damme (ötre):** ـُ, "u / ü" okutur: كُتُب
+- **Diğer işaretler:** sükûn (ـْ) harfin harekesiz okunduğunu, şedde (ـّ) iki kez okunduğunu, tenvin (ـً ـٍ ـٌ) sonda "-n" sesini gösterir.
+
+### Kelime | اَلْكَلِمَةُ
+Tek başına bir anlam bildiren söz. Arapçada kelime üçe ayrılır:
+- **İsim:** zamana bağlı olmadan anlam bildirir: كِتَاب (kitap)
+- **Fiil:** bir işi zamana bağlı bildirir: كَتَبَ (yazdı)
+- **Harf:** ancak başka kelimeyle anlam kazanır: فِي (içinde)
+
 ### İsim | اَلْاِسْمُ
 Kendi başına anlamı olan ve zaman bildirmeyen kelime. Varlık adları, sıfatlar, mastarlar, zamirler ve zarflar bu türe girer.
 
@@ -69,10 +82,14 @@ Fiillerin kalıp ailesi. Aynı kök farklı bablara girince anlamı değişir: �
 Mücerred fiil yalnızca kök harflerinden oluşur (I. bab). Mezîd fiile kök dışında harf eklenmiştir (II–X. bablar).
 
 ### Sülâsî / rubâî | ثُلَاثِيّ / رُبَاعِيّ
-Sülâsî üç kök harfli, rubâî dört kök harfli fiildir. Kur'an'daki fiillerin büyük çoğunluğu sülâsîdir.
+Sülâsî üç kök harfli, rubâî dört kök harfli fiildir. Arapçadaki fiillerin büyük çoğunluğu sülâsîdir.
 
 ### Esmâ-i hamse | اَلْأَسْمَاءُ الْخَمْسَةُ
 أَب, أَخ, حَم, فُو, ذُو: tamlama hâlinde i'râbı hareke yerine harfle (و / ا / ي) gösterilen beş isim: أَبُوهُ, أَبَاهُ, أَبِيهِ.
+
+### İllet | اَلْعِلَّةُ
+İllet harfleri و, ا ve ي harfleridir. Kökünde bunlardan biri bulunan kelime illetlidir (mu'tel); çekimde bu harf düşer ya da başka harfe döner: قَالَ (aslı قَوَلَ), يَقُولُ.
+İllet harfinin yerine göre üç çeşidi vardır: misal (ilk harf: وَعَدَ), ecvef (orta harf: قَالَ) ve nâkıs (son harf: دَعَا).
 
 ## Fiil
 
@@ -92,9 +109,9 @@ Edilgen fiil; işi yapan belirtilmez: كُتِبَ (yazıldı), يُكْتَبُ
 İkinci ve üçüncü kök harfi aynı olan fiil; bu iki harf şeddeyle birleşir: رَدَّ (aslı رَدَدَ), مَسَّ.
 
 ### Nâkıs (son harfi illetli) | اَلنَّاقِصُ
-Son kök harfi و ya da ي olan fiil: دَعَا (د ع و), هَدَى (ه د ي). Çekimde bu harf düşer ya da değişir. Bunlardan türeyen isimler تَنْوِين ile biter: هَادٍ, دَاعٍ, مُهْتَدٍ.
+Son kök harfi و ya da ي olan fiil: دَعَا (د ع و), هَدَى (ه د ي). Çekimde bu harf düşer ya da değişir. Bunlardan türeyen isimler tenvin ile biter: هَادٍ, دَاعٍ, مُهْتَدٍ.
 
-### Nâkıs fiil (kâne ve kardeşleri) | كَانَ وَأَخَوَاتُهَا
+### Kâne ve kardeşleri | كَانَ وَأَخَوَاتُهَا
 Tek başına anlamı tamamlanmayan, isim cümlesinin başına gelip haberi nasb eden fiiller: كَانَ (idi), صَارَ (oldu), لَيْسَ (değil), مَا زَالَ (hâlâ … idi), أَصْبَحَ.
 
 ### Câmid fiil | اَلْفِعْلُ الْجَامِدُ
@@ -171,7 +188,7 @@ Mastar anlamı taşıyan ama fiilin bütün harflerini almayan kelime: عَطَ�
 İşi yapanı bildirir; "-en, -an". I. babda فَاعِل: كَاتِب (yazan). Mezîd bablarda muzâri harfi yerine مُـ gelir, sondan önceki harf esreli olur: مُؤْمِن (iman eden), مُسْتَغْفِر.
 
 ### İsm-i mef'ûl | اِسْمُ الْمَفْعُولِ
-İşin yapıldığı şeyi bildirir; "-ilen, -ilmiş". I. babda مَفْعُول: مَكْتُوب (yazılmış). Mezîd bablarda sondan önceki harf üstünlü olur: مُنْزَل (indirilmiş).
+İşin üzerinde yapıldığı şeyi bildirir; "-ilen, -ilmiş". I. babda مَفْعُول: مَكْتُوب (yazılmış). Mezîd bablarda sondan önceki harf üstünlü olur: مُنْزَل (indirilmiş).
 
 ### Sıfat | اَلصِّفَةُ
 Bir şeyin niteliğini bildiren isim. Kartta "sıfat" yazılanlar ism-i fâil, mef'ûl ya da sıfat-ı müşebbehe kalıbına girmeyen niteleyicilerdir: رَسُول (elçi), renk bildiren أَسْوَد / سُود.
@@ -274,7 +291,7 @@ Hem zaman hem yer için kullanılan zarflar: قَبْلَ (önce, önünde), ب�
 ### İsm-i fiil | اِسْمُ الْفِعْلِ
 Fiil anlamı taşıyan ama çekimlenmeyen kelime: أُفٍّ (öf!), هَيْهَاتَ (ne uzak!), هَلُمَّ (haydi, gelin), هَاؤُمُ (alın).
 
-### Haberiyye kem | كَمِ الْخَبَرِيَّةُ
+### Haberiyye kem'i | كَمِ الْخَبَرِيَّةُ
 Soru değil, çokluk bildiren كَمْ: "nice, ne çok". كَأَيِّنْ de aynı anlamdadır: كَمْ مِنْ فِئَةٍ قَلِيلَةٍ غَلَبَتْ فِئَةً كَثِيرَةً (nice az topluluk çok topluluğa galip gelmiştir).
 
 ### Nidâ kalıbı | اَللّٰهُمَّ
@@ -328,13 +345,13 @@ Pekiştiren لَ: "elbette, mutlaka": لَقَدْ (andolsun ki), إِنَّ ر�
 ### Tekid nûnu | نُونُ التَّوْكِيدِ
 Muzâri ve emrin sonuna gelip pekiştirir: لَيُسْجَنَنَّ (mutlaka zindana atılacak).
 
-### Muhaffefe in | إِنِ الْمُخَفَّفَةُ
+### Muhaffefe in'i | إِنِ الْمُخَفَّفَةُ
 إِنَّ'nin hafifletilmiş hâli; haberine çoğunlukla لَ gelir: وَإِنْ كَانُوا مِنْ قَبْلُ لَفِي ضَلَالٍ مُبِينٍ (gerçekten önceden apaçık bir sapıklık içindeydiler).
 
 ### Masdariyye harfi | اَلْحَرْفُ الْمَصْدَرِيُّ
 Fiille birlikte mastar anlamı verir: أَنْ تَصُومُوا خَيْرٌ لَكُمْ (oruç tutmanız sizin için hayırlıdır). لَوْ da "keşke … -se" anlamıyla bu işi görür: وَدُّوا لَوْ تُدْهِنُ.
 
-### Masdariyye mâ | مَا الْمَصْدَرِيَّةُ
+### Masdariyye mâ'sı | مَا الْمَصْدَرِيَّةُ
 مَا + fiil = mastar: بِمَا كَانُوا يَكْذِبُونَ (yalan söylemeleri yüzünden). مَا دَامَ'da "-dığı sürece" anlamı verir.
 
 ### Tefsiriyye harfi | أَنِ التَّفْسِيرِيَّةُ
@@ -370,7 +387,7 @@ Seslenme: يَا (ey!). Belirli isme أَيُّهَا ile seslenilir: يَا أ�
 ### Hasr harfi | أَدَاةُ الْحَصْرِ
 Olumsuzdan sonra gelen إِلَّا "ancak, sadece" anlamıyla sınırlar: مَا مُحَمَّدٌ إِلَّا رَسُولٌ (Muhammed ancak bir elçidir).
 
-### Kâffe mâ | مَا الْكَافَّةُ
+### Kâffe mâ'sı | مَا الْكَافَّةُ
 إِنَّ ve kardeşlerine bitişip onların etkisini kaldırır, "ancak" anlamı katar: إِنَّمَا (ancak, sadece).
 
 ### İstidrak harfi | حَرْفُ الِاسْتِدْرَاكِ

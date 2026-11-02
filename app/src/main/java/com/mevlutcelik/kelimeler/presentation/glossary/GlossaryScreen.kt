@@ -35,6 +35,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -116,18 +117,17 @@ private fun TermItem(term: GlossaryTerm) {
                 Text(term.arabic, style = ArabicStyles.ListItem)
             }
         }
+        // Açıklamalar Türkçe: Arapçayla başlayan satır da soldan sağa dizilsin. Varsayılan yön ilk harfe
+        // bakar; "أَيّ (hangi) …" gibi bir satırı sağdan sola çevirip Türkçe kısmı tersine diziyordu.
+        val body = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr)
         Column(Modifier.padding(top = 6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             term.blocks.forEach { block ->
                 when (block) {
-                    is GlossaryBlock.Paragraph -> Text(
-                        rich(block.text),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = OnSurface,
-                    )
+                    is GlossaryBlock.Paragraph -> Text(rich(block.text), style = body, color = OnSurface)
                     is GlossaryBlock.Bullet -> Row {
                         Text("•", style = MaterialTheme.typography.bodyMedium, color = PrimaryMint)
                         Spacer(Modifier.width(8.dp))
-                        Text(rich(block.text), style = MaterialTheme.typography.bodyMedium, color = OnSurface)
+                        Text(rich(block.text), style = body, color = OnSurface)
                     }
                 }
             }
