@@ -416,6 +416,7 @@ private fun AboutSection() {
         SectionTitle(Icons.Filled.Info, stringResource(R.string.section_about))
         Spacer(Modifier.height(10.dp))
         Text(stringResource(R.string.about_version, BuildConfig.VERSION_NAME), style = MaterialTheme.typography.bodyLarge)
+        Text(stringResource(R.string.about_developers), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
         Spacer(Modifier.height(10.dp))
         Text(stringResource(R.string.about_sources), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
         listOf(

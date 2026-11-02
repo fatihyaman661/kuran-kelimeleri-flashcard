@@ -225,6 +225,7 @@
 
     <string name="section_about">Hakkında</string>
     <string name="about_version">Sürüm %1$s</string>
+    <string name="about_developers">Fatih Yaman ve Mevlüt Çelik tarafından geliştirilmiştir.</string>
     <string name="about_sources">Kaynaklar</string>
     <string name="source_tanzil">Kur\'an metni: Tanzil Project, Tanzil Quran Text (Uthmani 1.0.2), CC BY-ND 3.0. Metin değiştirilmeden kullanılmıştır.</string>
     <string name="source_corpus">Morfoloji verisi: Quranic Arabic Corpus (GNU GPL), mustafa0x/quran-morphology sürümü.</string>
