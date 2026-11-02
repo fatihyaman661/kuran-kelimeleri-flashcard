@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -109,6 +110,7 @@ fun SettingsScreen(onOpenPlacement: () -> Unit = {}, viewModel: SettingsViewMode
             DeckSection(state, viewModel)
             SyncSection(state, viewModel)
             BackupSection(viewModel)
+            ResetSection(viewModel)
             AboutSection()
             Spacer(Modifier.height(8.dp))
         }
@@ -414,6 +416,42 @@ private fun BackupSection(viewModel: SettingsViewModel) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             SecondaryButton(stringResource(R.string.backup_export), onClick = { exportLauncher.launch(fileName) })
             SecondaryButton(stringResource(R.string.backup_import), onClick = { importLauncher.launch(arrayOf("application/json", "application/octet-stream", "text/plain")) })
+        }
+        NoticeText(notice)
+    }
+}
+
+@Composable
+private fun ResetSection(viewModel: SettingsViewModel) {
+    val notice by viewModel.resetNotice.collectAsStateWithLifecycle()
+    var confirm by remember { mutableStateOf(false) }
+    if (confirm) {
+        AlertDialog(
+            onDismissRequest = { confirm = false },
+            title = { Text(stringResource(R.string.reset_confirm_title)) },
+            text = { Text(stringResource(R.string.reset_confirm_body)) },
+            confirmButton = {
+                TextButton(onClick = { confirm = false; viewModel.resetProgress() }) {
+                    Text(stringResource(R.string.reset_confirm), color = LearnCoral)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirm = false }) { Text(stringResource(R.string.cancel), color = OnSurfaceMuted) }
+            },
+            containerColor = KelimelerColors.CardBg,
+        )
+    }
+    ContentCard {
+        SectionTitle(Icons.Filled.Replay, stringResource(R.string.reset_title))
+        Spacer(Modifier.height(10.dp))
+        Text(stringResource(R.string.reset_body), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+        Spacer(Modifier.height(12.dp))
+        OutlinedButton(
+            onClick = { confirm = true },
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, LearnCoral.copy(alpha = 0.6f)),
+        ) {
+            Text(stringResource(R.string.reset_button), color = LearnCoral)
         }
         NoticeText(notice)
     }

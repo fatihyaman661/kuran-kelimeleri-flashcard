@@ -100,6 +100,14 @@ Daha önce Arapça çalışmış kullanıcı baştaki bildiği kelimelerle uğra
 - Güvenilirlik ölçüsü: testle bilinen sayılan kelimelerin ilk cevabındaki "Tekrar" oranı (seviye tespiti ekranında gösterilir). %15–20'yi geçerse eşik (`PASS`) ya da başlangıç kararlılığı gözden geçirilmeli.
 - **Sunucu:** `server/functions/api/sync.ts` −3 ve −4'ü kabul eder. Bu sürümü yayımlamadan önce sunucu yeniden yayına alınmalı; eski sunucu bilinmeyen değerli bir gönderimi bütünüyle reddeder ve senkron takılır.
 
+## İlerlemeyi sıfırlama
+
+- Ayarlar → İlerlemeyi sıfırla (onay sorulur). Bütün kelimeler hiç çalışılmamış hâle döner: tekrar geçmişi, öğrenilen/askıdaki kelimeler, seviye testi ve istatistikler. Ayarlar kalır.
+- Kayıtlar silinmez: `RESET` (−5) olayı eklenir, kelime kimliği `*`. Tekrar kayıtlarını okuyan sorgular (`forWord`, `observeForWord`, `timesSince`, `answersSince`, `totalsSince`, `allSinceReset`) son sıfırlamadan önceki kayıtları görmez. Kart ve askı önbellekleri temizlenir.
+- Olay senkronla diğer cihazlara gider; gelen bir sıfırlama bütün kart durumlarını baştan hesaplatır (`rebuildAll`). Sıfırlamanın zamanı, cihazdaki en yeni kayıttan da sonra olacak şekilde seçilir.
+- Sonuç: sıfırlamadan önce alınmış bir yedek içe aktarılsa da eski ilerleme dönmez (kayıtları sıfırlamadan önceye düşer). Onay penceresi bunu söyler.
+- Bu olayı tanımayan eski uygulama sürümleri sıfırlamayı yok sayar. Sunucu −5'i kabul eder.
+
 ## İstatistik
 
 - Yeni veri tutulmaz; hepsi tekrar kayıtlarından ve kart durumlarından hesaplanır (`StatsRepository`).

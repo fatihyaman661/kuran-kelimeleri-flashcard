@@ -33,6 +33,8 @@ data class WordEntity(
  * aynı kayıtlarla taşındığı için yedek, senkron ve "geri al" onu da ayrıca bir şey yapmadan kapsar.
  * [PLACEMENT] (seviye testinde bilinen sayıldı) ve [PLACEMENT_UNDO] (test geri alındı) de böyledir;
  * [PLACEMENT] kaydında [durationMs] süre değil, ilk tekrara kalan süredir (vade = reviewedAt + durationMs).
+ * [RESET] ("İlerlemeyi sıfırla") bütün kelimeler içindir ([RESET_WORD_ID]): ondan önceki kayıtlar silinmez
+ * ama hiçbir hesaba girmez. Böylece sıfırlama da senkronla diğer cihazlara geçer.
  */
 @Entity(tableName = "reviews", indices = [Index("wordId"), Index("reviewedAt"), Index("synced")])
 data class ReviewEntity(
@@ -48,11 +50,15 @@ data class ReviewEntity(
         const val UNSUSPEND = -2
         const val PLACEMENT = -3
         const val PLACEMENT_UNDO = -4
+        const val RESET = -5
+
+        /** [RESET] kaydının kelime kimliği: belirli bir kelimeye değil, hepsine ait. */
+        const val RESET_WORD_ID = "*"
 
         fun isAnswer(rating: Int) = rating in 1..4
 
         /** Bu sürümün tanıdığı kayıt; yedekten ya da sunucudan gelen başka değerler atlanır. */
-        fun isKnown(rating: Int) = isAnswer(rating) || rating in PLACEMENT_UNDO..SUSPEND
+        fun isKnown(rating: Int) = isAnswer(rating) || rating in RESET..SUSPEND
 
         /**
          * Kelimenin geçerli seviye testi kaydı: son test olayı [PLACEMENT] ise ve ondan önce hiç cevap

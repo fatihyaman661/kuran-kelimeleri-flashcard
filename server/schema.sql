@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     id          TEXT NOT NULL,               -- istemcinin ürettiği UUID
     word_id     TEXT NOT NULL,               -- deste kimliği (Anki not GUID'i)
     reviewed_at INTEGER NOT NULL,            -- epoch milisaniye
-    rating      INTEGER NOT NULL,            -- 1 Tekrar, 2 Zor, 3 İyi, 4 Kolay; -1 askıya al, -2 askıdan çıkar; -3 seviye testi, -4 test geri alındı
+    rating      INTEGER NOT NULL,            -- 1 Tekrar, 2 Zor, 3 İyi, 4 Kolay; -1 askıya al, -2 askıdan çıkar; -3 seviye testi, -4 test geri alındı, -5 ilerleme sıfırlandı (word_id "*")
     duration_ms INTEGER NOT NULL DEFAULT 0,
     UNIQUE (user_id, id)
 );

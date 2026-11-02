@@ -19,6 +19,7 @@ import com.mevlutcelik.kelimeler.data.settings.SettingsRepository
 import com.mevlutcelik.kelimeler.data.settings.StudySettings
 import com.mevlutcelik.kelimeler.data.settings.SyncAccount
 import com.mevlutcelik.kelimeler.data.settings.ThemeMode
+import com.mevlutcelik.kelimeler.data.study.StudyRepository
 import com.mevlutcelik.kelimeler.data.sync.SessionExpiredException
 import com.mevlutcelik.kelimeler.data.sync.SyncRepository
 import com.mevlutcelik.kelimeler.data.sync.SyncState
@@ -54,6 +55,7 @@ class SettingsViewModel @Inject constructor(
     private val glossary: GlossaryRepository,
     private val backup: BackupRepository,
     private val sync: SyncRepository,
+    private val study: StudyRepository,
     wordDao: WordDao,
     reviewDao: ReviewDao,
 ) : ViewModel() {
@@ -144,6 +146,16 @@ class SettingsViewModel @Inject constructor(
         } catch (e: IOException) {
             Notice(R.string.sync_failed)
         }
+    }
+
+    private val _resetNotice = MutableStateFlow<Notice?>(null)
+    val resetNotice: StateFlow<Notice?> = _resetNotice.asStateFlow()
+
+    /** Bütün ilerlemeyi sıfırlar; girişliyse sıfırlama hemen diğer cihazlara da gönderilir. */
+    fun resetProgress() = viewModelScope.launch {
+        study.resetProgress()
+        _resetNotice.value = Notice(R.string.reset_done)
+        if (state.value.account != null) sync.sync()
     }
 
     fun export(uri: Uri) = viewModelScope.launch {

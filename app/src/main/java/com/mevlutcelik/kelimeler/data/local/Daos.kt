@@ -130,6 +130,9 @@ interface CardStateDao {
     @Query("DELETE FROM card_states WHERE wordId = :wordId")
     suspend fun delete(wordId: String)
 
+    @Query("DELETE FROM card_states")
+    suspend fun deleteAll()
+
     @Query("SELECT * FROM card_states WHERE wordId = :wordId")
     suspend fun get(wordId: String): CardStateEntity?
 
@@ -222,11 +225,20 @@ interface ReviewDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(reviews: List<ReviewEntity>): List<Long>
 
-    @Query("SELECT * FROM reviews WHERE wordId = :wordId ORDER BY reviewedAt")
+    // Bu DAO'daki sorguların çoğu son sıfırlamadan ([ReviewEntity.RESET]) önceki kayıtları görmez.
+
+    @Query("SELECT * FROM reviews WHERE wordId = :wordId AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5) ORDER BY reviewedAt")
     suspend fun forWord(wordId: String): List<ReviewEntity>
 
-    @Query("SELECT * FROM reviews WHERE wordId = :wordId ORDER BY reviewedAt DESC")
+    @Query("SELECT * FROM reviews WHERE wordId = :wordId AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5) ORDER BY reviewedAt DESC")
     fun observeForWord(wordId: String): Flow<List<ReviewEntity>>
+
+    /** Son sıfırlamadan sonra kaydı olan kelimeler. */
+    @Query("SELECT DISTINCT wordId FROM reviews WHERE rating != -5 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5)")
+    suspend fun wordIdsSinceReset(): List<String>
+
+    @Query("SELECT * FROM reviews WHERE rating != -5 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5) ORDER BY reviewedAt")
+    suspend fun allSinceReset(): List<ReviewEntity>
 
     @Query("SELECT * FROM reviews ORDER BY reviewedAt DESC LIMIT 1")
     suspend fun latest(): ReviewEntity?
@@ -255,15 +267,15 @@ interface ReviewDao {
     @Query("SELECT COUNT(*) FROM reviews")
     suspend fun count(): Int
 
-    @Query("SELECT reviewedAt FROM reviews WHERE reviewedAt >= :since AND rating > 0")
+    @Query("SELECT reviewedAt FROM reviews WHERE reviewedAt >= :since AND rating > 0 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5)")
     suspend fun timesSince(since: Long): List<Long>
 
-    @Query("SELECT reviewedAt, rating FROM reviews WHERE reviewedAt >= :since AND rating > 0")
+    @Query("SELECT reviewedAt, rating FROM reviews WHERE reviewedAt >= :since AND rating > 0 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5)")
     suspend fun answersSince(since: Long): List<AnswerRow>
 
     @Query(
         """SELECT COUNT(*) AS total, COALESCE(SUM(CASE WHEN rating > 1 THEN 1 ELSE 0 END), 0) AS correct
-           FROM reviews WHERE reviewedAt >= :since AND rating > 0""",
+           FROM reviews WHERE reviewedAt >= :since AND rating > 0 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5)""",
     )
     suspend fun totalsSince(since: Long): ReviewTotals
 }
@@ -275,6 +287,9 @@ interface SuspendedDao {
 
     @Query("DELETE FROM suspended WHERE wordId = :wordId")
     suspend fun delete(wordId: String)
+
+    @Query("DELETE FROM suspended")
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM suspended WHERE wordId = :wordId")
     suspend fun get(wordId: String): SuspendedEntity?

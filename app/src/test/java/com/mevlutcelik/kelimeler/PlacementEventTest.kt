@@ -16,7 +16,9 @@ class PlacementEventTest {
         assertTrue(ReviewEntity.isKnown(ReviewEntity.PLACEMENT))
         assertTrue(ReviewEntity.isKnown(ReviewEntity.PLACEMENT_UNDO))
         assertFalse(ReviewEntity.isAnswer(ReviewEntity.PLACEMENT))
-        assertFalse(ReviewEntity.isKnown(-5))
+        assertTrue(ReviewEntity.isKnown(ReviewEntity.RESET))
+        assertFalse(ReviewEntity.isAnswer(ReviewEntity.RESET))
+        assertFalse(ReviewEntity.isKnown(-6))
     }
 
     @Test

@@ -239,6 +239,14 @@
     <string name="backup_failed">İşlem tamamlanamadı.</string>
     <string name="backup_file_name">kuran-kelimeleri-yedek-%1$s.json</string>
 
+    <string name="reset_title">İlerlemeyi sıfırla</string>
+    <string name="reset_body">Bütün kelimeler hiç çalışılmamış hâle döner: tekrar geçmişi, öğrenilen ve askıdaki kelimeler, seviye testi sonuçları ve istatistikler sıfırlanır. Ayarların (günlük yeni kelime, hedef hatırlama oranı, tema, yazı boyutu) olduğu gibi kalır.</string>
+    <string name="reset_button">İlerlemeyi sıfırla</string>
+    <string name="reset_confirm_title">Emin misin?</string>
+    <string name="reset_confirm_body">Bütün ilerlemen sıfırlanacak ve bu geri alınamaz; daha önce aldığın yedekler de eski ilerlemeyi geri getirmez. Google ile giriş yaptıysan diğer cihazlarındaki ilerleme de bir sonraki senkronda sıfırlanır.</string>
+    <string name="reset_confirm">Sıfırla</string>
+    <string name="reset_done">İlerleme sıfırlandı.</string>
+
     <string name="section_about">Hakkında</string>
     <string name="about_version">Sürüm %1$s</string>
     <string name="about_developers">Fatih Yaman ve Mevlüt Çelik tarafından geliştirilmiştir.</string>

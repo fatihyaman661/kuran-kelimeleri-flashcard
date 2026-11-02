@@ -4,9 +4,10 @@ const MAX_PUSH = 500;
 const PAGE = 1000;
 /**
  * 1–4 cevaplar (Tekrar, Zor, İyi, Kolay); -1 askıya alma, -2 askıdan çıkarma; -3 seviye testinde
- * bilinen sayıldı (duration_ms = ilk tekrara kalan süre), -4 seviye testi geri alındı.
+ * bilinen sayıldı (duration_ms = ilk tekrara kalan süre), -4 seviye testi geri alındı, -5 bütün
+ * ilerleme sıfırlandı (word_id = "*"; ondan önceki kayıtlar uygulamada hesaba girmez).
  */
-const RATINGS = new Set([1, 2, 3, 4, -1, -2, -3, -4]);
+const RATINGS = new Set([1, 2, 3, 4, -1, -2, -3, -4, -5]);
 
 interface Review {
   id: string;
