@@ -17,6 +17,7 @@ import com.mevlutcelik.kelimeler.data.settings.NewOrder
 import com.mevlutcelik.kelimeler.data.settings.SettingsRepository
 import com.mevlutcelik.kelimeler.data.settings.StudySettings
 import com.mevlutcelik.kelimeler.data.settings.SyncAccount
+import com.mevlutcelik.kelimeler.data.settings.ThemeMode
 import com.mevlutcelik.kelimeler.data.sync.SessionExpiredException
 import com.mevlutcelik.kelimeler.data.sync.SyncRepository
 import com.mevlutcelik.kelimeler.data.sync.SyncState
@@ -70,6 +71,8 @@ class SettingsViewModel @Inject constructor(
     fun setArabicScale(value: Float) = viewModelScope.launch { settings.setArabicScale(value) }
 
     fun setLatinScale(value: Float) = viewModelScope.launch { settings.setLatinScale(value) }
+
+    fun setTheme(value: ThemeMode) = viewModelScope.launch { settings.setTheme(value) }
 
     fun resetDisplay() = viewModelScope.launch { settings.resetDisplay() }
 

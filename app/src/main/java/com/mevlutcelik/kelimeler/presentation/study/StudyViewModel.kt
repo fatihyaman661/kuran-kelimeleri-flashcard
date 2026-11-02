@@ -91,6 +91,11 @@ class StudyViewModel @Inject constructor(
         _state.update { it.copy(revealed = true) }
     }
 
+    /** Kartı yeniden ön yüzüne çevirir; cevap verilmeden kelimeyi bir daha düşünmek için. */
+    fun hide() {
+        _state.update { it.copy(revealed = false) }
+    }
+
     fun answer(rating: Rating) {
         val card = _state.value.card ?: return
         if (!_state.value.revealed || busy) return

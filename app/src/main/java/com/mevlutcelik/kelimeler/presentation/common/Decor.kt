@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,22 +27,25 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.mevlutcelik.kelimeler.presentation.theme.LocalPalette
 import com.mevlutcelik.kelimeler.presentation.theme.PrimaryMint
 import kotlin.math.min
 
-/** Kahraman kartların zemini: koyu nane gradyanı. */
-val HeroGradient = Brush.linearGradient(
-    colors = listOf(Color(0xFF0F4F38), Color(0xFF082E21), Color(0xFF051A12)),
-    start = Offset.Zero,
-    end = Offset.Infinite,
-)
+/** Kahraman kartların zemini: nane gradyanı (koyu temada gece, açık temada sabah tonu). */
+private val HeroGradient: Brush
+    @Composable @ReadOnlyComposable get() = Brush.linearGradient(
+        colors = LocalPalette.current.heroGradient,
+        start = Offset.Zero,
+        end = Offset.Infinite,
+    )
 
 /** Sağ üstten vuran yumuşak nane ışığı. */
-private val HeroGlow = Brush.radialGradient(
-    colors = listOf(PrimaryMint.copy(alpha = 0.22f), Color.Transparent),
-    center = Offset(Float.POSITIVE_INFINITY, 0f),
-    radius = 900f,
-)
+private val HeroGlow: Brush
+    @Composable @ReadOnlyComposable get() = Brush.radialGradient(
+        colors = listOf(PrimaryMint.copy(alpha = 0.22f), Color.Transparent),
+        center = Offset(Float.POSITIVE_INFINITY, 0f),
+        radius = 900f,
+    )
 
 /** Cami silüetinin çizildiği tasarım ölçüsü (birim); çizim ekrana oranı korunarak ölçeklenir. */
 private const val MosqueWidth = 400f

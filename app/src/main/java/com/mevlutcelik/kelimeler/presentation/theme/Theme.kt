@@ -3,6 +3,7 @@ package com.mevlutcelik.kelimeler.presentation.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
@@ -87,23 +88,24 @@ object ArabicStyles {
     fun span(size: TextUnit, color: Color = Color.Unspecified) = SpanStyle(fontFamily = AmiriFamily, fontSize = size * arabicFactor(), color = color)
 }
 
-val KelimelerColorScheme = darkColorScheme(
-    primary          = PrimaryMint,
-    onPrimary        = OnMint,
-    primaryContainer = SurfaceMintDeep,
-    onPrimaryContainer = PrimaryMint,
-    secondary        = AccentGold,
-    onSecondary      = Color.Black,
-    surface          = SurfaceDim,
-    surfaceVariant   = Surface,
-    surfaceContainer = SurfaceDim,
-    surfaceContainerHigh = Surface,
-    background       = Background,
-    onBackground     = OnSurface,
-    onSurface        = OnSurface,
-    onSurfaceVariant = OnSurfaceMuted,
-    outline          = Color(0xFF333333),
-    outlineVariant   = Color(0xFF262626),
+private fun KelimelerPalette.colorScheme() = (if (isDark) darkColorScheme() else lightColorScheme()).copy(
+    primary          = primaryMint,
+    onPrimary        = onMint,
+    primaryContainer = surfaceMintDeep,
+    onPrimaryContainer = primaryMint,
+    secondary        = accentGold,
+    onSecondary      = if (isDark) Color.Black else Color.White,
+    surface          = surfaceDim,
+    surfaceVariant   = surface,
+    surfaceContainer = surfaceDim,
+    surfaceContainerHigh = surface,
+    surfaceContainerHighest = surface,
+    background       = background,
+    onBackground     = onSurface,
+    onSurface        = onSurface,
+    onSurfaceVariant = onSurfaceMuted,
+    outline          = outline,
+    outlineVariant   = cardBorder,
 )
 
 val KelimelerTypography = Typography(
@@ -150,25 +152,25 @@ val KelimelerTypography = Typography(
 )
 
 object KelimelerColors {
-    val CardBg = Color(0xFF181818)
-    val CardBorder = Color(0xFF262626)
-    val NavBarBg = Color(0xFF111111)
-    val NavBarBorder = Color(0xFF222222)
-    val NavInactive = Color(0xFF666666)
-    val ProgressTrack = Color(0xFF333333)
-    val HeroBorder = Color(0xFF0E4A33)
-    val Highlight = PrimaryMint
+    val CardBg: Color @Composable @ReadOnlyComposable get() = LocalPalette.current.cardBg
+    val CardBorder: Color @Composable @ReadOnlyComposable get() = LocalPalette.current.cardBorder
+    val NavInactive: Color @Composable @ReadOnlyComposable get() = LocalPalette.current.navInactive
+    val ProgressTrack: Color @Composable @ReadOnlyComposable get() = LocalPalette.current.progressTrack
+    val Highlight: Color @Composable @ReadOnlyComposable get() = LocalPalette.current.primaryMint
+    val Tile: Color @Composable @ReadOnlyComposable get() = LocalPalette.current.tile
 
     /** Askıdaki kelime: diğer durum renklerinden ayrı, sakin bir gri. */
-    val Suspended = Color(0xFF9AA3AD)
+    val Suspended: Color @Composable @ReadOnlyComposable get() = LocalPalette.current.suspended
 }
 
 @Composable
-fun KelimelerTheme(scales: TextScales = TextScales(), content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalTextScales provides scales) {
+fun KelimelerTheme(dark: Boolean = true, scales: TextScales = TextScales(), content: @Composable () -> Unit) {
+    val palette = if (dark) DarkPalette else LightPalette
+    val colorScheme = remember(palette) { palette.colorScheme() }
+    CompositionLocalProvider(LocalTextScales provides scales, LocalPalette provides palette) {
         WithLatinScale(scales.latin) {
             MaterialTheme(
-                colorScheme = KelimelerColorScheme,
+                colorScheme = colorScheme,
                 typography = KelimelerTypography,
                 content = content,
             )
