@@ -92,7 +92,7 @@ import java.time.LocalDate
 import kotlin.math.roundToInt
 
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsScreen(onOpenPlacement: () -> Unit = {}, viewModel: SettingsViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxSize().navigationBarsPadding()) {
         ScreenHeader(stringResource(R.string.nav_settings), stringResource(R.string.settings_subtitle))
@@ -103,7 +103,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            StudySection(state.study, viewModel::setRetention, viewModel::setNewPerDay, viewModel::setNewOrder)
+            StudySection(state.study, viewModel::setRetention, viewModel::setNewPerDay, viewModel::setNewOrder, onOpenPlacement)
             val display by viewModel.display.collectAsStateWithLifecycle()
             DisplaySection(display, viewModel::setTheme, viewModel::setArabicScale, viewModel::setLatinScale, viewModel::resetDisplay)
             DeckSection(state, viewModel)
@@ -116,7 +116,13 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
 }
 
 @Composable
-private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onNewPerDay: (Int) -> Unit, onNewOrder: (NewOrder) -> Unit) {
+private fun StudySection(
+    study: StudySettings,
+    onRetention: (Float) -> Unit,
+    onNewPerDay: (Int) -> Unit,
+    onNewOrder: (NewOrder) -> Unit,
+    onOpenPlacement: () -> Unit,
+) {
     // Kaydırırken her adımda DataStore'a yazmamak için değer bırakılınca kaydedilir.
     var retention by remember(study.desiredRetention) { mutableFloatStateOf(study.desiredRetention) }
     ContentCard {
@@ -185,6 +191,12 @@ private fun StudySection(study: StudySettings, onRetention: (Float) -> Unit, onN
                 }
             }
         }
+
+        Spacer(Modifier.height(18.dp))
+        Text(stringResource(R.string.placement_settings_title), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+        Text(stringResource(R.string.placement_settings_body), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+        Spacer(Modifier.height(8.dp))
+        SecondaryButton(stringResource(R.string.placement_settings_button), onOpenPlacement)
     }
 }
 

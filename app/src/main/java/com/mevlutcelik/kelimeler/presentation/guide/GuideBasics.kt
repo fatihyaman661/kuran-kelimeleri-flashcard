@@ -473,7 +473,7 @@ private fun FactTile(title: String, body: String, color: androidx.compose.ui.gra
 // 8 ─ Günlük düzen -------------------------------------------------------------------------------
 
 @Composable
-internal fun DailyPage(onStart: () -> Unit, onMore: () -> Unit) {
+internal fun DailyPage(onStart: () -> Unit, onMore: () -> Unit, onPlacement: () -> Unit) {
     GuidePageColumn {
         GuideHeading(stringResource(R.string.guide_daily_title))
         DailyRow(Icons.Filled.Today, stringResource(R.string.guide_daily_start))
@@ -502,6 +502,19 @@ internal fun DailyPage(onStart: () -> Unit, onMore: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                 ) { Text(stringResource(R.string.guide_more_screens), color = PrimaryMint) }
             }
+        }
+        // Daha önce Arapça çalışmış olanlar baştaki bildikleri kelimelerle uğraşmasın.
+        ContentCard {
+            Text(stringResource(R.string.guide_placement_title), style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(4.dp))
+            Text(stringResource(R.string.guide_placement_body), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
+            Spacer(Modifier.height(10.dp))
+            OutlinedButton(
+                onClick = onPlacement,
+                shape = RoundedCornerShape(14.dp),
+                border = BorderStroke(1.dp, PrimaryMint.copy(alpha = 0.6f)),
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text(stringResource(R.string.guide_placement_button), color = PrimaryMint) }
         }
     }
 }

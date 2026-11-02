@@ -9,6 +9,7 @@ import com.mevlutcelik.kelimeler.BuildConfig
 import com.mevlutcelik.kelimeler.data.local.AppDatabase
 import com.mevlutcelik.kelimeler.data.local.WordDao
 import com.mevlutcelik.kelimeler.data.local.WordEntity
+import com.mevlutcelik.kelimeler.data.placement.PlacementRepository
 import com.mevlutcelik.kelimeler.data.settings.SettingsRepository
 import com.mevlutcelik.kelimeler.util.SearchText
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -52,6 +53,7 @@ class DeckRepository @Inject constructor(
     private val db: AppDatabase,
     private val wordDao: WordDao,
     private val settings: SettingsRepository,
+    private val placement: PlacementRepository,
     private val http: OkHttpClient,
     private val json: Json,
 ) {
@@ -144,6 +146,7 @@ class DeckRepository @Inject constructor(
                     require(ids.isNotEmpty()) { "Deste boş" }
                     ids
                 }
+                placement.importFrom(source)
                 settings.setDeckVersion(version, now)
                 DeckChange(version, added = (after - before).size, removed = (before - after).size)
             }

@@ -186,6 +186,8 @@ private fun ProgressCard(cardState: CardStateEntity?, retrievability: Double?, r
                 val (label, color) = when {
                     ReviewEntity.isAnswer(review.rating) -> Rating.of(review.rating).let { it.label() to it.color() }
                     review.rating == ReviewEntity.SUSPEND -> R.string.history_suspended to KelimelerColors.Suspended
+                    review.rating == ReviewEntity.PLACEMENT -> R.string.history_placement to PrimaryMint
+                    review.rating == ReviewEntity.PLACEMENT_UNDO -> R.string.history_placement_undo to KelimelerColors.Suspended
                     else -> R.string.history_unsuspended to KelimelerColors.Suspended
                 }
                 Row(Modifier.fillMaxWidth().padding(vertical = 3.dp)) {

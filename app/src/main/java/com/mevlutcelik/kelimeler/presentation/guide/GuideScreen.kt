@@ -68,7 +68,7 @@ internal enum class GuidePage(val part: GuidePart) {
  * örneklerle anlatır. İlk açılışta kendiliğinden açılır, menüden de her zaman ulaşılır.
  */
 @Composable
-fun GuideScreen(onClose: () -> Unit) {
+fun GuideScreen(onClose: () -> Unit, onPlacement: () -> Unit = {}) {
     val pages = GuidePage.entries
     val pagerState = rememberPagerState(pageCount = { pages.size })
     val scope = rememberCoroutineScope()
@@ -101,7 +101,7 @@ fun GuideScreen(onClose: () -> Unit) {
             modifier = Modifier.weight(1f).fillMaxWidth(),
             verticalAlignment = Alignment.Top,
         ) { index ->
-            GuidePageContent(pages[index], goTo, onClose)
+            GuidePageContent(pages[index], goTo, onClose, onPlacement)
         }
         Row(
             Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
@@ -133,7 +133,7 @@ fun GuideScreen(onClose: () -> Unit) {
 }
 
 @Composable
-private fun GuidePageContent(page: GuidePage, goTo: (GuidePage) -> Unit, onClose: () -> Unit) {
+private fun GuidePageContent(page: GuidePage, goTo: (GuidePage) -> Unit, onClose: () -> Unit, onPlacement: () -> Unit) {
     when (page) {
         GuidePage.Welcome -> WelcomePage()
         GuidePage.Frequency -> FrequencyPage()
@@ -142,7 +142,7 @@ private fun GuidePageContent(page: GuidePage, goTo: (GuidePage) -> Unit, onClose
         GuidePage.Buttons -> ButtonsPage()
         GuidePage.Durations -> DurationsPage()
         GuidePage.Fsrs -> FsrsPage()
-        GuidePage.Daily -> DailyPage(onStart = onClose, onMore = { goTo(GuidePage.TopBar) })
+        GuidePage.Daily -> DailyPage(onStart = onClose, onMore = { goTo(GuidePage.TopBar) }, onPlacement = onPlacement)
         GuidePage.TopBar -> TopBarPage()
         GuidePage.Front -> FrontPage()
         GuidePage.Back -> BackPage()

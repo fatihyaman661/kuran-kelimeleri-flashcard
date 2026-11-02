@@ -52,11 +52,30 @@ class Scheduler(
     fun review(card: Card, rating: Rating, now: Long, fuzzSeed: Long = 0L): Card =
         preview(card, now, fuzzSeed).getValue(rating)
 
-    /** Tekrar kayıtlarını sırayla uygulayarak kartın bugünkü durumunu hesaplar. */
-    fun replay(reviews: List<Pair<Long, Rating>>, seedBase: Long): Card =
-        reviews.sortedBy { it.first }.fold(Card()) { card, (time, rating) ->
+    /**
+     * Tekrar kayıtlarını sırayla uygulayarak kartın bugünkü durumunu hesaplar. [start] verilirse
+     * (seviye testinden gelen kart, bkz. [placed]) yeni kart yerine ondan başlanır.
+     */
+    fun replay(reviews: List<Pair<Long, Rating>>, seedBase: Long, start: Card = Card()): Card =
+        reviews.sortedBy { it.first }.fold(start) { card, (time, rating) ->
             review(card, rating, time, seedBase + card.reps)
         }
+
+    /**
+     * Seviye testinde bilinen sayılan kelime: [at] anında öğrenilmiş kabul edilir, ilk tekrarı [due]'da.
+     * Kararlılık [stabilityDays], zorluk ilk kez "İyi" denmiş bir kelimeninki. Tekrar sayısı 0 kalır;
+     * böylece henüz sorulmamış test kelimeleri (Review aşamasında ama reps = 0) ayırt edilebilir.
+     */
+    fun placed(at: Long, due: Long, stabilityDays: Double): Card = Card(
+        phase = Phase.Review,
+        step = 0,
+        stability = max(stabilityDays, STABILITY_MIN),
+        difficulty = initialDifficulty(Rating.Good, clamp = true),
+        due = due,
+        lastReview = at,
+        reps = 0,
+        lapses = 0,
+    )
 
     private fun next(card: Card, rating: Rating, now: Long, fuzzSeed: Long): Card {
         val elapsedDays = card.lastReview?.let { clock.dayOf(now) - clock.dayOf(it) }

@@ -19,6 +19,7 @@ Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yönt
 - **İlerleme:** Öğrenilen kelime yüzdesi, Kur'an metnindeki kelime geçişlerinin ne kadarının tanındığı (metin kapsamı), son 30 günün tekrar grafiği ve çalışma serisi
 - **Istılahat:** Kartlardaki kelime türlerinin ve gramer terimlerinin aranabilir kısa açıklamaları; metin repodan güncellenir
 - **Nasıl kullanılır:** Aralıklı tekrarı hiç bilmeyenler için etkileşimli rehber; ilk açılışta kendiliğinden açılır, menüde de durur
+- **Seviye tespiti:** Daha önce Arapça çalışanlar için kısa, uyarlanabilir bir test; bilinen kelimeler askıya alınmaz, günde en fazla 3'ü tekrar olarak sorulur
 - **İstatistik:** Son bir yılın çalışma takvimi (ısı haritası), en uzun seri, önümüzdeki 30 günün tekrar tahmini, tahmini bitiş ve kalıcı kelime sayısı
 
 Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASARIM.md)
@@ -36,7 +37,7 @@ Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASAR
 |---|---|
 | `app/` | Android uygulaması |
 | `fsrs/` | FSRS-6 zamanlayıcısı (saf Kotlin/JVM, birim testli) |
-| `scripts/build_deck.py` | `data/kelimeler.apkg` → `data/deck.db.gz` + `data/deck-version.json` |
+| `scripts/build_deck.py` | `data/kelimeler.apkg` → `data/deck.db.gz` + `data/deck-version.json` (+ seviye tespiti soru havuzu, `scripts/placement.py`) |
 | `data/` | Anki destesi ve uygulamanın okuduğu deste dosyaları |
 | `server/` | Senkron sunucusu (Cloudflare Pages Functions + D1) |
 | `docs/` | Tasarım kararları |
@@ -63,7 +64,7 @@ Destenin güncel hali her zaman [`data/kelimeler.apkg`](data/kelimeler.apkg) dos
 python3 scripts/build_deck.py
 ```
 
-Betik `data/deck.db.gz` (gzip'li SQLite) ve `data/deck-version.json` dosyalarını üretir. Bu dosyalar `main`'e gönderilince
+Betik `data/deck.db.gz` (gzip'li SQLite) ve `data/deck-version.json` dosyalarını üretir; seviye tespiti sorularının gözden geçirme listesini de `data/placement-review.md` olarak yazar (sorun çıkaranlar `data/placement-exclude.txt` ile çıkarılır). Bu dosyalar `main`'e gönderilince
 uygulamalar yeni sürümü kendileri indirir (açılışta en fazla 12 saatte bir, ya da Ayarlar → Deste → Güncellemeleri kontrol et);
 yeni bir derleme de aynı dosyayı APK'nın içine koyar, ilk açılışta internet gerekmez. Not GUID'leri sabit kalmalı; ilerleme bunlara bağlı.
 

@@ -46,6 +46,26 @@ interface WordDao {
     )
     suspend fun newCount(): Int
 
+    /** Seviye testi için: [maxRank]'e kadar hiç görülmemiş, askıda olmayan kelimeler, sondan başa. */
+    @Query(
+        """SELECT w.id FROM words w WHERE w.retired = 0 AND w.rank <= :maxRank
+           AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)
+           AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id)
+           ORDER BY w.rank DESC""",
+    )
+    suspend fun unseenUpTo(maxRank: Int): List<String>
+
+    @Query(
+        """SELECT w.rank FROM words w WHERE w.retired = 0
+           AND NOT EXISTS (SELECT 1 FROM card_states s WHERE s.wordId = w.id)
+           AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id)
+           ORDER BY w.rank""",
+    )
+    suspend fun unseenRanks(): List<Int>
+
+    @Query("SELECT COALESCE(MAX(rank), 0) FROM words WHERE retired = 0")
+    suspend fun maxRank(): Int
+
     @Query(
         """SELECT w.id, w.rank, w.vocalized, w.meaning, w.searchText, s.phase, s.due, s.lapses,
                   EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = w.id) AS suspended
@@ -59,6 +79,16 @@ interface WordDao {
 interface CardStateDao {
     @Upsert
     suspend fun upsert(state: CardStateEntity)
+
+    @Upsert
+    suspend fun upsertAll(states: List<CardStateEntity>)
+
+    /** Seviye testinden gelip henüz hiç sorulmamış kartlar (Review aşamasında, tekrar sayısı 0). */
+    @Query("SELECT wordId FROM card_states WHERE phase = 2 AND reps = 0")
+    suspend fun pendingPlacementIds(): List<String>
+
+    @Query("SELECT due FROM card_states WHERE phase = 2 AND reps = 0")
+    suspend fun pendingPlacementDues(): List<Long>
 
     @Query("DELETE FROM card_states WHERE wordId = :wordId")
     suspend fun delete(wordId: String)
@@ -121,10 +151,13 @@ interface CardStateDao {
     )
     suspend fun dueTimesBefore(until: Long): List<Long>
 
-    /** Kararlılığı [days] günü geçmiş (kalıcı) öğrenilmiş kelime sayısı. */
+    /**
+     * Kararlılığı [days] günü geçmiş (kalıcı) öğrenilmiş kelime sayısı. Seviye testinden gelip henüz
+     * sorulmamış kelimeler (reps = 0) sayılmaz: kararlılıkları varsayımdır.
+     */
     @Query(
         """SELECT COUNT(*) FROM card_states s JOIN words w ON w.id = s.wordId
-           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase = 2 AND s.stability >= :days""",
+           WHERE w.retired = 0 AND NOT EXISTS (SELECT 1 FROM suspended x WHERE x.wordId = s.wordId) AND s.phase = 2 AND s.reps > 0 AND s.stability >= :days""",
     )
     suspend fun matureCount(days: Double): Int
 
