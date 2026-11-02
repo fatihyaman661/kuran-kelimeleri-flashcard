@@ -68,6 +68,7 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Kişisel not:** Kullanıcının bir karta kendi notunu eklemesi.
 - **Hata bildirme:** Karttaki bir hatayı geliştiriciye iletme.
 - **Hakkında ekranı:** Kaynaklar ve lisanslar (Tanzil, Quranic Arabic Corpus, GPLv3). *(Yapıldı: Ayarlar → Hakkında.)*
+- **Nasıl kullanılır rehberi:** Anki'yi bilmeyen kullanıcılar zorlandığı için eklendi (`presentation/guide/`). İlk açılışta bir kez kendiliğinden açılır (`guide_seen` ayarı), menüde "Nasıl kullanılır" olarak durur. İki bölüm: *Temel bilgiler* (amaç, sıklık sırası, aralıklı tekrar ve unutma eğrisi, kartın akışı, dört buton, butonların altındaki süreler, FSRS ve hedef oran, günlük düzen) ve *Ekranları tanı* (üst çubuk, kartın ön ve arka yüzü, zorlanan kelimeler ve askıya alma, menü). Rehberdeki süreler uydurma değil, uygulamanın kendi FSRS zamanlayıcısıyla (fuzz kapalı) hesaplanır; örnek kelime (عَلِمَ) `GuideSample.kt`'de gömülüdür. Çalışma ekranında bir şey değişirse (buton, simge, kart düzeni) rehberdeki taklidi de güncellenmeli.
 
 ## İstatistik
 
