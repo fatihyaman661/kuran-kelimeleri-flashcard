@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,7 @@ import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.data.study.DayCount
 import com.mevlutcelik.kelimeler.presentation.common.percent
 import com.mevlutcelik.kelimeler.presentation.theme.KelimelerColors
+import com.mevlutcelik.kelimeler.presentation.theme.LocalPalette
 import com.mevlutcelik.kelimeler.presentation.theme.OnSurfaceMuted
 import com.mevlutcelik.kelimeler.presentation.theme.PrimaryMint
 import com.mevlutcelik.kelimeler.presentation.theme.PrimaryMintDark
@@ -56,22 +58,25 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 /** Halkanın boş kısmı: aynı nane tonunun koyu basamağı, böylece halkanın tamamı tek ölçek gibi okunur. */
-private val RingTrack = Color(0xFF0E3B2A)
+private val RingTrack: Color @Composable @ReadOnlyComposable get() = LocalPalette.current.ringTrack
 
 /** Öğrenilen kelime oranı: tek değerli halka ölçer, ortada büyük yüzde. */
 @Composable
 fun LearnedRing(fraction: Float, modifier: Modifier = Modifier, diameter: Dp = 136.dp, stroke: Dp = 14.dp) {
     val animated by animateFloatAsState(fraction, tween(900, easing = FastOutSlowInEasing), label = "ring")
 
+    val track = RingTrack
+    val sweep = listOf(PrimaryMintDark, PrimaryMint, PrimaryMintDark)
+
     Box(modifier.size(diameter), contentAlignment = Alignment.Center) {
         Canvas(Modifier.size(diameter)) {
             val width = stroke.toPx()
             val arcSize = Size(size.width - width, size.height - width)
             val topLeft = Offset(width / 2, width / 2)
-            drawArc(RingTrack, -90f, 360f, useCenter = false, topLeft = topLeft, size = arcSize, style = Stroke(width))
+            drawArc(track, -90f, 360f, useCenter = false, topLeft = topLeft, size = arcSize, style = Stroke(width))
             if (animated > 0f) {
                 drawArc(
-                    Brush.sweepGradient(listOf(PrimaryMintDark, PrimaryMint, PrimaryMintDark)), -90f, 360f * animated.coerceAtMost(1f), useCenter = false,
+                    Brush.sweepGradient(sweep), -90f, 360f * animated.coerceAtMost(1f), useCenter = false,
                     topLeft = topLeft, size = arcSize, style = Stroke(width, cap = StrokeCap.Round),
                 )
             }
@@ -90,11 +95,13 @@ fun LearnedRing(fraction: Float, modifier: Modifier = Modifier, diameter: Dp = 1
 /** Tek değer için ince yatay ölçer (metin kapsamı). */
 @Composable
 fun Meter(fraction: Float, modifier: Modifier = Modifier) {
+    val track = RingTrack
+    val fill = PrimaryMint
     Canvas(modifier.fillMaxWidth().height(6.dp)) {
         val r = CornerRadius(size.height / 2)
-        drawRoundRect(RingTrack, cornerRadius = r)
+        drawRoundRect(track, cornerRadius = r)
         if (fraction > 0f) {
-            drawRoundRect(PrimaryMint, size = Size(maxOf(size.height, size.width * fraction.coerceAtMost(1f)), size.height), cornerRadius = r)
+            drawRoundRect(fill, size = Size(maxOf(size.height, size.width * fraction.coerceAtMost(1f)), size.height), cornerRadius = r)
         }
     }
 }
@@ -137,6 +144,7 @@ fun DayBarChart(
     val peak = days.maxOfOrNull { it.reviews } ?: 0
     val scaleMax = niceCeiling(peak)
     val descriptionText = description(total, peak)
+    val grid = KelimelerColors.CardBorder
 
     Column(modifier) {
         val pick = selected
@@ -159,7 +167,6 @@ fun DayBarChart(
                         }
                     },
             ) {
-                val grid = KelimelerColors.CardBorder
                 val hairline = 1.dp.toPx()
                 drawLine(grid, Offset(0f, 0f), Offset(size.width, 0f), hairline)
                 drawLine(grid, Offset(0f, size.height / 2), Offset(size.width, size.height / 2), hairline)

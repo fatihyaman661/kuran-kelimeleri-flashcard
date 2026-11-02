@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,11 +49,13 @@ import com.mevlutcelik.kelimeler.presentation.theme.AccentGold
 import com.mevlutcelik.kelimeler.presentation.theme.ArabicStyles
 import com.mevlutcelik.kelimeler.presentation.theme.KelimelerColors
 import com.mevlutcelik.kelimeler.presentation.theme.LearnCoral
+import com.mevlutcelik.kelimeler.presentation.theme.LocalPalette
 import com.mevlutcelik.kelimeler.presentation.theme.OnSurface
 import com.mevlutcelik.kelimeler.presentation.theme.OnSurfaceMuted
 import com.mevlutcelik.kelimeler.presentation.theme.PrimaryMint
 
-private val TranslationColor = androidx.compose.ui.graphics.Color(0xFFB5B2AB)
+private val TranslationColor: androidx.compose.ui.graphics.Color
+    @Composable @ReadOnlyComposable get() = LocalPalette.current.translation
 
 /**
  * Kartın arka yüzü; destedeki Anki şablonunun (Harekeli, Tip, Çekim, Anlam, kök/sıklık, Örnekler,
@@ -216,13 +219,14 @@ private fun Examples(examples: List<Example>, initial: Int) {
 
 @Composable
 private fun ExampleView(example: Example) {
-    val verse = remember(example) {
+    val highlight = KelimelerColors.Highlight
+    val verse = remember(example, highlight) {
         buildAnnotatedString {
             append(example.ar)
             example.highlights.forEach { (start, end) ->
                 val s = start.coerceIn(0, example.ar.length)
                 val e = end.coerceIn(s, example.ar.length)
-                addStyle(SpanStyle(color = KelimelerColors.Highlight), s, e)
+                addStyle(SpanStyle(color = highlight), s, e)
             }
         }
     }

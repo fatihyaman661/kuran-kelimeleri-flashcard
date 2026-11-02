@@ -1,6 +1,7 @@
 package com.mevlutcelik.kelimeler.presentation.study
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.Spring
@@ -39,7 +40,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -102,6 +105,9 @@ fun StudyScreen(
         viewModel.messages.collect { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
     }
 
+    // Açık kartta geri hareketi önce kartı kapatır, oturumdan çıkmaz.
+    BackHandler(enabled = state.revealed && state.card != null) { viewModel.hide() }
+
     Column(
         Modifier
             .fillMaxSize()
@@ -121,7 +127,7 @@ fun StudyScreen(
                 state.loading -> CircularProgressIndicator(color = PrimaryMint)
                 card == null -> Finished(state, onBack, viewModel::addNewToday)
                 else -> key(card.word.id, card.state?.reps) {
-                    FlipCard(card, state.revealed, viewModel::reveal)
+                    FlipCard(card, state.revealed, viewModel::reveal, viewModel::hide)
                 }
             }
         }
@@ -195,9 +201,9 @@ private fun CountChip(value: Int, color: Color, current: Boolean) {
     }
 }
 
-/** Dokununca 3B dönerek arka yüzü gösteren kart. */
+/** Dokununca 3B dönerek arka yüzü gösteren kart; arka yüzdeki X onu yeniden kapatır. */
 @Composable
-private fun FlipCard(card: StudyCard, revealed: Boolean, onReveal: () -> Unit) {
+private fun FlipCard(card: StudyCard, revealed: Boolean, onReveal: () -> Unit, onHide: () -> Unit) {
     val rotation by animateFloatAsState(if (revealed) 180f else 0f, tween(520, easing = FastOutSlowInEasing), label = "flip")
     Box(
         Modifier
@@ -214,14 +220,26 @@ private fun FlipCard(card: StudyCard, revealed: Boolean, onReveal: () -> Unit) {
             }
         } else {
             CardFace(Modifier.graphicsLayer { rotationY = 180f }) {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 20.dp, vertical = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    WordBack(card.word, card.details)
+                Box {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 20.dp, vertical = 24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        WordBack(card.word, card.details)
+                    }
+                    FilledTonalIconButton(
+                        onClick = onHide,
+                        modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).size(36.dp),
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(
+                            containerColor = KelimelerColors.CardBorder,
+                            contentColor = OnSurfaceMuted,
+                        ),
+                    ) {
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.study_hide_answer), modifier = Modifier.size(20.dp))
+                    }
                 }
             }
         }

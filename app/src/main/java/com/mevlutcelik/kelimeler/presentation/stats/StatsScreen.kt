@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,10 +33,12 @@ import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.data.study.StudyStats
 import com.mevlutcelik.kelimeler.presentation.common.ContentCard
 import com.mevlutcelik.kelimeler.presentation.common.ScreenHeader
+import com.mevlutcelik.kelimeler.presentation.common.hijriDate
 import com.mevlutcelik.kelimeler.presentation.common.SectionLabel
 import com.mevlutcelik.kelimeler.presentation.common.shortDuration
 import com.mevlutcelik.kelimeler.presentation.home.DayBarChart
 import com.mevlutcelik.kelimeler.presentation.home.Meter
+import com.mevlutcelik.kelimeler.presentation.theme.KelimelerColors
 import com.mevlutcelik.kelimeler.presentation.theme.NewBlue
 import com.mevlutcelik.kelimeler.presentation.theme.OnSurfaceMuted
 import com.mevlutcelik.kelimeler.presentation.theme.PrimaryMint
@@ -85,7 +86,7 @@ private fun CalendarCard(stats: StudyStats) {
         Spacer(Modifier.height(12.dp))
         ActivityHeatmap(stats.activity, stats.today, selected) { selected = it }
         Spacer(Modifier.height(10.dp))
-        val date = LocalDate.ofEpochDay(selected).format(dayFormat)
+        val date = LocalDate.ofEpochDay(selected).let { "${it.format(dayFormat)} · ${hijriDate(it)}" }
         val day = stats.activity[selected]
         Text(
             if (day == null) stringResource(R.string.stats_day_empty, date)
@@ -163,7 +164,7 @@ private fun FinishCard(stats: StudyStats) {
 private fun StatTile(value: String, label: String, modifier: Modifier = Modifier) {
     Column(
         modifier
-            .background(Color.Black.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+            .background(KelimelerColors.Tile, RoundedCornerShape(16.dp))
             .padding(horizontal = 12.dp, vertical = 10.dp),
     ) {
         Text(value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)

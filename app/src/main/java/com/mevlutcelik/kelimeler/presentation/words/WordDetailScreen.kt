@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -202,6 +203,8 @@ private fun Rating.label() = when (this) {
     Rating.Easy -> R.string.rating_easy
 }
 
+@Composable
+@ReadOnlyComposable
 private fun Rating.color(): Color = when (this) {
     Rating.Again -> LearnCoral
     Rating.Hard -> HardAmber
