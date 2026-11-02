@@ -2,6 +2,7 @@ package com.mevlutcelik.kelimeler.data.settings
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -108,6 +109,13 @@ class SettingsRepository @Inject constructor(
         prefs[SYNC_TOKEN]?.let { SyncAccount(it, prefs[SYNC_EMAIL].orEmpty(), prefs[SYNC_CURSOR] ?: 0L, prefs[SYNC_AT] ?: 0L) }
     }
 
+    /** "Nasıl kullanılır" rehberi bir kez gösterildi mi; ilk açılışta uygulama oraya yönlendirir. */
+    val guideSeen: Flow<Boolean> = store.data.map { it[GUIDE_SEEN] ?: false }
+
+    suspend fun setGuideSeen() {
+        store.edit { it[GUIDE_SEEN] = true }
+    }
+
     suspend fun currentStudy() = study.first()
 
     suspend fun setRetention(value: Float) {
@@ -200,5 +208,6 @@ class SettingsRepository @Inject constructor(
         val SYNC_EMAIL = stringPreferencesKey("sync_email")
         val SYNC_CURSOR = longPreferencesKey("sync_cursor")
         val SYNC_AT = longPreferencesKey("sync_at")
+        val GUIDE_SEEN = booleanPreferencesKey("guide_seen")
     }
 }
