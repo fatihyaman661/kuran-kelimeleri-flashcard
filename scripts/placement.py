@@ -43,6 +43,7 @@ TR_SOUND = {
     "b": "B", "p": "B", "d": "D", "t": "D", "c": "C", "ç": "C", "j": "C", "g": "K", "k": "K", "s": "S",
     "ş": "S", "z": "Z", "h": "H", "f": "F", "r": "R", "l": "L", "m": "M", "n": "N", "v": "V", "y": "Y", "ğ": "K",
 }
+TURKISH_SUFFIX = re.compile(r"(l[ıiuü]k?|l[ae]r|s[ıiuü]z|m[ae]k)$")
 HARAKAT = re.compile("[\u064B-\u065F\u0670\u0640]")
 
 
@@ -66,6 +67,8 @@ def turkish_cognate(word):
     if len(letters) >= 2:
         needles.append(letters)
     for token in re.findall(r"[a-zçğıöşüâîû]+", word["meaning"].lower()):
+        # Türkçe yapım ve çokluk eklerini at: "azametli" → "azamet"; oran kökün kendisine bakar.
+        token = TURKISH_SUFFIX.sub("", token) or token
         sounds = [TR_SOUND[c] for c in token if c in TR_SOUND]
         for needle in needles:
             # Sözcüğün ünsüzlerinin çoğu Arapça kelimeden gelmeli: "yeryüzü"ndeki r–z tesadüftür.

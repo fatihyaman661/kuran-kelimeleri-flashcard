@@ -27,13 +27,13 @@ Toplam 140 soru.
 | 70 | آتى | Fiil | **vermek, bahşetmek** | yalanlamak, yalancılıkla suçlamak (#93); yapmak, işlemek, amel etmek (#69); Allah'tan sakınmak, korkmak (#96) |
 | 71 | رأى | Fiil | **görmek** | çağırmak (#94); yapmak, işlemek, amel etmek (#69); yaratmak, yoktan var etmek (#88) |
 | 73 | أتى | Fiil | **gelmek** | indirmek (#90); görmek (#71); çağırmak (#94) |
-| 78 | ناس | İsim – cem ismi | **insanlar** | her, bütün, hepsi (#51); gerçek, hak, doğru (#75); bir kısım, bazısı (#100) |
 | 80 | شاء | Fiil | **dilemek, istemek** | yaratmak, yoktan var etmek (#88); vermek, bahşetmek (#70); Allah'tan sakınmak, korkmak (#96) |
 | 88 | خلق | Fiil | **yaratmak, yoktan var etmek** | gelmek (#68); indirmek (#90); çağırmak (#94) |
 | 90 | أنزل | Fiil | **indirmek** | Allah'tan sakınmak, korkmak (#96); inkâr etmek, kâfir olmak (#64); yaratmak, yoktan var etmek (#88) |
 | 92 | سبيل | İsim | **yol** | her, bütün, hepsi (#51); nefis, can, ruh (#62); azap, şiddetli acı, ceza (#58) |
 | 93 | كذّب | Fiil | **yalanlamak, yalancılıkla suçlamak** | Allah'tan sakınmak, korkmak (#96); indirmek (#90); görmek (#71) |
 | 94 | دعا | Fiil | **çağırmak** | yapmak, işlemek, amel etmek (#69); indirmek (#90); yaratmak, yoktan var etmek (#88) |
+| 96 | اتّقى | Fiil | **Allah'tan sakınmak, korkmak** | kılmak, yapmak (#54); inkâr etmek, kâfir olmak (#64); dilemek, istemek (#80) |
 | 98 | عليم | İsim – sıfat-ı müşebbehe | **her şeyi bilen** | hikmet sahibi (#147); hayır, iyilik (#91); ilk, birinci (#174) |
 
 ## Bant 3: sıra 101–200 (20 soru)
@@ -42,19 +42,19 @@ Toplam 140 soru.
 |---|---|---|---|---|
 | 102 | ذو | İsim | **sahibi, -li** | ateş (#111); mal, servet (#162); oğulcuğum, yavrum (#177) |
 | 110 | غير | İsim | **başka, -den başka** | aile, ev halkı (#125); eş (#188); söz, söyleyiş (#153) |
-| 114 | أراد | Fiil | **istemek, dilemek** | vahyetmek (#200); almak, tutmak (#124); yüz çevirmek, sırt dönmek (#180) |
 | 124 | أخذ | Fiil | **almak, tutmak** | korkmak (#169); uymak, tâbi olmak (#116); işitmek (#181) |
 | 127 | اتّخذ | Fiil | **edinmek, tutmak** | karşılığını vermek (#196); vahyetmek (#200); itaat etmek (#198) |
-| 137 | عظيم | İsim – sıfat-ı müşebbehe | **büyük, azametli** | daha çok, en çok (#176); çok merhametli, esirgeyici (#133); acı veren, elem verici, can yakıcı (#199) |
+| 129 | يد | İsim | **el** | ateş (#111); söz, söyleyiş (#153); bilgi, ilim (#142) |
 | 138 | سأل | Fiil | **sormak** | itaat etmek (#198); ibadet etmek, kulluk etmek, tapmak (#128); öldürmek (#171) |
 | 140 | وجد | Fiil | **bulmak** | sormak (#138); almak, tutmak (#124); bakmak (#161) |
 | 150 | أكل | Fiil | **yemek** | emretmek, buyurmak (#183); yapmak, işlemek, etmek (#158); bulmak (#140) |
 | 153 | قول | İsim – mastar | **söz, söyleyiş** | benzer, eş, misli, aynısı (#190); eş (#188); ateş (#111) |
-| 161 | نظر | Fiil | **bakmak** | işitmek (#181); emretmek, buyurmak (#183); öldürmek (#171) |
+| 155 | ليس | Fiil | **değil, değildir** | oğulcuğum, yavrum (#177); hidayet, doğru yol (#165); eş (#188) |
 | 163 | وليّ | İsim – sıfat-ı müşebbehe | **dost, yardımcı, koruyucu** | peygamber, nebî (#191); mutlak galip, yenilmez (#144); dünya (#134) |
 | 167 | فضل | İsim – mastar | **lütuf, ihsan** | söz, söyleyiş (#153); aile, ev halkı (#125); ilah, mabut (#108) |
 | 168 | ليل | İsim | **gece** | sahibi, -li (#102); örnek, misal, darb-ı mesel (#159); melek (#160) |
 | 169 | خاف | Fiil | **korkmak** | dönmek (#178); emretmek, buyurmak (#183); yemek (#150) |
+| 174 | أوّل | İsim – ism-i tafdîl | **ilk, birinci** | acı veren, elem verici, can yakıcı (#199); kâfir, inkârcı (#103); salih, iyi, düzgün (#194) |
 | 178 | رجع | Fiil | **dönmek** | istemek, dilemek (#114); bulmak (#140); ibadet etmek, kulluk etmek, tapmak (#128) |
 | 180 | تولّى | Fiil | **yüz çevirmek, sırt dönmek** | işitmek (#181); istemek, dilemek (#114); korkmak (#169) |
 | 186 | دخل | Fiil | **girmek** | itaat etmek (#198); yapmak, işlemek, etmek (#158); öldürmek (#171) |
@@ -72,13 +72,13 @@ Toplam 140 soru.
 | 242 | نذير | İsim – sıfat-ı müşebbehe | **uyarıcı, korkutucu** | şahit, gözeten (#249); daha iyi bilen (#276); az, azıcık (#208) |
 | 245 | عين | İsim | **göz** | hamd, övgü (#308); kıyamet, diriliş günü (#210); ölüm (#274) |
 | 263 | بعث | Fiil | **diriltmek** | fayda vermek, yetmek, korumak (#311); üzülmek, kederlenmek (#363); yolunu şaşırmak, sapmak (#261) |
-| 265 | مجرم | İsim – ism-i fâil | **suçlu, günahkâr** | takva sahibi (#281); şiddetli, çetin (#248); uyarıcı, korkutucu (#242) |
-| 274 | موت | İsim – mastar | **ölüm** | insan, beşer (#353); nur, ışık, aydınlık (#310); geçici faydalanma, yararlanma (#375) |
-| 297 | صراط | İsim | **yol, doğru yol** | kıyamet (#285); çocuk, evlat, oğul (#251); zekât (#394) |
-| 300 | أنذر | Fiil | **uyarmak, korkutmak** | yolunu şaşırmak, sapmak (#261); yetmek, kâfi gelmek (#397); aramak, istemek, talep etmek (#380) |
+| 272 | سوء | İsim – mastar | **kötülük** | insan (#204); kıyamet (#285); sapıklık, doğru yoldan sapma (#349) |
+| 277 | زاد | Fiil | **artırmak** | eşit olmak (#370); gitmek (#373); helâk etmek, yok etmek (#267) |
+| 299 | وذر | Fiil | **bırakmak** | secde etmek (#374); kalkmak, ayakta durmak (#387); seslenmek, çağırmak, nida etmek (#306) |
+| 303 | صدر | İsim | **göğüs** | kadınlar (#238); babalar (#220); ev, oda (#215) |
 | 312 | أدخل | Fiil | **sokmak, koymak** | okumak (#233); toplamak (#354); büyüklenmek (#329) |
-| 342 | جبل | İsim | **dağ** | insan, beşer (#353); izin (#340); son, akıbet, netice (#395) |
-| 351 | ميّت | İsim – sıfat-ı müşebbehe | **ölü, ölmüş** | şahit, gözeten (#249); salih amel, iyi iş (#230); şiddetli, çetin (#248) |
+| 320 | حمل | Fiil | **taşımak, yüklenmek** | sevmek (#221); gitmek (#373); unutmak (#377) |
+| 345 | مات | Fiil | **ölmek** | ihtilafa düşmek (#369); akmak (#243); şükretmek (#292) |
 | 355 | ذنب | İsim | **günah, suç** | hamd, övgü (#308); yüz (#201); oğul (#226) |
 | 362 | نجّى | Fiil | **kurtarmak** | öğretmek, bildirmek (#323); dosdoğru kılmak (#256); rızık vermek (#234) |
 | 373 | ذهب | Fiil | **gitmek** | haber vermek, bildirmek (#293); helâk etmek, yok etmek (#267); açıklamak (#371) |
@@ -91,23 +91,23 @@ Toplam 140 soru.
 | Sıra | Kelime | Tür | Doğru | Çeldiriciler (sıra) |
 |---|---|---|---|---|
 | 407 | ساء | Fiil | **üzmek, kötü gelmek** | mühlet vermek, ertelemek (#795); yerine getirmek (#576); karşılaşmak, kavuşmak (#706) |
-| 418 | جند | İsim | **ordu, asker** | çamur, balçık (#777); kuvvet, güç (#411); güzellik (#724) |
-| 452 | آل | İsim | **aile, hanedan** | topluluk, grup, parti (#549); pay, hisse, nasip (#538); kalınacak yer, durak, konak (#736) |
+| 429 | حديث | İsim | **söz, haber, kıssa** | vaat edilen zaman/yer (#789); ruh, can (#529); ayak (#661) |
+| 454 | امرأة | İsim | **kadın** | tuzak, hile, düzen (#568); mescit, secde/namaz yeri (#433); arka, sırt (#585) |
 | 477 | أنثى | İsim | **dişi, kadın** | müjde, sevinçli haber (#657); taht, Arş (#421); ekin, tarla (#723) |
-| 498 | فلك | İsim | **gemi, gemiler** | hikmet (#550); derece, mertebe, rütbe (#584); ordu, asker (#418) |
-| 519 | مكر | Fiil | **tuzak kurmak, hile yapmak** | lütufta bulunmak, nimet vermek (#645); yemin etmek, and içmek (#543); iddia etmek, sanmak, ileri sürmek (#726) |
-| 534 | مشى | Fiil | **yürümek** | bilmek, farkına varmak (#760); arkasından yetişmek, peşine düşmek (#651); içmek (#663) |
-| 552 | سعى | Fiil | **koşmak, hızlı yürümek** | üzmek, kötü gelmek (#407); durmak, sükûn bulmak (#662); kuşatmak, çepeçevre sarmak (#598) |
-| 571 | نفخ | Fiil | **üflemek** | toplamak, bir araya getirmek (#508); öğüt vermek (#678); yemin etmek, and içmek (#543) |
-| 590 | عاد | Fiil | **dönmek, geri dönmek** | kurtuluşa ermek (#438); azmak, haddi aşmak (#776); bilmek, farkına varmak (#760) |
-| 609 | تراب | İsim | **toprak** | şüphe, kuşku (#664); çevre, etraf (#612); konut, ev, mesken (#787) |
-| 627 | أنبت | Fiil | **bitirmek, yetiştirmek** | açmak (#638); bozmak, fesat çıkarmak (#653); toplamak, bir araya getirmek (#508) |
-| 639 | فرح | Fiil | **sevinmek** | üstün kılmak, üstün tutmak (#617); kulak vermek, dinlemek (#629); anlamak, kavramak (#573) |
-| 669 | غرّ | Fiil | **aldatmak, kandırmak** | lanet etmek, rahmetten kovmak (#500); önceden göndermek/yapmak (#445); ayrıntılı açıklamak (#616) |
-| 686 | أخت | İsim | **kız kardeş** | takva, Allah'tan sakınma (#608); adalet, hakkaniyet (#700); nutfe, meni damlası (#791) |
-| 713 | أبى | Fiil | **şiddetle reddetmek, diretmek** | gidermek, yok etmek, alıp götürmek (#798); uzatmak, yaymak, germek (#737); bile bile inkâr etmek (#762) |
+| 504 | أذاق | Fiil | **tattırmak** | koymak, bırakmak (#539); yemek, yiyecek (#482); düzeltmek, ıslah etmek (#426) |
+| 525 | أمات | Fiil | **öldürmek, canını almak** | evlenmek, nikâhlamak (#711); ölçüp biçmek, takdir etmek (#641); koymak, bırakmak (#539) |
+| 537 | مكذّب | İsim – ism-i fâil | **yalanlayan** | huşu duyan, saygıyla boyun eğen (#693); batıldan hakka yönelen (#767); çirkin iş, hayâsızlık (#615) |
+| 559 | مرّة | İsim – ism-i merre | **kere, defa, kez** | yardım, zafer, galibiyet (#520); adalet, hakkaniyet (#700); topluluk, grup, parti (#549) |
+| 577 | أخفى | Fiil | **gizlemek, saklamak** | fayda vermek, yararlı olmak (#404); üzmek, kötü gelmek (#407); toplamak, bir araya getirmek (#508) |
+| 594 | مولى | İsim | **efendi, sahip, yardımcı** | hüküm, karar (#406); insanlar, insan türü (#580); söz, haber, kıssa (#429) |
+| 615 | فاحشة | İsim – ism-i fâil | **çirkin iş, hayâsızlık** | adı konmuş (#535); bilen (#591); yalanlayan (#537) |
+| 628 | أفك | Fiil | **çevirmek, döndürmek** | bile bile inkâr etmek (#762); karşılaşmak, kavuşmak (#706); düşmek (#792) |
+| 640 | فؤاد | İsim | **gönül, kalp** | sabır, nefsi tutma (#665); üç (#719); sadaka (#729) |
+| 671 | قسط | İsim | **adalet, hakkaniyet** | zulüm, haksızlık (#554); süs, ziynet (#563); tuzak, hile, düzen (#462) |
+| 688 | ابتغاء | İsim – mastar | **arama, isteme, talep** | ağızlar (#750); derece, mertebe, rütbe (#584); meyve, ürün (#610) |
+| 710 | مهين | İsim – ism-i fâil | **alçaltıcı, rezil edici** | güzel, temiz, hoş (#409); yaratan (#768); daha yakın (#561) |
 | 726 | زعم | Fiil | **iddia etmek, sanmak, ileri sürmek** | arkasından yetişmek, peşine düşmek (#651); miras bırakmak (#751); tartışmak (#763) |
-| 738 | مرض | İsim – mastar | **hastalık** | ordu, asker (#418); iyilik etme (#752); heva ve hevesler, nefsanî arzular (#601) |
+| 741 | نجم | İsim | **yıldız** | ay (#531); gölge (#698); kalınacak yer, durak, konak (#736) |
 | 758 | بدأ | Fiil | **başlamak** | korumak, esirgemek (#649); ölçüp biçmek, takdir etmek (#641); seçmek, seçkin kılmak (#757) |
 | 772 | سلك | Fiil | **girmek, tutmak** | dönmek, geri dönmek (#590); düzenlemek, düzgün kılmak (#727); sakınmak, korkup çekinmek (#794) |
 
@@ -116,72 +116,72 @@ Toplam 140 soru.
 | Sıra | Kelime | Tür | Doğru | Çeldiriciler (sıra) |
 |---|---|---|---|---|
 | 801 | أولى | İsim – ism-i tafdîl | **daha yakın** | açıklayıcı, apaçık (#1286); çok zulmeden, zulümkâr (#1419); razı, hoşnut (#1586) |
-| 848 | يسّر | Fiil | **kolaylaştırmak** | elde etmeye uğraşmak (#1029); karşılamak (#1554); helâk olmak, ölmek (#1483) |
-| 889 | عاذ | Fiil | **sığınmak, korunma dilemek** | biat etmek, bağlılık sözü vermek (#1202); silip yok etmek (#1418); birbiriyle çekişmek, davalaşmak (#1006) |
-| 928 | ارتاب | Fiil | **şüpheye düşmek, kuşkulanmak** | kaymak, sapmak (#1230); faydalanmak, zevk sürmek (#807); yaklaştırmak, önüne koymak (#1443) |
-| 967 | فصل | İsim – mastar | **ayırma** | izzet, yenilmezlik, şeref (#826); cahiliye (#1561); dönüş, geri dönüş (#1274) |
-| 1012 | برهان | İsim | **kesin delil, apaçık hüccet** | zorluk, güçlük, darlık (#1429); azat etme, hürriyetine kavuşturma (#1351); atlar (#1384) |
-| 1060 | مثقال | İsim – ism-i âlet | **ağırlık, miktar** | inek, sığır (#1203); karar yeri, durak (#903); fayda, yarar (#843) |
-| 1112 | حبل | İsim | **ip, urgan** | yıldırım (#1033); ağırlık, sağırlık (#1305); sık ağaçlık, koru (#1526) |
-| 1162 | منيب | İsim – ism-i fâil | **Allah'a yönelen, tövbe ile dönen** | yeni (#1019); zelil, güçsüz, hor (#1504); kesin inanan, yakîn sahibi (#1472) |
-| 1192 | أوّاب | İsim – mübalağa sîgası | **Allah'a çokça dönen, tövbekâr** | şefaatçi (#878); rızık veren (#1227); sayılı, az (#1281) |
-| 1230 | زاغ | Fiil | **kaymak, sapmak** | ayırmak, yarmak (#1435); giymek (#834); geçmek, aşmak (#1562) |
-| 1284 | موج | İsim | **dalga** | yağmur (#1158); renk (#972); sapıklık, dalalet (#953) |
-| 1324 | أساء | Fiil | **kötülük etmek, kötü davranmak** | yaraşmak, uygun düşmek (#1310); geri kalmak, gecikmek, ertelenmek (#1307); borç vermek (#1190) |
-| 1354 | تفصيل | İsim – mastar | **ayrıntılı açıklama** | intikam, cezalandırma (#1542); gömlek (#1270); koca, eş (#1098) |
-| 1396 | رعب | İsim – mastar | **korku, dehşet** | dönüş, geri dönüş (#1274); ağaçlar (#1135); ekin (#874) |
-| 1429 | عسر | İsim – mastar | **zorluk, güçlük, darlık** | hak ile batılı ayıran (#1148); bir (#803); yeter, kâfi (#809) |
-| 1467 | مطهّرة | İsim – ism-i mef'ûl | **tertemiz kılınmış, arındırılmış** | aydınlatan, nurlu, parlak (#1293); geride kalan (#1146); daha yakın (#801) |
-| 1514 | كنان | İsim | **örtü, perde, kılıf** | yüz (#906); yüksek oda, köşk (#1315); tehdit, azap vaadi (#1304) |
-| 1541 | اقترف | Fiil | **kazanmak, işlemek** | yaklaşmak (#849); büyük olmak (#1046); hâlâ … olmak, durmadan … etmek (#1030) |
-| 1574 | حلّى | Fiil | **süslemek** | korumak, muhafaza etmek (#1115); gülmek (#1139); giymek (#834) |
+| 846 | هزؤ | İsim – mastar | **alay, eğlence konusu** | hasret, pişmanlık ve iç yarası (#1073); Yahudiler (#989); rıza, hoşnutluk (#1454) |
+| 888 | عصا | İsim | **asa, değnek** | sapıklık, dalalet (#953); açlık (#1567); helak, mahvoluş (#1560) |
+| 923 | أيّد | Fiil | **desteklemek** | sığınmak, korunma dilemek (#889); beklemek, gözlemek (#1071); uğrayıp geçmek, yanından geçmek (#899) |
+| 961 | غليظ | İsim – sıfat-ı müşebbehe | **kaba, katı** | çok yalancı, yalanı bol (#1446); merhamet eden (#1226); esir, tutsak (#1508) |
+| 1002 | أغوى | Fiil | **azdırmak, saptırmak** | tercih etmek, üstün tutmak (#1317); kaymak, sapmak (#1230); kör olmak (#1144) |
+| 1056 | محصنة | İsim – ism-i mef'ûl | **iffetli kadın** | taş yağdıran fırtına (#1569); büyük günah (#1154); dosdoğru, eğriliksiz (#1444) |
+| 1111 | حبّ | İsim | **tane, tahıl** | sure (#877); savaş, harp (#1570); yan, taraf, kenar (#937) |
+| 1158 | مطر | İsim | **yağmur** | sapıklık, dalalet (#953); ebedîlik, ölümsüzlük (#1220); perde, örtü (#1119) |
+| 1190 | أقرض | Fiil | **borç vermek** | faydalanmak, zevk sürmek (#807); kötülük etmek, kötü davranmak (#1324); alay etmek, eğlenmek (#812) |
+| 1224 | ذرأ | Fiil | **yaratıp yaymak** | bozmak (#1298); faydalanmak, yararlanmak (#1198); boşamak (#884) |
+| 1276 | كهف | İsim | **mağara** | âdet, sürekli gidişat, hâl (#1583); Arapça (#822); sevgi, muhabbet, dostluk (#1053) |
+| 1322 | أحصن | Fiil | **korumak, muhafaza etmek** | hâlâ … olmak, durmadan … etmek (#1030); türlü türlü çevirmek (#881); sokmak, girdirmek (#912) |
+| 1352 | تطهّر | Fiil | **temizlenmek, arınmak** | gizli kalmak, saklı olmak (#1306); kolaylaştırmak (#848); karşı gelmek, muhalefet etmek (#1134) |
+| 1392 | ذبح | Fiil | **boğazlamak, kesmek** | umduğunu bulamamak (#1577); geri dönmek (#1007); hazır bulunmak (#1113) |
+| 1420 | عتا | Fiil | **azmak, haddi aşmak** | umduğunu bulamamak (#1577); yardım dilemek, yardım istemek (#1537); korumak, muhafaza etmek (#1322) |
+| 1458 | مهد | İsim | **beşik** | son, sonuç (#1253); zillet, horluk, aşağılanma (#1122); İslam (#1004) |
+| 1506 | أرذل | İsim – ism-i tafdîl | **en düşük, en bayağı** | diriltilen, diriltilecek olan (#974); sabaha giren, sabahleyin (#1465); dönen, dönücü (#1585) |
+| 1538 | استغاث | Fiil | **yardım istemek, imdat dilemek** | affedip yüz çevirmek (#1309); hazır bulunmak (#1113); emretmek (#1252) |
+| 1569 | حاصب | İsim – ism-i fâil | **taş yağdıran fırtına** | oturan (#1149); pis, kötü (#942); büyüklük taslayan, kibirlenen (#1289) |
 
 ## Bant 7: sıra 1601–3200 (20 soru)
 
 | Sıra | Kelime | Tür | Doğru | Çeldiriciler (sıra) |
 |---|---|---|---|---|
 | 1601 | سيّئ | İsim – sıfat-ı müşebbehe | **kötü, fena** | daha az, en az (#2202); yönelen, kastederek giden (#2889); çıkan, çıkıcı (#1881) |
-| 1703 | مغرق | İsim – ism-i mef'ûl | **boğulmuş, boğulan** | tuzak kuran (#2654); iri taneli şiddetli yağmur (#2102); kusursuz, alacasız (#2065) |
-| 1783 | ألفى | Fiil | **bulmak** | zafer kazandırmak, galip kılmak (#2951); iffetli davranmak (#2128); koşturmak, aralarında koşuşturmak (#3008) |
-| 1876 | حذر | İsim | **tedbir** | şişe, billur kap (#2002); alıkoyma, engelleme (#2510); yağmur (#1978) |
-| 1954 | طال | Fiil | **uzamak, uzun sürmek** | sürüp ekmek (#3191); ilham etmek, muvaffak kılmak (#2221); karışmak, birbirine karışmak (#1800) |
-| 2024 | لام | Fiil | **kınamak, ayıplamak, suçlamak** | gösteriş yapmak, riyakârlık etmek (#2862); sağlamlaştırmak (#2897); taşıp akmak (#2324) |
-| 2107 | وزن | Fiil | **tartmak** | tutuşmak, alev almak (#3074); koşturmak, aralarında koşuşturmak (#3008); dökülüp saçılmak (#3105) |
-| 2188 | أصابع | İsim – çoğul | **parmaklar** | geçim, yaşayış (#2041); azgınlık (#2571); hüsran, büyük ziyan (#1891) |
-| 2263 | اكتال | Fiil | **ölçerek almak** | iyileştirmek, kurtarmak (#2339); çok görmek, daha çoğunu beklemek (#1806); korumak, alıkoymak (#2133) |
-| 2333 | التّنّور | İsim | **tandır, fırın** | şımarıklık (#2669); yol hazırlığı, yük, eşya ve azık (#2354); sabit kılma, sebat ettirme (#2305) |
-| 2426 | ذباب | İsim | **sinek** | vurma, darbe (#1949); sel süprüntüsü, çerçöp (#2593); yaşıt, akran (#1759) |
-| 2501 | شنآن | İsim – mastar | **kin, nefret, buğz** | lezzet (#2646); birkaç (#2292); zayıflık, güçsüzlük (#1621) |
-| 2570 | عيي | Fiil | **aciz kalmak** | kusur bulmak (#2138); gem vurup boyunduruk altına almak (#2911); hissetmek, sezmek (#1787) |
-| 2647 | لمح | İsim – mastar | **göz kırpma, bakıp geçme** | sığınak, sığınılacak yer (#2745); yaşıt, akran (#1759); hesap, ölçü (#1874) |
-| 2753 | مكيال | İsim – ism-i âlet | **ölçek, ölçü aleti** | dinlenme, istirahat (#2484); konak, durak (#2695); yüksek yerler (#1752) |
-| 2827 | دعّ | Fiil | **şiddetle itmek, itip kakmak** | bürünmek, örtünmek (#2251); akıtmak (#2932); istemek, dilemek (#2121) |
-| 2907 | أجدر | İsim – ism-i tafdîl | **daha uygun, daha layık** | akan (#1850); hazır, mevcut, göz önünde (#2880); bırakan, terk eden (#1831) |
-| 2986 | أمرّ | İsim – ism-i tafdîl | **daha acı, daha çetin** | musallat, zorba hâkim (#2734); kefil, üstlenen (#2456); çürümüş, ufalanmış (#2447) |
-| 3056 | استجار | Fiil | **himaye istemek** | sımsıkı tutunmak, sarılmak (#1807); kalıcı mal vermek (#2971); kaba doldurup saklamak (#2223) |
-| 3134 | بصل | İsim | **soğan** | ihtiyaç (#3022); dostluk, yardım, sahip çıkma (#2803); bahçe (#1864) |
+| 1693 | مبلس | İsim – ism-i fâil | **ümidi kesilmiş** | darlık çeken, sefil, yoksul (#3110); hakem (#1872); çok yalancı, müfteri (#2201) |
+| 1784 | أنشر | Fiil | **diriltmek** | bozulmak, düzeni bozulmak (#1988); akıtmak (#2932); beli bükmek (#2996) |
+| 1873 | حمأ | İsim | **kara balçık, kokuşmuş kara çamur** | başak (#1602); kurtuluş , kurtuluş sebebi (#2690); oturulacak yer, makam (#1682) |
+| 1950 | ضغث | İsim | **bir tutam demeti** | güzel kokulu bitki (#2450); astar (#2293); seslenme, çağrı (#2782) |
+| 2015 | كنز | Fiil | **yığıp saklamak, biriktirmek** | bolluk ve refah vermek (#1789); ayakla vurmak, tepmek (#2123); sebat etmek, sağlam durmak (#3044) |
+| 2096 | نشر | Fiil | **yaymak, açmak** | yarmak (#2499); uzaklaşmak, yüz çevirmek (#2088); açılıp ortaya çıkmak, aydınlanmak (#2306) |
+| 2180 | أسف | İsim – sıfat-ı müşebbehe | **çok üzgün, kederli** | zalim (#1629); yaran, yarıp çıkaran (#2600); koruyan, fayda veren, savan (#2740) |
+| 2255 | استيسر | Fiil | **kolay olmak, kolayca bulunmak** | oruç tutmak (#2833); çöküp yıkılmak, göçmek (#3107); yutmak, emmek (#3040) |
+| 2322 | عضل | Fiil | **engellemek, men etmek** | kaymak (#2458); sakındırmak, uyarmak (#2854); imkân vermek (#2992) |
+| 2415 | دخل | İsim – mastar | **hile, aldatma ve fesat aracı** | müjdeciler (#1828); ihtiyaç (#1859); yörünge (#2605) |
+| 2486 | سلالة | İsim | **süzülmüş öz, hulâsa** | yaygı, döşek (#3154); yükseklik, yücelik (#1642); on (#1633) |
+| 2561 | عضد | İsim | **pazu** | gözetlemek için üs hazırlama (#3023); ılgın ağacı (#2905); kurt (#1899) |
+| 2627 | كاظم | İsim – ism-i fâil | **yutan, tutan** | çürümüş, ufalanmış (#2447); hazır, hazırlanmış (#2550); hasta, rahatsız (#2476) |
+| 2735 | مصرخ | İsim – ism-i fâil | **imdada yetişen, kurtarıcı** | tatlı (#2555); kör, gerçeği görmeyen (#2566); en orta, ortalama (#2222) |
+| 2821 | حبس | Fiil | **alıkoymak, tutmak, engellemek** | saçılmak, dağılmak (#3099); zelil olarak kovulmak, sinmek (#3050); çekilmek (#2267) |
+| 2901 | أتقن | Fiil | **sağlam ve kusursuz yapmak** | bayılıp yere yıkılmak (#2511); gizli olmak, içte kalmak (#2280); zelil edip geri püskürtmek (#2017) |
+| 2978 | كنّ | İsim | **barınak, sığınak** | sel (#2483); tedbir (#1876); kavurucu sıcak rüzgâr (#1931) |
+| 3048 | احترق | Fiil | **yanmak, tutuşup yanmak** | meshetmek, sürmek, sıvazlamak (#1812); mühlet vermek, acele etmemek (#2701); huşû içinde itaat etmek (#2841) |
+| 3132 | بسّ | İsim – mastar | **ufalama, un ufak etme** | sığınma (#2683); kurbanlık deve (#3147); sofra (#2652) |
 
 ## Bant 8: sıra 3201+ (20 soru)
 
 | Sıra | Kelime | Tür | Doğru | Çeldiriciler (sıra) |
 |---|---|---|---|---|
 | 3201 | تخويف | İsim – mastar | **korkutma, uyarma** | hizmette kullanılan (#3707); yıkanma yeri (#4435); nüsha, yazılı metin, kopya (#4593) |
-| 3266 | تفقّد | Fiil | **yoklamak, araştırmak** | sevdirmek (#3411); karşılıklı tartışmak, çekişmek (#4683); erzak getirmek, zahire taşımak (#4582) |
+| 3267 | تفكّه | Fiil | **şaşkınlıkla hayıflanıp dövünmek** | yarmak, açmak (#4013); birbirini alıkoymak (#4701); nöbet beklemek, hazır bulunmak (#3554) |
 | 3353 | ثيّب | İsim – sıfat-ı müşebbehe | **dul, daha önce evlenmiş kadın** | çok kavgacı (#3489); inkâr eden, kabullenmeyen (#4484); temizlenen, arınan (#4419) |
-| 3416 | حارس | İsim – ism-i fâil | **bekçi, muhafız** | derin (#3910); çağıran davetçi (#4473); övülmüş, övgüye layık (#4172) |
-| 3484 | خذول | İsim – mübalağa sîgası | **yüzüstü bırakan** | yalnız, tek başına (#4640); örtüsüne bürünen (#4371); koyu yeşil, yeşillikten kararmış (#4355) |
-| 3575 | رطب | İsim – sıfat-ı müşebbehe | **yaş, taze** | pek büyük, çok büyük (#4098); elinde bir şey kalmamış (#4169); işi düzenleyen (#4349) |
-| 3650 | زيغ | İsim – mastar | **sapma, eğrilik** | parçalar, kısımlar (#3935); buğday (#4017); ıslık çalma (#4459) |
-| 3731 | سيرة | İsim | **hal, durum** | Rakîm (#3580); dokunma, temas (#4505); süs eşyası, takı, mücevher (#3456) |
-| 3809 | صكّ | Fiil | **vurmak, çarpmak** | korkuyu gidermek (#4014); doğru yolu bulmak, hidayete ermek (#4720); yaklaşmak (#3532) |
-| 3912 | عنت | İsim – mastar | **sıkıntı, meşakkat** | yük taşımayan küçük hayvanlar (#3995); karanlık, kara duman (#4041); taşlama (#3569) |
-| 3998 | فصيلة | İsim | **yakın akraba, aşiret** | lanet etme, lanet (#4121); çisenti, hafif yağmur, çiy (#3856); hâkimler, yöneticiler (#3455) |
-| 4087 | كساد | İsim – mastar | **durgunluk** | dümdüz, çıplak arazi (#4033); azgınlık (#3854); yol, yörünge (#3446) |
-| 4181 | مرضع | İsim – ism-i fâil | **sütanneler, emzikli kadınlar** | bardaktan boşanırcasına dökülen (#4489); borçlu, borç altına girmiş kimse (#3944); tutuşturulmuş, kaynatılmış (#4203) |
-| 4278 | مهزوم | İsim – ism-i mef'ûl | **bozguna uğramış, yenilmiş** | gülen, sevinçli (#3833); dürülmüş (#4221); müstahkem, tahkim edilmiş (#4338) |
-| 4355 | مدهامّة | İsim – ism-i fâil | **koyu yeşil, yeşillikten kararmış** | sağ salim, esen, sağlıklı (#3673); halis, içten, samimi (#4554); dalan, girip doluşan (#4448) |
-| 4450 | مقترف | İsim – ism-i fâil | **işleyen, kazanan** | temizlenen, arınan (#4321); korunmuş, örtülü tutulan (#4249); bozguna uğramış, yenilmiş (#4278) |
+| 3412 | حتم | İsim – mastar | **kesin hüküm, kaçınılmaz karar** | kınama, ayıplama (#4129); kaçış, kurtuluş yeri, sığınak (#4266); tamamlama, tamlık (#3290) |
+| 3481 | خبء | İsim – mastar | **gizli olan, saklı şey** | yere serilmiş, yıkılmış (#3799); sur, duvar (#3721); çukur (#3453) |
+| 3566 | رتق | İsim – mastar | **bitişik, kapalı hâl** | gözetleme yeri, pusu yeri (#4190); set, sed (#3572); erteleme, nesî (#4545) |
+| 3644 | زهرة | İsim | **çiçek** | düz ve kaygan kaya (#3808); eğrilmiş iplik (#3956); ardı ardına, kesintisiz (#3449) |
+| 3730 | ساح | Fiil | **gezip dolaşmak** | feryat edip bağrışmak (#4743); alev alev yanmak, alevlenmek (#3285); semirtmek, besilemek (#4791) |
+| 3807 | صفصف | İsim | **dümdüz, çıplak arazi** | göç, yolculuğa çıkma (#3865); bekleme , gözetleme (#3213); dondurucu soğuk (#3640) |
+| 3899 | عسر | İsim – sıfat-ı müşebbehe | **zor, çetin** | tamamlayan (#4331); mühürlü, ağzı mühürlenmiş (#4174); uyan, izinden giden (#4449) |
+| 3994 | فرث | İsim | **işkembedeki sindirilmiş gıda** | iffet gösterme (#3248); karşılıklı danışma, istişare (#3232); kaçacak yer, kaçış (#4239) |
+| 4086 | كرّه | Fiil | **çirkin göstermek, nefret ettirmek** | yıkılmak, çöküp düşmek (#4766); az olmak, azalmak (#4055); yağmur yağdırmak (#4802) |
+| 4177 | مخضود | İsim – ism-i mef'ûl | **dikenleri ayıklanmış** | usta sihirbaz, çok büyü yapan (#3683); engelleyen, savsaklatıp alıkoyan (#4428); yapışkan , sıkıca yapışan (#4112) |
+| 4275 | مهيل | İsim – ism-i mef'ûl | **dökülüp akan, savrulan** | öne geçen, yarışıp geçen (#3663); dalan, söze ünsiyet eden (#4381); yeterli, kâfi gelen (#4077) |
+| 4352 | مدّخل | İsim – ism-i zaman/mekân | **girilecek delik, sokulacak yer** | sıkıntı, keder (#3969); kor, yanan odun parçası, ateş közü (#3366); çıkmış, açıkta görünen (#3761) |
+| 4445 | مقصّر | İsim – ism-i fâil | **kısaltan** | terk edilmiş (#4422); karma karışık topluluk (#4122); kulakları sağır eden çığlık (#3782) |
 | 4539 | خزي | Fiil | **rezil olmak, utanca düşmek** | arınmak, temiz olmak (#3635); bırakmak, terk etmek, aldırmamak (#3525); deri yüzmek (#4550) |
 | 4616 | هلوع | İsim – sıfat | **çok sabırsız** | ümidini kesen, ümitsiz (#4035); geçen, yoldan geçen (#3874); en aşağı, en alçak (#3714) |
-| 4692 | تغيّر | Fiil | **değişmek, bozulmak** | fidye vererek kurtarmak (#3990); yaklaşmak (#3532); nazik ve dikkatli davranmak (#4698) |
-| 4759 | يقطين | İsim | **yaprağı geniş, gövdesiz bitki** | konuşma, dil (#4269); geçmiş topluluk, öncüller (#3695); yardım için verilen ufak ev eşyası (#4144) |
+| 4694 | تفضّل | Fiil | **üstünlük taslamak** | usulüne göre boğazlamak (#3550); bağlamak, düğümlemek (#3905); koparıp kaldırmak (#4530) |
+| 4758 | قتر | Fiil | **cimrilik etmek, harcamayı kısmak** | lezzet vermek, hoşa gitmek (#3284); eritmek (#4795); şikâyet etmek, derdini yanmak (#3234) |
