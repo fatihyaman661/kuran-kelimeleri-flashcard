@@ -240,10 +240,11 @@
     <string name="backup_file_name">kuran-kelimeleri-yedek-%1$s.json</string>
 
     <string name="reset_title">İlerlemeyi sıfırla</string>
-    <string name="reset_body">Bütün kelimeler hiç çalışılmamış hâle döner: tekrar geçmişi, öğrenilen ve askıdaki kelimeler, seviye testi sonuçları ve istatistikler sıfırlanır. Ayarların (günlük yeni kelime, hedef hatırlama oranı, tema, yazı boyutu) olduğu gibi kalır.</string>
+    <string name="reset_body">Bu cihazdaki bütün ilerleme silinir; bütün kelimeler hiç çalışılmamış hâle döner. Ayarların (günlük yeni kelime, hedef hatırlama oranı, tema, yazı boyutu) olduğu gibi kalır.</string>
     <string name="reset_button">İlerlemeyi sıfırla</string>
     <string name="reset_confirm_title">Emin misin?</string>
-    <string name="reset_confirm_body">Bütün ilerlemen sıfırlanacak ve bu geri alınamaz; daha önce aldığın yedekler de eski ilerlemeyi geri getirmez. Google ile giriş yaptıysan diğer cihazlarındaki ilerleme de bir sonraki senkronda sıfırlanır.</string>
+    <string name="reset_confirm_body">Bu cihazdaki tekrar geçmişin, öğrendiğin ve askıya aldığın kelimeler, seviye testi sonuçların ve istatistiklerin silinecek. Bu geri alınamaz; önce Yedek → Dışa aktar ile yedek alırsan sonra içe aktarıp geri getirebilirsin.</string>
+    <string name="reset_confirm_signed_in">Senkrondan da çıkış yapılır. Sunucudaki ve diğer cihazlarındaki ilerleme silinmez; yeniden Google ile giriş yaparsan oradaki ilerleme bu cihaza geri gelir. Hepsini silmek istersen önce Senkron → Sunucudaki verilerimi sil.</string>
     <string name="reset_confirm">Sıfırla</string>
     <string name="reset_done">İlerleme sıfırlandı.</string>
 

@@ -225,26 +225,20 @@ interface ReviewDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(reviews: List<ReviewEntity>): List<Long>
 
-    // Bu DAO'daki sorguların çoğu son sıfırlamadan ([ReviewEntity.RESET]) önceki kayıtları görmez.
-
-    @Query("SELECT * FROM reviews WHERE wordId = :wordId AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5) ORDER BY reviewedAt")
+    @Query("SELECT * FROM reviews WHERE wordId = :wordId ORDER BY reviewedAt")
     suspend fun forWord(wordId: String): List<ReviewEntity>
 
-    @Query("SELECT * FROM reviews WHERE wordId = :wordId AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5) ORDER BY reviewedAt DESC")
+    @Query("SELECT * FROM reviews WHERE wordId = :wordId ORDER BY reviewedAt DESC")
     fun observeForWord(wordId: String): Flow<List<ReviewEntity>>
-
-    /** Son sıfırlamadan sonra kaydı olan kelimeler. */
-    @Query("SELECT DISTINCT wordId FROM reviews WHERE rating != -5 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5)")
-    suspend fun wordIdsSinceReset(): List<String>
-
-    @Query("SELECT * FROM reviews WHERE rating != -5 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5) ORDER BY reviewedAt")
-    suspend fun allSinceReset(): List<ReviewEntity>
 
     @Query("SELECT * FROM reviews ORDER BY reviewedAt DESC LIMIT 1")
     suspend fun latest(): ReviewEntity?
 
     @Query("DELETE FROM reviews WHERE id = :id")
     suspend fun delete(id: String)
+
+    @Query("DELETE FROM reviews")
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM reviews ORDER BY reviewedAt")
     suspend fun all(): List<ReviewEntity>
@@ -267,15 +261,15 @@ interface ReviewDao {
     @Query("SELECT COUNT(*) FROM reviews")
     suspend fun count(): Int
 
-    @Query("SELECT reviewedAt FROM reviews WHERE reviewedAt >= :since AND rating > 0 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5)")
+    @Query("SELECT reviewedAt FROM reviews WHERE reviewedAt >= :since AND rating > 0")
     suspend fun timesSince(since: Long): List<Long>
 
-    @Query("SELECT reviewedAt, rating FROM reviews WHERE reviewedAt >= :since AND rating > 0 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5)")
+    @Query("SELECT reviewedAt, rating FROM reviews WHERE reviewedAt >= :since AND rating > 0")
     suspend fun answersSince(since: Long): List<AnswerRow>
 
     @Query(
         """SELECT COUNT(*) AS total, COALESCE(SUM(CASE WHEN rating > 1 THEN 1 ELSE 0 END), 0) AS correct
-           FROM reviews WHERE reviewedAt >= :since AND rating > 0 AND reviewedAt > (SELECT COALESCE(MAX(reviewedAt), -1) FROM reviews WHERE rating = -5)""",
+           FROM reviews WHERE reviewedAt >= :since AND rating > 0""",
     )
     suspend fun totalsSince(since: Long): ReviewTotals
 }

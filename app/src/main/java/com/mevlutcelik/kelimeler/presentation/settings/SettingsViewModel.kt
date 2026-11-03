@@ -151,11 +151,15 @@ class SettingsViewModel @Inject constructor(
     private val _resetNotice = MutableStateFlow<Notice?>(null)
     val resetNotice: StateFlow<Notice?> = _resetNotice.asStateFlow()
 
-    /** Bütün ilerlemeyi sıfırlar; girişliyse sıfırlama hemen diğer cihazlara da gönderilir. */
+    /**
+     * Bu cihazdaki ilerlemeyi siler. Girişliyse senkrondan da çıkılır: yoksa diğer cihazlarda yapılan
+     * yeni tekrarlar gelip sıfırlanmış cihaza karışır. Sunucudaki ilerleme kalır; yeniden giriş yapılınca
+     * geri gelir.
+     */
     fun resetProgress() = viewModelScope.launch {
         study.resetProgress()
+        if (state.value.account != null) sync.signOut()
         _resetNotice.value = Notice(R.string.reset_done)
-        if (state.value.account != null) sync.sync()
     }
 
     fun export(uri: Uri) = viewModelScope.launch {

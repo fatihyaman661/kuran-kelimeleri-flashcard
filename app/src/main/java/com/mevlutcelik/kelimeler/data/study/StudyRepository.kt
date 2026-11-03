@@ -221,8 +221,6 @@ class StudyRepository @Inject constructor(
 
     suspend fun undoLast(): UndoResult {
         val last = reviewDao.latest() ?: return UndoResult.Nothing
-        // Sıfırlama çalışma ekranındaki "geri al" ile geri alınmaz.
-        if (last.rating == ReviewEntity.RESET) return UndoResult.Nothing
         if (last.synced) return UndoResult.AlreadySynced
         db.withTransaction {
             reviewDao.delete(last.id)
@@ -242,11 +240,7 @@ class StudyRepository @Inject constructor(
         return db.withTransaction {
             val inserted = reviewDao.insertAll(known)
             val changed = known.filterIndexed { i, _ -> inserted[i] != -1L }
-            if (changed.any { it.rating == ReviewEntity.RESET }) {
-                rebuildAll()
-            } else {
-                changed.mapTo(HashSet()) { it.wordId }.forEach { rebuild(it) }
-            }
+            changed.mapTo(HashSet()) { it.wordId }.forEach { rebuild(it) }
             changed.size
         }
     }
@@ -310,7 +304,7 @@ class StudyRepository @Inject constructor(
         var checked = 0
         var forgotten = 0
         // Testle gelmiş ve en az bir kez cevaplanmış kelimeler: ilk cevaba bakılır.
-        reviewDao.allSinceReset().groupBy { it.wordId }.forEach { (_, records) ->
+        reviewDao.all().groupBy { it.wordId }.forEach { (_, records) ->
             val placement = ReviewEntity.activePlacement(records) ?: return@forEach
             val first = records.firstOrNull { ReviewEntity.isAnswer(it.rating) && it.reviewedAt >= placement.reviewedAt } ?: return@forEach
             checked++
@@ -320,29 +314,19 @@ class StudyRepository @Inject constructor(
     }
 
     /**
-     * "İlerlemeyi sıfırla": bütün kelimeler hiç çalışılmamış hâle döner. Eski kayıtlar silinmez, bir
-     * [ReviewEntity.RESET] kaydı eklenir; ondan önceki kayıtlar hiçbir hesaba girmez. Kayıt senkronla
-     * diğer cihazlara da gider. Ayarlar olduğu gibi kalır.
+     * "İlerlemeyi sıfırla": bu cihazdaki bütün tekrar kayıtları, kart durumları ve askılar silinir;
+     * bütün kelimeler hiç çalışılmamış hâle döner. Ayarlar kalır. Sunucuya dokunmaz (bkz.
+     * SettingsViewModel.resetProgress).
      */
-    suspend fun resetProgress(now: Long = System.currentTimeMillis()) {
+    suspend fun resetProgress() {
         db.withTransaction {
-            // Başka bir cihazdan gelmiş, saati ileride bir kayıt da sıfırlamanın önünde kalsın.
-            val at = maxOf(now, (reviewDao.latest()?.reviewedAt ?: 0L) + 1)
-            reviewDao.insert(ReviewEntity(UUID.randomUUID().toString(), ReviewEntity.RESET_WORD_ID, at, ReviewEntity.RESET, 0))
+            reviewDao.deleteAll()
             stateDao.deleteAll()
             suspendedDao.deleteAll()
         }
     }
 
-    /** Senkronla ya da yedekten bir sıfırlama geldiğinde bütün kart durumlarını baştan hesaplar. */
-    private suspend fun rebuildAll() {
-        stateDao.deleteAll()
-        suspendedDao.deleteAll()
-        reviewDao.wordIdsSinceReset().forEach { rebuild(it) }
-    }
-
     private suspend fun rebuild(wordId: String) {
-        if (wordId == ReviewEntity.RESET_WORD_ID) return
         val records = reviewDao.forWord(wordId)
         val suspendedSince = ReviewEntity.suspendedSince(records)
         if (suspendedSince != null) suspendedDao.upsert(SuspendedEntity(wordId, suspendedSince)) else suspendedDao.delete(wordId)

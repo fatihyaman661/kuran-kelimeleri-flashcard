@@ -110,7 +110,7 @@ fun SettingsScreen(onOpenPlacement: () -> Unit = {}, viewModel: SettingsViewMode
             DeckSection(state, viewModel)
             SyncSection(state, viewModel)
             BackupSection(viewModel)
-            ResetSection(viewModel)
+            ResetSection(state.account != null, viewModel)
             AboutSection()
             Spacer(Modifier.height(8.dp))
         }
@@ -422,14 +422,19 @@ private fun BackupSection(viewModel: SettingsViewModel) {
 }
 
 @Composable
-private fun ResetSection(viewModel: SettingsViewModel) {
+private fun ResetSection(signedIn: Boolean, viewModel: SettingsViewModel) {
     val notice by viewModel.resetNotice.collectAsStateWithLifecycle()
     var confirm by remember { mutableStateOf(false) }
     if (confirm) {
         AlertDialog(
             onDismissRequest = { confirm = false },
             title = { Text(stringResource(R.string.reset_confirm_title)) },
-            text = { Text(stringResource(R.string.reset_confirm_body)) },
+            text = {
+                Text(
+                    stringResource(R.string.reset_confirm_body) +
+                        if (signedIn) "\n\n" + stringResource(R.string.reset_confirm_signed_in) else "",
+                )
+            },
             confirmButton = {
                 TextButton(onClick = { confirm = false; viewModel.resetProgress() }) {
                     Text(stringResource(R.string.reset_confirm), color = LearnCoral)

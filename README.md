@@ -20,7 +20,7 @@ Kur'an-ı Kerim'de geçen kelimeleri aralıklı tekrar (spaced repetition) yönt
 - **Istılahat:** Kartlardaki kelime türlerinin ve gramer terimlerinin aranabilir kısa açıklamaları; metin repodan güncellenir
 - **Nasıl kullanılır:** Aralıklı tekrarı hiç bilmeyenler için etkileşimli rehber; ilk açılışta kendiliğinden açılır, menüde de durur
 - **Seviye tespiti:** Daha önce Arapça çalışanlar için kısa, uyarlanabilir bir test; bilinen kelimeler askıya alınmaz, günde en fazla 3'ü tekrar olarak sorulur
-- **İlerlemeyi sıfırlama:** Ayarlar'dan, onaylı; senkronla diğer cihazlara da geçer
+- **İlerlemeyi sıfırlama:** Ayarlar'dan, onaylı; bu cihazdaki ilerlemeyi siler (sunucudakine dokunmaz)
 - **İstatistik:** Son bir yılın çalışma takvimi (ısı haritası), en uzun seri, önümüzdeki 30 günün tekrar tahmini, tahmini bitiş ve kalıcı kelime sayısı
 
 Alınan tasarım kararları ve yol haritası için: [docs/TASARIM.md](docs/TASARIM.md)
