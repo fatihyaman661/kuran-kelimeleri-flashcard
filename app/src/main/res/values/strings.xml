@@ -140,6 +140,8 @@
     <string name="word_unsuspended_done">Askıdan çıkarıldı: kelime yeniden çalışmaya gelecek.</string>
     <string name="history_suspended">Askıya alındı</string>
     <string name="history_unsuspended">Askıdan çıkarıldı</string>
+    <string name="history_placement">Seviye testi: biliniyor sayıldı</string>
+    <string name="history_placement_undo">Seviye testi geri alındı</string>
     <string name="phase_new">Yeni</string>
     <string name="phase_learning">Öğreniliyor</string>
     <string name="phase_review">Öğrenildi</string>
@@ -237,6 +239,15 @@
     <string name="backup_failed">İşlem tamamlanamadı.</string>
     <string name="backup_file_name">kuran-kelimeleri-yedek-%1$s.json</string>
 
+    <string name="reset_title">İlerlemeyi sıfırla</string>
+    <string name="reset_body">Bu cihazdaki bütün ilerleme silinir; bütün kelimeler hiç çalışılmamış hâle döner. Ayarların (günlük yeni kelime, hedef hatırlama oranı, tema, yazı boyutu) olduğu gibi kalır.</string>
+    <string name="reset_button">İlerlemeyi sıfırla</string>
+    <string name="reset_confirm_title">Emin misin?</string>
+    <string name="reset_confirm_body">Bu cihazdaki tekrar geçmişin, öğrendiğin ve askıya aldığın kelimeler, seviye testi sonuçların ve istatistiklerin silinecek. Bu geri alınamaz; önce Yedek → Dışa aktar ile yedek alırsan sonra içe aktarıp geri getirebilirsin.</string>
+    <string name="reset_confirm_signed_in">Senkrondan da çıkış yapılır. Sunucudaki ve diğer cihazlarındaki ilerleme silinmez; yeniden Google ile giriş yaparsan oradaki ilerleme bu cihaza geri gelir. Hepsini silmek istersen önce Senkron → Sunucudaki verilerimi sil.</string>
+    <string name="reset_confirm">Sıfırla</string>
+    <string name="reset_done">İlerleme sıfırlandı.</string>
+
     <string name="section_about">Hakkında</string>
     <string name="about_version">Sürüm %1$s</string>
     <string name="about_developers">Fatih Yaman ve Mevlüt Çelik tarafından geliştirilmiştir.</string>
@@ -280,7 +291,7 @@
     <string name="guide_coverage_note">Çubuklar, o kelimelerin Kur\'an metnindeki bütün kelimelerin yüzde kaçını oluşturduğunu gösteriyor. Yani ilk 100 kelimeyi öğrendiğinde okuduğun bir ayetteki her 10 kelimeden yaklaşık %1$d tanesini tanırsın.</string>
     <string name="guide_frequency_title">Kelimeler sıklık sırasıyla gelir</string>
     <string name="guide_frequency_body">Kelimeler, Kur\'an\'da kaç defa geçtiklerine göre sıralandı: 1. kelime en sık geçendir. Yeni kelimeler sana bu sırayla gelir. Böylece emeğin önce en çok karşına çıkacak kelimelere gider.</string>
-    <string name="guide_frequency_note">İlk sıralarda harfler ve ekler (و, مِنْ, zamir ekleri) var; onlar da Kur\'an\'da kelime gibi sayılır ve en çok onları göreceksin. Rehberdeki örnek kelime عَلِمَ (bilmek) ise 48. sırada.</string>
+    <string name="guide_frequency_note">İlk sıralarda harfler ve ekler (و, مِنْ, zamir ekleri) var; onlar da Kur\'an\'da kelime gibi sayılır ve en çok onları göreceksin. Arka arkaya gelip bunaltmasınlar diye bir harf ya da ekten sonra en az 3 başka kelime gelir. Rehberdeki örnek kelime عَلِمَ (bilmek) ise 48. sırada.</string>
     <string name="guide_spacing_title">Aralıklı tekrar nedir?</string>
     <string name="guide_spacing_body">Yeni öğrendiğin bir şeyi zamanla unutursun; ilk günlerde çok hızlı. Ama tam unutmak üzereyken bir kez daha hatırlarsan kelime hafızanda daha sağlam yer eder ve bir sonraki unutma daha yavaş olur. Her tekrardan sonra bir sonraki tekrara kadar daha uzun süre geçebilir.</string>
     <string name="guide_curve_label">Bir kelimeyi hatırlama ihtimalin</string>
@@ -398,4 +409,54 @@
     <string name="guide_menu_stats">Bir yıllık çalışma takvimi, en uzun serin, önümüzdeki günlerde kaç tekrar geleceği ve bütün kelimeleri ne zaman bitirmiş olacağının tahmini.</string>
     <string name="guide_menu_settings">Tema ve yazı boyutu, hedef hatırlama oranı, günlük yeni kelime sayısı, yeni kelimelerin sırası, deste güncellemesi, senkron, yedek ve kaynaklar.</string>
     <string name="guide_menu_guide">Bu rehber. İstediğin zaman buradan yeniden açabilirsin.</string>
+
+    <!-- Seviye tespiti -->
+    <string name="guide_placement_title">Daha önce Arapça çalıştın mı?</string>
+    <string name="guide_placement_body">Kısa bir seviye testiyle baştaki bildiğin kelimeleri atlayabilirsin. Testi Ayarlar → Çalışma\'dan sonra da yapabilirsin.</string>
+    <string name="guide_placement_button">Seviye testi yap</string>
+    <string name="placement_title">Seviye tespiti</string>
+    <string name="placement_intro_body">Daha önce Arapça çalıştıysan, baştaki bildiğin kelimelerle vakit kaybetme. Bu kısa test (yaklaşık 20–35 soru, birkaç dakika) nereden başlaman gerektiğini bulur.</string>
+    <string name="placement_how_label">Nasıl çalışır</string>
+    <string name="placement_how_1">Kelime, kartın ön yüzündeki gibi harekesiz gelir; doğru anlamı dört şıktan seç.</string>
+    <string name="placement_how_2">Bilmiyorsan tahmin etme, “Bilmiyorum”a dokun. Tahminle verilen doğru cevaplar sonucu şişirir ve bilmediğin kelimeler bilinen sayılır.</string>
+    <string name="placement_how_3">Doğru cevap verdikçe test daha az sık geçen kelimelere geçer, zorlandıkça geri gelir. Sonunda önerilen sayıyı istersen düzeltebilirsin.</string>
+    <string name="placement_after_label">Sonra ne olur</string>
+    <string name="placement_after_1">Bildiğin sayılan kelimeler askıya alınmaz; öğrenilmiş sayılır ve yeni kelimeler onlardan sonra başlar.</string>
+    <string name="placement_after_2">Bu kelimeler zamanla “Tekrar” kartı olarak sorulur: günde en fazla %1$d tanesi, önce testin en emin olmadığı kelimeler.</string>
+    <string name="placement_after_3">Sorulduğunda bilirsen aralık hemen uzar; bilemezsen kelime normal öğrenmeye döner. Testin hatası böyle kendiliğinden düzelir.</string>
+    <string name="placement_start">Teste başla</string>
+    <string name="placement_cancel">Vazgeç</string>
+    <string name="placement_close">Tamam</string>
+    <string name="placement_unavailable">Soru havuzu henüz yüklenmedi. İnternete bağlıyken Ayarlar → Deste → Güncellemeleri kontrol et\'e dokunup tekrar dene.</string>
+    <string name="placement_basics_title">Önce harfler ve ekler</string>
+    <string name="placement_basics_body">Bunlar Kur\'an\'da en sık geçen harfler ve zamir ekleri. Hepsini anlamlarıyla biliyor musun?</string>
+    <string name="placement_basics_note">“Evet” dersen ilk %2$d kelimedeki %1$d harf ve ek de, testin sonucundan bağımsız olarak bilinen sayılır. Diğerleri gibi askıya alınmazlar; zamanla tekrar olarak sorulurlar.</string>
+    <string name="placement_basics_yes">Evet, hepsini biliyorum</string>
+    <string name="placement_basics_no">Hayır, bilmediklerim var</string>
+    <string name="placement_effect_basics">Bunun %1$d tanesi kesme noktasının ötesindeki harf ve ekler (“Harfleri biliyorum” dediğin için).</string>
+    <string name="placement_question_number">Soru %1$d</string>
+    <string name="placement_question_prompt">Bu kelimenin anlamı hangisi?</string>
+    <string name="placement_dont_know">Bilmiyorum</string>
+    <string name="placement_correct_was">Doğrusu: %1$s</string>
+    <string name="placement_result">Tahminen ilk %1$d kelimeyi biliyorsun</string>
+    <string name="placement_result_zero">Baştan başlaman en iyisi</string>
+    <string name="placement_result_asked">%1$d soruya göre</string>
+    <string name="placement_adjust_label">İstersen düzelt</string>
+    <string name="placement_first_n">İlk %1$d kelime</string>
+    <string name="placement_effect">%1$d kelime öğrenilmiş sayılacak (daha önce çalıştıkların hariç). Günde en fazla %2$d tanesi sorulacağı için hepsinin sırası yaklaşık %3$d günde gelir.</string>
+    <string name="placement_effect_none">Bu aralıkta öğrenilmiş sayılacak yeni kelime yok.</string>
+    <string name="placement_apply">Uygula</string>
+    <string name="placement_skip">Uygulamadan çık</string>
+    <string name="placement_done">%1$d kelime öğrenilmiş sayıldı. Yeni kelimeler %2$d. sıradan başlayacak; testteki kelimeler zamanla tekrar olarak gelecek.</string>
+    <string name="placement_summary_label">Önceki test</string>
+    <string name="placement_summary_placed">Testle %1$d kelime bilinen sayıldı; %2$d tanesi henüz sorulmadı.</string>
+    <string name="placement_summary_checked">Sorulan %1$d kelimenin %2$d tanesinde “Tekrar” dedin (yüzde %3$d). Bu oran yüksekse kesme noktası fazla ileriydi.</string>
+    <string name="placement_undo_button">Sorulmamış %1$d kelimeyi geri al</string>
+    <string name="placement_undo_title">Test geri alınsın mı?</string>
+    <string name="placement_undo_body">Henüz sorulmamış %1$d kelime yeniden “yeni” olur ve sırası gelince öğrenilir. Sorulmuş olanlar, senin cevaplarına göre olduğu gibi kalır.</string>
+    <string name="placement_undo_confirm">Geri al</string>
+    <string name="placement_undone">%1$d kelime yeniden yeni kelime oldu.</string>
+    <string name="placement_settings_title">Seviye tespiti</string>
+    <string name="placement_settings_body">Daha önce Arapça çalıştıysan kısa bir testle baştaki bildiğin kelimeleri öğrenilmiş say. Önceki testi buradan geri de alabilirsin.</string>
+    <string name="placement_settings_button">Seviye testine gir</string>
 </resources>

@@ -5,6 +5,7 @@
   data/deck.db.gz         Bütün kelimeler (gzip'li SQLite). Uygulama hem ilk kurulumda hem güncellemede
                           bunu satır satır kendi veritabanına kopyalar; cihazda JSON ayrıştırılmaz.
   data/deck-version.json  Uygulamanın güncelleme kontrolünde indirdiği küçük dosya.
+  data/placement-review.md  Seviye tespiti soru havuzunun gözden geçirme listesi (bkz. placement.py).
 
 Kelime kimliği Anki not GUID'idir. AnkiWeb güncellemelerinde ilerleme korunsun diye GUID'ler
 zaten sabit tutuluyor; uygulama da ilerlemeyi bu kimliğe bağlar. Sürüm, içeriğin özetidir:
@@ -28,6 +29,8 @@ import zipfile
 from html.parser import HTMLParser
 from pathlib import Path
 
+import placement
+
 FORMAT = 1
 SCHEMA = """
 CREATE TABLE meta (key TEXT PRIMARY KEY NOT NULL, value TEXT NOT NULL);
@@ -43,6 +46,13 @@ CREATE TABLE words (
     frequency INTEGER NOT NULL,
     forms TEXT NOT NULL,            -- çekimlerin Arapçası, boşlukla ayrılmış (arama için)
     details TEXT NOT NULL           -- JSON: forms, table, examples, mufredat, tags (kartın arka yüzü)
+);
+-- Seviye tespiti soru havuzu. Eski uygulamalar bu tabloyu okumaz; biçim numarası değişmez.
+CREATE TABLE placement (
+    word_id TEXT PRIMARY KEY NOT NULL,
+    band INTEGER NOT NULL,          -- placement.BANDS içindeki sıra (0 = en sık)
+    answer TEXT NOT NULL,           -- doğru şık: anlamın kısa hâli
+    options TEXT NOT NULL           -- JSON dizisi: üç çeldirici
 );
 """
 DETAIL_KEYS = ("forms", "table", "examples", "mufredat", "tags")
@@ -247,7 +257,7 @@ def build_words(db):
     return words
 
 
-def write_db(words, version, path):
+def write_db(words, pool, version, path):
     if path.exists():
         path.unlink()
     db = sqlite3.connect(path)
@@ -265,6 +275,10 @@ def write_db(words, version, path):
             for w in words
         ],
     )
+    db.executemany(
+        "INSERT INTO placement VALUES (?, ?, ?, ?)",
+        [(q["id"], q["band"], q["answer"], json.dumps(q["options"], ensure_ascii=False)) for q in pool],
+    )
     db.commit()
     db.execute("VACUUM")
     db.close()
@@ -281,12 +295,17 @@ def main():
         db = open_collection(args.apkg, workdir)
         words = build_words(db)
         db.close()
+        pool = placement.build_pool(words, args.out / "placement-exclude.txt")
 
-        canonical = "\n".join(json.dumps(w, ensure_ascii=False, sort_keys=True, separators=(",", ":")) for w in words)
+        # Soru havuzu da sürüme girer: havuz değişince uygulamalar desteyi yeniden indirir.
+        canonical = "\n".join(
+            [json.dumps(w, ensure_ascii=False, sort_keys=True, separators=(",", ":")) for w in words]
+            + [json.dumps(q, ensure_ascii=False, sort_keys=True, separators=(",", ":")) for q in pool]
+        )
         version = hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:12]
 
         plain = Path(workdir) / "deck.db"
-        write_db(words, version, plain)
+        write_db(words, pool, version, plain)
         args.out.mkdir(parents=True, exist_ok=True)
         target = args.out / "deck.db.gz"
         # mtime=0: içerik aynıysa dosya da bayt bayt aynı kalsın.
@@ -295,7 +314,8 @@ def main():
 
     meta = {"format": FORMAT, "version": version, "words": len(words), "bytes": os.path.getsize(target)}
     (args.out / "deck-version.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
-    print(f"{len(words)} kelime, sürüm {version}, {meta['bytes'] / 1e6:.1f} MB → {target}")
+    placement.write_review(pool, args.out / "placement-review.md")
+    print(f"{len(words)} kelime, {len(pool)} seviye sorusu, sürüm {version}, {meta['bytes'] / 1e6:.1f} MB → {target}")
 
 
 if __name__ == "__main__":

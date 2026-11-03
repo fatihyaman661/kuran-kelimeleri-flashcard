@@ -150,4 +150,36 @@ class SchedulerTest {
         assertEquals(clock.dayOf(at("2026-10-29T12:00:00")) + 1, clock.dayOf(at("2026-10-30T04:00:00")))
         assertEquals(at("2026-10-30T04:00:00"), clock.startOfDay(clock.dayOf(at("2026-10-30T15:00:00"))))
     }
+
+    @Test
+    fun `placed card starts in review and reacts to the first answer`() {
+        val placedAt = at("2026-11-03T10:00:00")
+        val due = at("2026-12-20T04:00:00")
+        val card = noFuzz.placed(placedAt, due, stabilityDays = 30.0)
+        assertEquals(Phase.Review, card.phase)
+        assertEquals(0, card.reps)
+        assertEquals(30.0, card.stability, 1e-9)
+        assertEquals(due, card.due)
+
+        // Aylar sonra hâlâ hatırlanan kelime çok sağlam sayılır; unutulan yeniden öğrenmeye düşer.
+        val good = noFuzz.review(card, Rating.Good, due)
+        assertTrue(good.stability > 30.0)
+        assertTrue(daysBetween(due, good.due) > 30)
+        val again = noFuzz.review(card, Rating.Again, due)
+        assertEquals(Phase.Relearning, again.phase)
+        assertEquals(1, again.lapses)
+    }
+
+    @Test
+    fun `replay from a placed card matches answering it live`() {
+        val placedAt = at("2026-11-03T10:00:00")
+        val start = noFuzz.placed(placedAt, at("2026-11-20T04:00:00"), stabilityDays = 30.0)
+        val scheduler = Scheduler(FsrsParameters(), clock)
+        val seedBase = 77L shl 20
+        val t1 = at("2026-11-20T09:00:00")
+        val first = scheduler.review(start, Rating.Good, t1, seedBase + start.reps)
+        val t2 = first.due + 3_600_000
+        val second = scheduler.review(first, Rating.Again, t2, seedBase + first.reps)
+        assertEquals(second, scheduler.replay(listOf(t2 to Rating.Again, t1 to Rating.Good), seedBase, start))
+    }
 }

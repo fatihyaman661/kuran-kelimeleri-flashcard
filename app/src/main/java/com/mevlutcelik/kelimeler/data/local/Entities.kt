@@ -31,6 +31,8 @@ data class WordEntity(
  *
  * [rating] 1–4 ise cevaptır (FSRS notu). [SUSPEND] ve [UNSUSPEND] cevap değil olaydır: askıya alma da
  * aynı kayıtlarla taşındığı için yedek, senkron ve "geri al" onu da ayrıca bir şey yapmadan kapsar.
+ * [PLACEMENT] (seviye testinde bilinen sayıldı) ve [PLACEMENT_UNDO] (test geri alındı) de böyledir;
+ * [PLACEMENT] kaydında [durationMs] süre değil, ilk tekrara kalan süredir (vade = reviewedAt + durationMs).
  */
 @Entity(tableName = "reviews", indices = [Index("wordId"), Index("reviewedAt"), Index("synced")])
 data class ReviewEntity(
@@ -44,11 +46,23 @@ data class ReviewEntity(
     companion object {
         const val SUSPEND = -1
         const val UNSUSPEND = -2
+        const val PLACEMENT = -3
+        const val PLACEMENT_UNDO = -4
 
         fun isAnswer(rating: Int) = rating in 1..4
 
         /** Bu sürümün tanıdığı kayıt; yedekten ya da sunucudan gelen başka değerler atlanır. */
-        fun isKnown(rating: Int) = isAnswer(rating) || rating == SUSPEND || rating == UNSUSPEND
+        fun isKnown(rating: Int) = isAnswer(rating) || rating in PLACEMENT_UNDO..SUSPEND
+
+        /**
+         * Kelimenin geçerli seviye testi kaydı: son test olayı [PLACEMENT] ise ve ondan önce hiç cevap
+         * yoksa. Gerçek çalışma geçmişi olan kelimeye test dokunmaz.
+         */
+        fun activePlacement(records: List<ReviewEntity>): ReviewEntity? {
+            val last = records.lastOrNull { it.rating == PLACEMENT || it.rating == PLACEMENT_UNDO }
+                ?.takeIf { it.rating == PLACEMENT } ?: return null
+            return last.takeIf { placement -> records.none { isAnswer(it.rating) && it.reviewedAt < placement.reviewedAt } }
+        }
 
         /** Zaman sırasındaki kayıtlara göre kelime askıdaysa son askıya alma anı, değilse null. */
         fun suspendedSince(records: List<ReviewEntity>): Long? =

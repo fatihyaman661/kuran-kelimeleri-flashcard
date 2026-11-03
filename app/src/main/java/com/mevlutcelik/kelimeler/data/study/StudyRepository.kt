@@ -64,6 +64,14 @@ data class StudyOverview(
     val hasWork get() = newAvailable + learningDue + reviewDue > 0
 }
 
+/**
+ * Seviye testinin durumu: testle bilinen sayılan kelimelerden kaçı henüz sorulmadı, kaçı soruldu
+ * ve sorulanların kaçında ilk cevap "Tekrar" oldu (testin ne kadar iyimser olduğunun ölçüsü).
+ */
+data class PlacementSummary(val pending: Int, val checked: Int, val forgotten: Int) {
+    val placed get() = pending + checked
+}
+
 sealed interface UndoResult {
     /** [answer]: geri alınan kayıt bir cevap mıydı (değilse askıya alma). */
     data class Undone(val wordId: String, val answer: Boolean) : UndoResult
@@ -134,12 +142,21 @@ class StudyRepository @Inject constructor(
         stateDao.nextLearning(now)?.let { return load(it.wordId, it, now) }
         val newLeft = minOf(newLeftToday(now), wordDao.newCount())
         if (pickNew(settings.currentStudy().newOrder, stateDao.reviewDueCount(now), newLeft, mix)) {
-            wordDao.nextNew()?.let { return load(it.id, null, now, it) }
+            nextNewWord()?.let { return load(it.id, null, now, it) }
         }
         stateDao.nextReview(now)?.let { return load(it.wordId, it, now) }
-        if (newLeft > 0) wordDao.nextNew()?.let { return load(it.id, null, now, it) }
+        if (newLeft > 0) nextNewWord()?.let { return load(it.id, null, now, it) }
         stateDao.nextLearning(now + LEARN_AHEAD_MS)?.let { return load(it.wordId, it, now) }
         return null
+    }
+
+    /**
+     * Sıradaki yeni kelime: sıklık sırasıyla, ama bir yapı kelimesinden (harf, zamir eki…) sonra en az
+     * [FUNCTION_WORD_GAP] başka kelime gelir. Başka kelime kalmadıysa yapı kelimeleri sırayla devam eder.
+     */
+    private suspend fun nextNewWord(): WordEntity? {
+        if (functionWordAllowed(stateDao.recentIntroducedTypes(FUNCTION_WORD_GAP))) return wordDao.nextNew()
+        return wordDao.nextNewContent() ?: wordDao.nextNew()
     }
 
     private suspend fun load(wordId: String, state: CardStateEntity?, now: Long, word: WordEntity? = null): StudyCard? {
@@ -228,12 +245,101 @@ class StudyRepository @Inject constructor(
         }
     }
 
+    /**
+     * Seviye testi: [maxRank]'e kadar hiç görülmemiş kelimeleri öğrenilmiş sayar. Her biri Review
+     * aşamasına [PLACEMENT_STABILITY_DAYS] kararlılıkla girer; ilk tekrarları yarından başlayarak günde
+     * en fazla [PLACEMENT_PER_DAY] tane olacak şekilde serpiştirilir. Sıra kesme noktasından geriye
+     * doğrudur: testin en çok yanılabileceği kelimeler önce sorulur. Önceki bir testten bekleyen
+     * kelimelerin günleri dolu sayılır. [functionWordsUpTo] > 0 ise ("Harfleri ve ekleri biliyorum")
+     * o sıraya kadarki bütün yapı kelimeleri de kesme noktasından bağımsız olarak eklenir. Bilinen
+     * sayılan kelime sayısını döner.
+     */
+    suspend fun applyPlacement(maxRank: Int, functionWordsUpTo: Int = 0, now: Long = System.currentTimeMillis()): Int {
+        val ids = wordDao.unseenUpTo(maxRank, functionWordsUpTo)
+        if (ids.isEmpty()) return 0
+        val taken = stateDao.pendingPlacementDues().groupingBy { clock.dayOf(it) }.eachCount().toMutableMap()
+        val scheduler = scheduler()
+        var day = clock.dayOf(now) + 1
+        val reviews = ArrayList<ReviewEntity>(ids.size)
+        val states = ArrayList<CardStateEntity>(ids.size)
+        for (id in ids) {
+            while ((taken[day] ?: 0) >= PLACEMENT_PER_DAY) day++
+            taken[day] = (taken[day] ?: 0) + 1
+            val due = clock.startOfDay(day)
+            reviews += ReviewEntity(
+                id = UUID.randomUUID().toString(),
+                wordId = id,
+                reviewedAt = now,
+                rating = ReviewEntity.PLACEMENT,
+                durationMs = due - now,
+            )
+            // Testle gelen kelime bugünün yeni kelime sınırından yemesin: ilk görülme anı 0.
+            states += CardStateEntity.of(id, scheduler.placed(now, due, PLACEMENT_STABILITY_DAYS), introducedAt = 0L)
+        }
+        db.withTransaction {
+            reviewDao.insertAll(reviews)
+            stateDao.upsertAll(states)
+        }
+        return ids.size
+    }
+
+    /**
+     * Testle bilinen sayılıp henüz hiç sorulmamış kelimeleri yeniden "yeni" yapar. Sorulmuş olanlar
+     * kalır: onların durumu artık kullanıcının kendi cevaplarından geliyor. Geri alınan sayıyı döner.
+     */
+    suspend fun undoPlacement(now: Long = System.currentTimeMillis()): Int {
+        val ids = stateDao.pendingPlacementIds()
+        if (ids.isEmpty()) return 0
+        db.withTransaction {
+            reviewDao.insertAll(
+                ids.map { ReviewEntity(UUID.randomUUID().toString(), it, now, ReviewEntity.PLACEMENT_UNDO, 0) },
+            )
+            ids.forEach { rebuild(it) }
+        }
+        return ids.size
+    }
+
+    suspend fun placementSummary(): PlacementSummary {
+        val pending = stateDao.pendingPlacementIds().size
+        var checked = 0
+        var forgotten = 0
+        // Testle gelmiş ve en az bir kez cevaplanmış kelimeler: ilk cevaba bakılır.
+        reviewDao.all().groupBy { it.wordId }.forEach { (_, records) ->
+            val placement = ReviewEntity.activePlacement(records) ?: return@forEach
+            val first = records.firstOrNull { ReviewEntity.isAnswer(it.rating) && it.reviewedAt >= placement.reviewedAt } ?: return@forEach
+            checked++
+            if (first.rating == Rating.Again.value) forgotten++
+        }
+        return PlacementSummary(pending = pending, checked = checked, forgotten = forgotten)
+    }
+
+    /**
+     * "İlerlemeyi sıfırla": bu cihazdaki bütün tekrar kayıtları, kart durumları ve askılar silinir;
+     * bütün kelimeler hiç çalışılmamış hâle döner. Ayarlar kalır. Sunucuya dokunmaz (bkz.
+     * SettingsViewModel.resetProgress).
+     */
+    suspend fun resetProgress() {
+        db.withTransaction {
+            reviewDao.deleteAll()
+            stateDao.deleteAll()
+            suspendedDao.deleteAll()
+        }
+    }
+
     private suspend fun rebuild(wordId: String) {
         val records = reviewDao.forWord(wordId)
         val suspendedSince = ReviewEntity.suspendedSince(records)
         if (suspendedSince != null) suspendedDao.upsert(SuspendedEntity(wordId, suspendedSince)) else suspendedDao.delete(wordId)
 
         val answers = records.filter { ReviewEntity.isAnswer(it.rating) }
+        val placement = ReviewEntity.activePlacement(records)
+        if (placement != null) {
+            val scheduler = scheduler()
+            val start = scheduler.placed(placement.reviewedAt, placement.reviewedAt + placement.durationMs, PLACEMENT_STABILITY_DAYS)
+            val card = scheduler.replay(answers.map { it.reviewedAt to Rating.of(it.rating) }, seed(wordId, 0), start)
+            stateDao.upsert(CardStateEntity.of(wordId, card, introducedAt = 0L))
+            return
+        }
         if (answers.isEmpty()) {
             stateDao.delete(wordId)
             return
@@ -247,6 +353,12 @@ class StudyRepository @Inject constructor(
 
     companion object {
         const val ACTIVITY_DAYS = 30
+
+        /** Seviye testinde bilinen sayılan kelimenin başlangıç kararlılığı (gün). */
+        const val PLACEMENT_STABILITY_DAYS = 30.0
+
+        /** Seviye testinden gelen kelimelerden bir günde en fazla kaçının ilk tekrarı olur. */
+        const val PLACEMENT_PER_DAY = 3
         private const val LEARN_AHEAD_MS = 20 * 60 * 1000L
         private const val MAX_DURATION_MS = 5 * 60 * 1000L
     }

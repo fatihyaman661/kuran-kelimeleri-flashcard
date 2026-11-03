@@ -65,6 +65,7 @@ import com.mevlutcelik.kelimeler.R
 import com.mevlutcelik.kelimeler.presentation.common.HeroBackground
 import com.mevlutcelik.kelimeler.presentation.glossary.GlossaryScreen
 import com.mevlutcelik.kelimeler.presentation.guide.GuideScreen
+import com.mevlutcelik.kelimeler.presentation.placement.PlacementScreen
 import com.mevlutcelik.kelimeler.presentation.guide.GuideViewModel
 import com.mevlutcelik.kelimeler.presentation.home.HomeScreen
 import com.mevlutcelik.kelimeler.presentation.settings.SettingsScreen
@@ -86,6 +87,7 @@ object Routes {
     const val GLOSSARY = "glossary"
     const val STUDY = "study"
     const val GUIDE = "guide"
+    const val PLACEMENT = "placement"
     const val WORD_ARG = "key"
     const val WORD = "word/{$WORD_ARG}"
 
@@ -172,8 +174,16 @@ fun KelimelerApp(navController: NavHostController = rememberNavController()) {
                     }
                     composable(Routes.STATS) { StatsScreen() }
                     composable(Routes.GLOSSARY) { GlossaryScreen() }
-                    composable(Routes.SETTINGS) { SettingsScreen() }
-                    composable(Routes.GUIDE) { entry -> GuideScreen(onClose = { entry.ifResumed { navigateTab(Routes.TODAY) } }) }
+                    composable(Routes.SETTINGS) { entry ->
+                        SettingsScreen(onOpenPlacement = { entry.ifResumed { navController.navigate(Routes.PLACEMENT) } })
+                    }
+                    composable(Routes.GUIDE) { entry ->
+                        GuideScreen(
+                            onClose = { entry.ifResumed { navigateTab(Routes.TODAY) } },
+                            onPlacement = { entry.ifResumed { navController.navigate(Routes.PLACEMENT) } },
+                        )
+                    }
+                    composable(Routes.PLACEMENT) { entry -> PlacementScreen(onClose = { entry.ifResumed { navController.popBackStack() } }) }
                     composable(Routes.STUDY) { entry -> StudyScreen(onBack = { entry.ifResumed { navController.popBackStack() } }) }
                     composable(Routes.WORD, arguments = listOf(navArgument(Routes.WORD_ARG) { type = NavType.StringType })) { entry ->
                         WordDetailScreen(onBack = { entry.ifResumed { navController.popBackStack() } })

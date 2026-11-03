@@ -28,7 +28,8 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
   - Alternatif: [java-fsrs](https://github.com/open-spaced-repetition/java-fsrs) (MIT, Maven Central). `FSRS-Kotlin` deposunun lisansı olmadığı için kullanılamaz.
 - Hedef hatırlama oranı (desired retention) kullanıcı tarafından ayarlanabilir, varsayılan 0.90.
 - İlk sürümde varsayılan FSRS parametreleri kullanılır. Kişiye özel parametre optimizasyonu sonradan eklenebilir; bunun için tekrar kayıtlarının **baştan eksiksiz tutulması şart**.
-- Günlük yeni kart limiti ayarlanabilir. Ayrıca yalnızca o gün için artırılabilir (ana sayfada ve oturum sonunda "Bugün daha fazla yeni kelime": +10 / +25 / +50); ertesi gün sınır yine ayardaki değer olur.
+- Günlük yeni kart limiti ayarlanabilir.
+- **Yapı kelimeleri seyreltilir:** Destenin başı harf, zamir eki, işaret ismi ve mevsulle dolu (ilk 50 kartın 40'ı, ilk 100'ün 62'si); arka arkaya gelince yeni başlayanı bunaltıyordu. Yeni kelime seçilirken bir yapı kelimesinden (fiil, isim ya da özel isim olmayan her tür) sonra en az 3 başka kelime gelir: الْ, اللّٰه, قَالَ, كَانَ, وَ, رَبّ… Sıklık sırası korunur; ilk 100'deki yapı kelimeleri yaklaşık 245. yeni kartta biter. Kural `data/study/WordKind.kt`'de, son tanıtılan kelimelerin türüne bakar. Ayrıca yalnızca o gün için artırılabilir (ana sayfada ve oturum sonunda "Bugün daha fazla yeni kelime": +10 / +25 / +50); ertesi gün sınır yine ayardaki değer olur.
 - Kart sırası (Anki'deki "Yeni/tekrar sırası"): vakti gelen öğrenme adımları her zaman önce; sonra yeni kelimeler ile tekrarlar ayara göre **tekrarlarla karışık** (varsayılan, az olan tür çok olanın arasına eşit aralıkla serpiştirilir), **tekrarlardan sonra** ya da **tekrarlardan önce**.
 
 ## Veri modeli
@@ -70,30 +71,40 @@ Anki'ye bağımlı olmadan, tek bir özenle hazırlanmış desteyi (Kur'an kelim
 - **Hakkında ekranı:** Kaynaklar ve lisanslar (Tanzil, Quranic Arabic Corpus, GPLv3). *(Yapıldı: Ayarlar → Hakkında.)*
 - **Nasıl kullanılır rehberi:** Anki'yi bilmeyen kullanıcılar zorlandığı için eklendi (`presentation/guide/`). İlk açılışta bir kez kendiliğinden açılır (`guide_seen` ayarı), menüde "Nasıl kullanılır" olarak durur. İki bölüm: *Temel bilgiler* (amaç, sıklık sırası, aralıklı tekrar ve unutma eğrisi, kartın akışı, dört buton, butonların altındaki süreler, FSRS ve hedef oran, günlük düzen) ve *Ekranları tanı* (üst çubuk, kartın ön ve arka yüzü, zorlanan kelimeler ve askıya alma, menü). Rehberdeki süreler uydurma değil, uygulamanın kendi FSRS zamanlayıcısıyla (fuzz kapalı) hesaplanır; örnek kelime (عَلِمَ) `GuideSample.kt`'de gömülüdür. Çalışma ekranında bir şey değişirse (buton, simge, kart düzeni) rehberdeki taklidi de güncellenmeli.
 
-## Seviye tespiti (planlanan)
+## Seviye tespiti
 
-Daha önce Arapça çalışmış kullanıcı baştaki bildiği kelimelerle uğraşmasın diye. İlk açılışta rehberin sonunda ("Daha önce Arapça çalıştın mı?") ve Ayarlar → Çalışma'da sunulur; tekrar yapılabilir ve geri alınabilir.
+Daha önce Arapça çalışmış kullanıcı baştaki bildiği kelimelerle uğraşmasın diye. Rehberin "Her gün birkaç dakika" sayfasında ("Daha önce Arapça çalıştın mı?") ve Ayarlar → Çalışma → Seviye tespiti'nde sunulur; tekrar yapılabilir, sorulmamış kelimeler geri alınabilir. Kod: `scripts/placement.py`, `data/placement/`, `presentation/placement/`.
 
 **Soru havuzu (önceden hazırlanır):**
-- `scripts/build_deck.py` desteyle birlikte bir `placement` tablosu üretir: kelime, doğru anlam ve 3 çeldirici. Havuz yayımlanmadan önce elle gözden geçirilir; sorunlu soru silinir.
-- Sıklık bantları logaritmik: 1–50, 51–100, 101–200, 201–400, 401–800, 801–1600, 1601–3200, 3200+. Her banttan 15–20 soru.
-- Soru olmayanlar: harfler, zamirler, işaret isimleri, ism-i mevsuller (ayrı tek bir "temel harf ve ekler" sorusu), özel isimler, anlamı çok uzun ya da belirsiz kelimeler.
-- Şık metni anlamın ilk kısmıdır (ilk `;`'ye kadar).
-- Çeldiriciler: aynı tür (fiile fiil), aynı ya da komşu bant, aynı kökten değil, doğru cevapla ortak anlam kelimesi taşımayan (ör. جَاءَ / أَتَى ikisi de "gelmek").
+- `scripts/build_deck.py`, `scripts/placement.py` ile deste dosyasına bir `placement` tablosu yazar: kelime, bant, doğru şık ve 3 çeldirici. Eski uygulamalar tabloyu okumaz; biçim numarası değişmez. Havuz sürüm özetine girer: havuz değişince uygulamalar desteyi yeniden indirir.
+- Uygulama deste yüklenirken havuzu `files/placement.json`'a yazar (veritabanı şeması değişmez). Dosya yoksa (uygulama güncellenmiş, deste değişmemiş) APK'daki desteden okunur.
+- Gözden geçirme listesi: `data/placement-review.md` (betik üretir). Sorunlu soru ya da çeldirici, sırası `data/placement-exclude.txt`'ye yazılıp betik yeniden çalıştırılarak çıkarılır.
+- Sıklık bantları logaritmik: 1–50, 51–100, 101–200, 201–400, 401–800, 801–1600, 1601–3200, 3201+ (Kotlin'deki `PlacementBands` ile aynı olmalı). Her banttan en fazla 20 soru, bant boyunca eşit aralıklı.
+- Soru olmayanlar: harfler, zamirler, işaret isimleri, ism-i mevsuller, özel isimler, anlamı çok uzun ya da ünlemli kelimeler. Bunlar kesme noktasının altındaysa diğer kelimelerle birlikte öğrenilmiş sayılır. Ayrıca testin başında en sık 18 harf ve ek anlamlarıyla gösterilip "Hepsini biliyor musun?" diye sorulur (öz beyan): "Evet" denirse ilk 500 kelimedeki bütün yapı kelimeleri (fiil, isim ya da özel isim olmayanlar; şu an 115) kesme noktasından bağımsız olarak bilinen sayılır. Harf ve ekleri bilip kelime bilgisi az olan (kesme noktası 0'a yakın çıkan) kullanıcı için.
+- Şık metni anlamın ilk kısmıdır (ilk `;`'ye kadar, parantezler atılmış).
+- Çeldiriciler: şıkkın görünüşüne göre aynı grup ("-mek" ile biten eylemler / sıfatlar / isimler), aynı ya da komşu bant, aynı kökten değil, doğru cevapla ortak anlam kelimesi taşımayan. Seçim kelimenin GUID'iyle tohumlanır; aynı deste aynı havuzu verir.
 
-**Test (uyarlanabilir):**
-- Kelime kartın önündeki gibi gösterilir (harekesiz + tür); 4 anlam şıkkı ve "Bilmiyorum".
-- 101–200 bandından başlar, her bantta 5 soru: 5'te 4+ doğruysa üst banda, 2 ve altıysa alt banda / bitiş. Bilinen oranın %80'i geçtiği ve geçmediği bantlar bulununca sınırda 5–10 soru daha; kesme noktası iki bant arasında hesaplanır.
-- Puan: doğru +1, "Bilmiyorum" 0, yanlış −⅓ (şans düzeltmesi). Toplam 25–40 soru.
-- Sonuç ekranında "Tahminen ilk N kelimeyi biliyorsun"; kullanıcı N'yi kaydırıcıyla düzeltebilir.
+**Test (uyarlanabilir, `PlacementTest`):**
+- Kelime kartın önündeki gibi gösterilir (harekesiz + tür); 4 anlam şıkkı ve "Bilmiyorum". Yanlışta doğru cevap kısa süre gösterilir.
+- 101–200 bandından başlar, her ziyarette 6 soru. Puan: doğru +1, "Bilmiyorum" 0, yanlış −⅓ (şans düzeltmesi). Ortalama puan 0,7 ve üstüyse (6'da 5 doğru 1 yanlış geçer) üst banda, altındaysa alt banda. Geçilen ve geçilemeyen komşu bantlar bulununca geçilemeyende 6 soru daha; kesme noktası o bandın içinde, puana göre logaritmik ölçekte. En fazla 45 soru.
+- Gürültülü cevaplarla yapılan benzetimde 6 soruluk ziyaret, 5'e göre belirgin daha isabetli çıktı (ortalama ~26 soru); 8 soru isabeti artırmadan testi uzattı.
+- Sonuç ekranında "Tahminen ilk N kelimeyi biliyorsun"; kullanıcı N'yi düzeltebilir, kaç kelimenin bilinen sayılacağını ve kaç günde sorulacağını görür.
 
 **Bilinen sayılan kelimeler (askıya alınmaz):**
-- Her biri için yeni bir olay türüyle ("seviye testi") kayıt yazılır. Replay bu olayı görünce kartı doğrudan Review aşamasına koyar: **başlangıç kararlılığı 30 gün**, ortalama zorluk.
-- Yeni kelimeler N+1'den başlar; ilerleme ve metin kapsamı bu kelimeleri hemen sayar.
-- İlk tekrarlar serpiştirilir: **bu kelimelerden günde en fazla 3 tanesi** gelir. Sıra kesme noktasına en yakın kelimeden geriye doğrudur (en belirsiz olanlar önce; و, مِنْ gibi en sık kelimeler en sona kalır).
-- İlk tekrarda İyi/Kolay → aralık büyür, normal devam. Tekrar → yeniden öğrenme; testin hatası böyle kendiliğinden düzelir.
-- Geri almak = bu olayları silmek. Kişiye özel FSRS optimizasyonu bu olayları gerçek tekrar saymaz.
-- Güvenilirlik ölçüsü: testle bilinen sayılan kelimelerin ilk tekrarlarındaki "Tekrar" oranı; %15–20'yi geçerse eşik düşürülür.
+- N'ye kadar hiç görülmemiş, askıda olmayan her kelime için `PLACEMENT` (−3) kaydı yazılır; bu kayıtta `durationMs` ilk tekrara kalan süredir. Replay bu olayı görünce kartı doğrudan Review aşamasına koyar (`Scheduler.placed`): **başlangıç kararlılığı 30 gün**, zorluk ilk kez "İyi" denmiş kelimeninki, tekrar sayısı 0. Daha önce çalışılmış kelimeye test dokunmaz.
+- Kartın `introducedAt` değeri 0'dır: günlük yeni kelime sınırından yemez. Yeni kelimeler N'den sonraki ilk görülmemiş kelimeden başlar; ilerleme ve metin kapsamı bu kelimeleri hemen sayar, "Kalıcı kelimeler" henüz sorulmamışları saymaz.
+- İlk tekrarlar serpiştirilir: **bu kelimelerden günde en fazla 3 tanesi** (önceki testten bekleyenlerle birlikte). Sıra kesme noktasından geriye doğrudur (en belirsizler önce; و, مِنْ gibi en sık kelimeler en sona).
+- İlk tekrarda İyi/Kolay → FSRS geçen uzun süreyi hesaba katıp aralığı büyük açar. Tekrar → yeniden öğrenme; testin hatası böyle kendiliğinden düzelir.
+- Geri alma: henüz sorulmamış (Review, reps = 0) kelimelere `PLACEMENT_UNDO` (−4) kaydı yazılır, kelime yeniden yeni olur. Sorulmuş olanlar kalır. Kayıtlar silinmediği için geri alma senkronla diğer cihazlara da geçer.
+- Kişiye özel FSRS optimizasyonu eklenirse bu olaylar gerçek tekrar sayılmamalı.
+- Güvenilirlik ölçüsü: testle bilinen sayılan kelimelerin ilk cevabındaki "Tekrar" oranı (seviye tespiti ekranında gösterilir). %15–20'yi geçerse eşik (`PASS`) ya da başlangıç kararlılığı gözden geçirilmeli.
+- **Sunucu:** `server/functions/api/sync.ts` −3 ve −4'ü kabul eder. Bu sürümü yayımlamadan önce sunucu yeniden yayına alınmalı; eski sunucu bilinmeyen değerli bir gönderimi bütünüyle reddeder ve senkron takılır.
+
+## İlerlemeyi sıfırlama
+
+- Ayarlar → İlerlemeyi sıfırla (onay sorulur). Bu cihazdaki bütün tekrar kayıtları, kart durumları ve askılar silinir; bütün kelimeler hiç çalışılmamış hâle döner. Ayarlar kalır.
+- Yalnızca yereldir; sunucuya dokunmaz. Girişliyse senkrondan da çıkılır: çıkılmasaydı diğer cihazlardaki yeni tekrarlar sıfırlanmış cihaza karışırdı. Sunucudaki ilerleme kalır, yeniden giriş yapılınca geri gelir. Hepsini silmek için önce Senkron → Sunucudaki verilerimi sil.
+- Sıfırlamadan önce alınan bir yedek içe aktarılırsa eski ilerleme geri gelir.
 
 ## İstatistik
 
