@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import com.mevlutcelik.kelimeler.data.local.WordDao
+import com.mevlutcelik.kelimeler.data.settings.SettingsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.IOException
@@ -11,11 +12,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
+
+/** Kaydedilmiş havuz ve nereden geldiği: "deck:<sürüm>" ya da "bundle:<uygulamanın kurulma anı>". */
+@Serializable
+private data class StoredPool(val source: String, val questions: List<PlacementQuestion>)
 
 /**
  * Seviye tespiti soru havuzu. Havuz deste dosyasının `placement` tablosundan gelir
@@ -26,18 +33,21 @@ import kotlinx.serialization.json.Json
 class PlacementRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wordDao: WordDao,
+    private val settings: SettingsRepository,
     private val json: Json,
 ) {
     private val file get() = File(context.filesDir, POOL_FILE)
-    private val serializer = ListSerializer(PlacementQuestion.serializer())
+    private val serializer = StoredPool.serializer()
 
     /**
      * Açık deste dosyasından havuzu okuyup kaydeder; tablo yoksa (eski deste) ya da okunamazsa havuz
      * silinir. Havuzdaki bir sorun deste yüklemesini hiçbir zaman bozmaz.
      */
-    fun importFrom(source: SQLiteDatabase) {
+    fun importFrom(source: SQLiteDatabase, deckVersion: String) = importTagged(source, "deck:$deckVersion")
+
+    private fun importTagged(source: SQLiteDatabase, tag: String) {
         try {
-            readFrom(source)
+            readFrom(source, tag)
         } catch (e: SQLException) {
             file.delete()
         } catch (e: SerializationException) {
@@ -49,7 +59,7 @@ class PlacementRepository @Inject constructor(
         }
     }
 
-    private fun readFrom(source: SQLiteDatabase) {
+    private fun readFrom(source: SQLiteDatabase, tag: String) {
         val exists = source.rawQuery("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'placement'", null).use { it.moveToFirst() }
         if (!exists) {
             file.delete()
@@ -63,7 +73,7 @@ class PlacementRepository @Inject constructor(
                 }
             }
         }
-        file.writeText(json.encodeToString(serializer, questions))
+        file.writeText(json.encodeToString(serializer, StoredPool(tag, questions)))
     }
 
     /** Yeni bir test; havuz yoksa ya da hiçbir sorunun kelimesi destede değilse null. */
@@ -76,29 +86,47 @@ class PlacementRepository @Inject constructor(
         if (items.isEmpty()) null else PlacementTest(items, wordDao.maxRank(), random)
     }
 
-    private fun loadPool(): List<PlacementQuestion> {
-        if (!file.exists()) importBundled()
-        if (!file.exists()) return emptyList()
+    /**
+     * Yüklü destenin havuzu; yüklü destede havuz yoksa uygulamayla gelen desteninki. Kaydedilmiş havuz
+     * kaynağı tutmuyorsa (deste ya da uygulama değişmiş) yeniden okunur: yoksa eski bir sürümün
+     * soruları kalıcı olarak takılı kalırdı.
+     */
+    private suspend fun loadPool(): List<PlacementQuestion> {
+        val stored = readStored()
+        val deckTag = settings.deck.first().version?.let { "deck:$it" }
+        if (stored != null && stored.source == deckTag) return stored.questions
+        val bundleTag = "bundle:${installedAt()}"
+        if (stored != null && stored.source == bundleTag) return stored.questions
+        importBundled(bundleTag)
+        return readStored()?.takeIf { it.source == bundleTag }?.questions.orEmpty()
+    }
+
+    private fun readStored(): StoredPool? {
+        if (!file.exists()) return null
         return try {
             json.decodeFromString(serializer, file.readText())
         } catch (e: SerializationException) {
             file.delete()
-            emptyList()
+            null
         } catch (e: IllegalArgumentException) {
             file.delete()
-            emptyList()
+            null
         }
     }
+
+    /** Uygulamanın kurulma ya da güncellenme anı: yeni bir sürüm, yeni bir paketlenmiş havuz demek. */
+    @Suppress("DEPRECATION")
+    private fun installedAt(): Long = context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime
 
     /**
      * Deste, havuzu olmayan eski bir sürümden yüklenmişse (uygulama güncellenmiş ama deste henüz
      * değişmemiş) havuz uygulamayla gelen kopyadan okunur.
      */
-    private fun importBundled() {
+    private fun importBundled(tag: String) {
         val copy = File(context.cacheDir, "placement-bundled.db")
         try {
             context.assets.open(BUNDLED_DECK).use { input -> copy.outputStream().use { input.copyTo(it) } }
-            SQLiteDatabase.openDatabase(copy.path, null, SQLiteDatabase.OPEN_READONLY).use { importFrom(it) }
+            SQLiteDatabase.openDatabase(copy.path, null, SQLiteDatabase.OPEN_READONLY).use { importTagged(it, tag) }
         } catch (e: IOException) {
             // Havuz yok sayılır; ekran testin şu an yapılamadığını söyler.
         } catch (e: SQLException) {

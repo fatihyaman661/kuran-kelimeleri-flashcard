@@ -184,7 +184,10 @@ def build_pool(words, exclude_path):
         short = gloss(word["meaning"])
         if short is None:
             continue
-        candidates.append({**word, "gloss": short, "band": band_of(word["rank"]), "group": group_of(word, short)})
+        candidates.append({
+            **word, "gloss": short, "band": band_of(word["rank"]), "group": group_of(word, short),
+            "cognate": turkish_cognate(word),
+        })
 
     # Kökünden Türkçede bir kelime bulunan kökler: o kökten gelen kelimeler soru olarak ikinci tercih.
     familiar_roots = {w["root"] for w in words if w.get("root") and turkish_cognate(w)}
@@ -233,9 +236,12 @@ def pick_distractors(item, candidates):
     """Aynı gruptan, aynı ya da komşu banttan, anlamı örtüşmeyen üç kelime. Seçim kelimeye göre sabittir."""
     rng = random.Random(item["id"])
     for spread in (0, 1, 2):
+        # Türkçede de olan anlamlar ("isabet etmek", "hamd") çeldirici olmaz: Türkçe bilen, Arapça
+        # kelimenin o olmadığını hemen görüp eler.
         near = [
             c for c in candidates
             if c["id"] != item["id"] and c["group"] == item["group"] and abs(c["band"] - item["band"]) <= spread
+            and not c["cognate"]
         ]
         rng.shuffle(near)
         chosen = []

@@ -146,7 +146,7 @@ class DeckRepository @Inject constructor(
                     require(ids.isNotEmpty()) { "Deste boş" }
                     ids
                 }
-                placement.importFrom(source)
+                placement.importFrom(source, version)
                 settings.setDeckVersion(version, now)
                 DeckChange(version, added = (after - before).size, removed = (before - after).size)
             }
