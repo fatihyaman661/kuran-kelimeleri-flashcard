@@ -37,9 +37,9 @@ data class PlacementResult(
 )
 
 /**
- * Uyarlanabilir seviye testi. Bir banttan [PER_VISIT] soru sorulur; şans düzeltmeli puan (doğru +1,
+ * Uyarlanabilir seviye testi. Bir banttan [visitSize] soru sorulur; şans düzeltmeli puan (doğru +1,
  * "Bilmiyorum" 0, yanlış −⅓) [PASS] oranını geçerse üst banda, geçmezse alt banda gidilir. Geçilen
- * ve geçilemeyen komşu iki bant bulununca geçilemeyende [REFINE] soru daha sorulur ve kesme noktası
+ * ve geçilemeyen komşu iki bant bulununca geçilemeyende bir o kadar soru daha sorulur ve kesme noktası
  * o bandın içinde, puana göre logaritmik ölçekte hesaplanır.
  *
  * Ekrandan bağımsız, saf Kotlin: birim testleri (PlacementTestTest) bunu doğrudan çalıştırır.
@@ -57,7 +57,7 @@ class PlacementTest(
     private val failed = BooleanArray(PlacementBands.size)
 
     private var band = firstBand()
-    private var visitLeft = PER_VISIT
+    private var visitLeft = visitSize(band)
     private var refining = false
     private var total = 0
 
@@ -127,7 +127,7 @@ class PlacementTest(
 
     private fun visit(target: Int) {
         band = target
-        visitLeft = PER_VISIT
+        visitLeft = visitSize(target)
         advance()
     }
 
@@ -135,7 +135,7 @@ class PlacementTest(
     private fun refine(target: Int) {
         band = target
         refining = true
-        visitLeft = REFINE
+        visitLeft = visitSize(target)
         advance()
     }
 
@@ -149,12 +149,15 @@ class PlacementTest(
         return null
     }
 
-    /** [b] bandının içinde, puana göre kesme noktası: puan [PASS]'e yaklaştıkça bandın sonuna. */
+    /**
+     * [b] bandının içinde, puana göre kesme noktası. Temkinli: puanın [PASS]'e oranının karesi kadar
+     * ilerlenir (logaritmik ölçekte); yarı puan bandın ancak dörtte birini bilinen sayar.
+     */
     private fun cutoffIn(b: Int): Int {
         val range = PlacementBands[b]
         val low = range.first - 1
         val high = minOf(range.last, maxRank)
-        val fraction = (ratio(b) / PASS).coerceIn(0.0, 1.0)
+        val fraction = (ratio(b) / PASS).coerceIn(0.0, 1.0).let { it * it }
         if (fraction <= 0.0 || high <= low) return max(low, 0)
         val from = ln(max(low, 1).toDouble())
         val to = ln(high.toDouble())
@@ -173,13 +176,19 @@ class PlacementTest(
 
     companion object {
         // 6 soruluk ziyaretler, gürültülü cevaplarla yapılan benzetimde 5'e göre belirgin daha isabetli
-        // çıktı (ortalama ~26 soru); 8'e çıkmak isabeti artırmadan testi uzatıyor.
+        // çıktı. Nadir kelimelerin bantlarında (801+) şans payı büyük: orada 8 soru.
         const val PER_VISIT = 6
-        const val REFINE = 6
-        /** 6 sorudan 5 doğru 1 yanlış (puan 0,78) geçer; 4 doğru 2 "Bilmiyorum" (0,67) geçmez. */
-        const val PASS = 0.7
+        const val LONG_VISIT = 8
+        const val LONG_FROM_BAND = 5
+
+        fun visitSize(band: Int) = if (band >= LONG_FROM_BAND) LONG_VISIT else PER_VISIT
+        /**
+         * 6 sorudan 5 doğru 1 "Bilmiyorum" (0,83) geçer; 5 doğru 1 yanlış (0,78) geçmez. İlk sürümde 0,7
+         * idi ve şıklar baştan görünüyordu: kök bilgisiyle tanınan kelimeler sonucu binlere çıkardı.
+         */
+        const val PASS = 0.8
         const val START_BAND = 2
-        const val MAX_QUESTIONS = 45
+        const val MAX_QUESTIONS = 50
 
         /** Havuz satırını, kelimenin bilgileriyle ve karıştırılmış şıklarla teste hazırlar. */
         fun item(question: PlacementQuestion, rank: Int, word: String, type: String, random: Random = Random.Default): PlacementItem {
