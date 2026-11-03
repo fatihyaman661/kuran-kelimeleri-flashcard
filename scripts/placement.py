@@ -29,6 +29,78 @@ STOPWORDS = {
 }
 
 
+# --- Türkçede de bilinen kelimeler -------------------------------------------------------------------
+# "ihtilafa düşmek", "takva", "emanet" gibi Türkçeye geçmiş kelimeleri Türkçe bilen herkes tanır; bunlar
+# Arapça kelime bilgisini ölçmez. Arapça kelimenin (ya da kökünün) ünsüzleri Türkçe anlamdaki bir
+# sözcükte sırasıyla geçiyorsa kelime Türkçede de var sayılır. Ses denkliği kabadır: Türkçedeki
+# sertleşme yüzünden b/p, d/t, c/ç, g/k aynı sınıftır; ayın, hemze ve elif atlanır.
+AR_SOUND = {
+    "ب": "B", "ت": "D", "ث": "S", "ج": "C", "ح": "H", "خ": "H", "د": "D", "ذ": "Z", "ر": "R", "ز": "Z",
+    "س": "S", "ش": "S", "ص": "S", "ض": "ZD", "ط": "D", "ظ": "Z", "غ": "K", "ف": "F", "ق": "K", "ك": "K",
+    "ل": "L", "م": "M", "ن": "N", "ه": "H", "ة": "D", "و": "V", "ي": "Y",
+}
+TR_SOUND = {
+    "b": "B", "p": "B", "d": "D", "t": "D", "c": "C", "ç": "C", "j": "C", "g": "K", "k": "K", "s": "S",
+    "ş": "S", "z": "Z", "h": "H", "f": "F", "r": "R", "l": "L", "m": "M", "n": "N", "v": "V", "y": "Y", "ğ": "K",
+}
+TURKISH_SUFFIX = re.compile(r"(l[ıiuü]k?|l[ae]r|s[ıiuü]z|m[ae]k)$")
+HARAKAT = re.compile("[\u064B-\u065F\u0670\u0640]")
+
+
+def subsequence(needle, haystack):
+    i = 0
+    for sound in haystack:
+        if i < len(needle) and sound in needle[i]:
+            i += 1
+    return i == len(needle)
+
+
+def turkish_cognate(word):
+    """Türkçe anlamda, Arapça kelimeden ya da kökünden gelmiş bir sözcük var mı ("kitap", "ihtilaf")."""
+    needles = []
+    if word.get("root"):
+        root = [AR_SOUND.get(c, "") for c in word["root"].split()]
+        root = [c for c in root if c and c not in ("V", "Y")]
+        if len(root) >= 2:
+            needles.append(root)
+    letters = [AR_SOUND[c] for c in HARAKAT.sub("", word["word"]) if c in AR_SOUND]
+    if len(letters) >= 2:
+        needles.append(letters)
+    for token in re.findall(r"[a-zçğıöşüâîû]+", word["meaning"].lower()):
+        # Türkçe yapım ve çokluk eklerini at: "azametli" → "azamet"; oran kökün kendisine bakar.
+        token = TURKISH_SUFFIX.sub("", token) or token
+        sounds = [TR_SOUND[c] for c in token if c in TR_SOUND]
+        for needle in needles:
+            # Sözcüğün ünsüzlerinin çoğu Arapça kelimeden gelmeli: "yeryüzü"ndeki r–z tesadüftür.
+            if len(sounds) >= len(needle) and subsequence(needle, sounds) and len(needle) / len(sounds) >= 0.6:
+                return True
+    return False
+
+
+# --- Ezberden bilinen yerler --------------------------------------------------------------------------
+# Yalnızca çok ezberlenen yerlerde geçen nadir bir kelimeyi (Âdiyât'taki مُورِيَات gibi) bilmek, o sıradaki
+# kelimeleri bilmek demek değildir. Fâtiha, Yâsîn, Mülk, Amme cüzü, Âyetü'l-Kürsî, Âmenerrasûlü ve Haşr'in
+# sonu.
+MEMORIZED_SURAS = {1, 36, 67, *range(78, 115)}
+MEMORIZED_VERSES = {(2, 255), (2, 285), (2, 286), (59, 22), (59, 23), (59, 24)}
+SOURCE = re.compile(r"(\d+)/(\d+)")
+
+
+def only_in_memorized(word):
+    """Kelimenin bütün geçtiği yerler ezberlenen yerlerde mi. Örnekler 10'da kesildiyse bilinemez: hayır."""
+    examples = word.get("examples", [])
+    if not examples or len(examples) >= 10:
+        return False
+    for example in examples:
+        found = SOURCE.search(example.get("source", ""))
+        if not found:
+            return False
+        sura, verse = int(found.group(1)), int(found.group(2))
+        if sura not in MEMORIZED_SURAS and (sura, verse) not in MEMORIZED_VERSES:
+            return False
+    return True
+
+
 def band_of(rank):
     for index, (low, high) in enumerate(BANDS):
         if low <= rank <= high:
@@ -114,12 +186,26 @@ def build_pool(words, exclude_path):
             continue
         candidates.append({**word, "gloss": short, "band": band_of(word["rank"]), "group": group_of(word, short)})
 
+    # Kökünden Türkçede bir kelime bulunan kökler: o kökten gelen kelimeler soru olarak ikinci tercih.
+    familiar_roots = {w["root"] for w in words if w.get("root") and turkish_cognate(w)}
+
+    def askable(c):
+        return not turkish_cognate(c) and not only_in_memorized(c)
+
+    def preferred(c):
+        return c.get("root") not in familiar_roots
+
     pool = []
     for band in range(len(BANDS)):
-        in_band = [c for c in candidates if c["band"] == band]
-        # Bant boyunca eşit aralıklı seçim: bandın başını da sonunu da temsil etsin.
-        step = max(1, len(in_band) / PER_BAND)
-        chosen = [in_band[int(i * step)] for i in range(min(PER_BAND, len(in_band)))]
+        # Şık olarak her kelime kullanılabilir; soru olarak yalnızca Türkçede olmayan, ezberden
+        # gelmeyenler. Önce kökü Türkçede de bilinmeyenler, yetmezse diğerleri.
+        in_band = [c for c in candidates if c["band"] == band and askable(c)]
+        first = [c for c in in_band if preferred(c)]
+        second = [c for c in in_band if not preferred(c)]
+        chosen = spread(first, PER_BAND)
+        if len(chosen) < PER_BAND:
+            chosen += spread(second, PER_BAND - len(chosen))
+        chosen.sort(key=lambda c: c["rank"])
         for item in chosen:
             distractors = pick_distractors(item, candidates)
             if distractors is None:
@@ -135,6 +221,12 @@ def build_pool(words, exclude_path):
                 "distractor_ranks": [d["rank"] for d in distractors],
             })
     return pool
+
+
+def spread(items, count):
+    """Bant boyunca eşit aralıklı seçim: bandın başını da sonunu da temsil etsin."""
+    step = max(1, len(items) / count) if count else 1
+    return [items[int(i * step)] for i in range(min(count, len(items)))]
 
 
 def pick_distractors(item, candidates):

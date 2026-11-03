@@ -415,10 +415,10 @@
     <string name="guide_placement_body">Kısa bir seviye testiyle baştaki bildiğin kelimeleri atlayabilirsin. Testi Ayarlar → Çalışma\'dan sonra da yapabilirsin.</string>
     <string name="guide_placement_button">Seviye testi yap</string>
     <string name="placement_title">Seviye tespiti</string>
-    <string name="placement_intro_body">Daha önce Arapça çalıştıysan, baştaki bildiğin kelimelerle vakit kaybetme. Bu kısa test (yaklaşık 20–35 soru, birkaç dakika) nereden başlaman gerektiğini bulur.</string>
+    <string name="placement_intro_body">Daha önce Arapça çalıştıysan, baştaki bildiğin kelimelerle vakit kaybetme. Bu kısa test (yaklaşık 20–45 soru, birkaç dakika) nereden başlaman gerektiğini bulur.</string>
     <string name="placement_how_label">Nasıl çalışır</string>
-    <string name="placement_how_1">Kelime, kartın ön yüzündeki gibi harekesiz gelir; doğru anlamı dört şıktan seç.</string>
-    <string name="placement_how_2">Bilmiyorsan tahmin etme, “Bilmiyorum”a dokun. Tahminle verilen doğru cevaplar sonucu şişirir ve bilmediğin kelimeler bilinen sayılır.</string>
+    <string name="placement_how_1">Kelime, kartın ön yüzündeki gibi harekesiz gelir. Anlamını aklından hatırlayabiliyorsan “Biliyorum” de; şıklar açılır ve doğrusunu seçersin.</string>
+    <string name="placement_how_2">Hatırlayamıyorsan “Bilmiyorum” de. Şıklar yalnızca doğrulamak için: test, kartlarda yaptığın gibi hatırlamayı ölçüyor; tanıyıp tahmin etmek sonucu şişirir.</string>
     <string name="placement_how_3">Doğru cevap verdikçe test daha az sık geçen kelimelere geçer, zorlandıkça geri gelir. Sonunda önerilen sayıyı istersen düzeltebilirsin.</string>
     <string name="placement_after_label">Sonra ne olur</string>
     <string name="placement_after_1">Bildiğin sayılan kelimeler askıya alınmaz; öğrenilmiş sayılır ve yeni kelimeler onlardan sonra başlar.</string>
@@ -435,7 +435,11 @@
     <string name="placement_basics_no">Hayır, bilmediklerim var</string>
     <string name="placement_effect_basics">Bunun %1$d tanesi kesme noktasının ötesindeki harf ve ekler (“Harfleri biliyorum” dediğin için).</string>
     <string name="placement_question_number">Soru %1$d</string>
-    <string name="placement_question_prompt">Bu kelimenin anlamı hangisi?</string>
+    <string name="placement_question_prompt">Bu kelimenin anlamını biliyor musun?</string>
+    <string name="placement_question_hint">Önce anlamını aklından söyle. “Biliyorum” dersen şıklar açılır ve doğrusunu seçersin.</string>
+    <string name="placement_know">Biliyorum</string>
+    <string name="placement_pick_prompt">Hangisiydi?</string>
+    <string name="placement_actually_not">Aslında bilmiyorum</string>
     <string name="placement_dont_know">Bilmiyorum</string>
     <string name="placement_correct_was">Doğrusu: %1$s</string>
     <string name="placement_result">Tahminen ilk %1$d kelimeyi biliyorsun</string>

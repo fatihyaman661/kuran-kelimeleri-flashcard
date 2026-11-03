@@ -108,7 +108,7 @@ fun PlacementScreen(onClose: () -> Unit, viewModel: PlacementViewModel = hiltVie
                 PlacementStep.Intro -> Intro(state, onStart = viewModel::start, onUndo = viewModel::undo, onClose = onClose)
                 PlacementStep.Unavailable -> Message(stringResource(R.string.placement_unavailable), stringResource(R.string.placement_close), onClose)
                 is PlacementStep.Basics -> BasicsView(step, viewModel::answerBasics)
-                is PlacementStep.Question -> QuestionView(step, viewModel::choose)
+                is PlacementStep.Question -> QuestionView(step, viewModel::knowIt, viewModel::choose)
                 is PlacementStep.Result -> ResultView(state, step, viewModel::setCutoff, viewModel::apply, onSkip = onClose)
                 is PlacementStep.Done -> DoneView(step, onClose)
             }
@@ -259,7 +259,7 @@ private fun BasicsView(step: PlacementStep.Basics, onAnswer: (Boolean) -> Unit) 
 // Soru --------------------------------------------------------------------------------------------
 
 @Composable
-private fun QuestionView(step: PlacementStep.Question, onChoose: (Int) -> Unit) {
+private fun QuestionView(step: PlacementStep.Question, onKnow: () -> Unit, onChoose: (Int) -> Unit) {
     val item = step.item
     val answered = step.chosen != null
     PageColumn {
@@ -279,22 +279,38 @@ private fun QuestionView(step: PlacementStep.Question, onChoose: (Int) -> Unit) 
                 }
             }
         }
-        Text(stringResource(R.string.placement_question_prompt), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
-        item.choices.forEachIndexed { index, choice ->
-            val color = when {
-                !answered -> null
-                index == item.answerIndex -> PrimaryMint
-                index == step.chosen -> LearnCoral
-                else -> null
+        if (!step.revealed) {
+            // Önce hatırla: şıklar görünmeden "Biliyorum" ya da "Bilmiyorum".
+            Text(stringResource(R.string.placement_question_prompt), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.placement_question_hint), style = MaterialTheme.typography.bodySmall, color = OnSurfaceMuted)
+            PrimaryAction(stringResource(R.string.placement_know), onKnow, enabled = !answered)
+            OutlinedButton(
+                onClick = { onChoose(-1) },
+                enabled = !answered,
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, (if (step.chosen == -1) LearnCoral else PrimaryMint).copy(alpha = 0.6f)),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(stringResource(R.string.placement_dont_know), color = if (step.chosen == -1) LearnCoral else PrimaryMint)
             }
-            ChoiceButton(choice, color, enabled = !answered) { onChoose(index) }
-        }
-        TextButton(
-            onClick = { onChoose(-1) },
-            enabled = !answered,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-        ) {
-            Text(stringResource(R.string.placement_dont_know), color = if (step.chosen == -1) LearnCoral else PrimaryMint)
+        } else {
+            Text(stringResource(R.string.placement_pick_prompt), style = MaterialTheme.typography.bodyMedium, color = OnSurfaceMuted)
+            item.choices.forEachIndexed { index, choice ->
+                val color = when {
+                    !answered -> null
+                    index == item.answerIndex -> PrimaryMint
+                    index == step.chosen -> LearnCoral
+                    else -> null
+                }
+                ChoiceButton(choice, color, enabled = !answered) { onChoose(index) }
+            }
+            TextButton(
+                onClick = { onChoose(-1) },
+                enabled = !answered,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+            ) {
+                Text(stringResource(R.string.placement_actually_not), color = if (step.chosen == -1) LearnCoral else OnSurfaceMuted)
+            }
         }
         if (answered && step.chosen != item.answerIndex) {
             Text(

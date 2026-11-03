@@ -29,8 +29,12 @@ sealed interface PlacementStep {
     /** "Bu harfleri ve ekleri biliyor musun?": en sık yapı kelimeleri, sorulardan önce. */
     data class Basics(val words: List<WordEntity>, val count: Int) : PlacementStep
 
-    /** [chosen]: verilen cevap (şık sırası; "Bilmiyorum" için -1); null ise henüz cevaplanmadı. */
-    data class Question(val item: PlacementItem, val number: Int, val chosen: Int? = null) : PlacementStep
+    /**
+     * Önce yalnızca kelime gösterilir; kullanıcı "Biliyorum" derse ([revealed]) şıklar açılır. Şıklar
+     * hatırlatmasın, yalnızca doğrulasın diye. [chosen]: verilen cevap (şık sırası; "Bilmiyorum" için -1);
+     * null ise henüz cevaplanmadı.
+     */
+    data class Question(val item: PlacementItem, val number: Int, val revealed: Boolean = false, val chosen: Int? = null) : PlacementStep
 
     /** [cutoff] kullanıcının kaydırıcıyla düzelttiği değer; [suggested] testin önerisi. */
     data class Result(val suggested: Int, val cutoff: Int, val asked: Int) : PlacementStep
@@ -104,8 +108,17 @@ class PlacementViewModel @Inject constructor(
     }
 
     /** [index]: seçilen şık; -1 "Bilmiyorum". Doğru cevap kısa bir süre gösterilir, sonra sıradaki soru gelir. */
+    /** "Biliyorum": şıkları aç. */
+    fun knowIt() {
+        val current = _state.value.step as? PlacementStep.Question ?: return
+        if (current.chosen != null) return
+        _state.update { it.copy(step = current.copy(revealed = true)) }
+    }
+
     fun choose(index: Int) {
         val current = _state.value.step as? PlacementStep.Question ?: return
+        // Şık ancak "Biliyorum" dendikten sonra seçilebilir; "Bilmiyorum" her an.
+        if (index >= 0 && !current.revealed) return
         val running = test ?: return
         if (current.chosen != null) return
         _state.update { it.copy(step = current.copy(chosen = index)) }
