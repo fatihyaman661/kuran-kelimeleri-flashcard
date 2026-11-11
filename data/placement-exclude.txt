@@ -1,4 +1,4 @@
 # Seviye tespiti havuzundan çıkarılacak kelimeler: her satıra bir sıra numarası ya da GUID.
 # '#' sonrası açıklamadır. Değiştirdikten sonra: python3 scripts/build_deck.py
 1364  # جرم: "lâ cerame" kalıbı; tek başına isim olarak sorulunca yanıltıcı
-933   # "yücedir" (tebâreke): çeldirici olarak tuhaf duruyor
+936   # "yücedir" (tebâreke): çeldirici olarak tuhaf duruyor

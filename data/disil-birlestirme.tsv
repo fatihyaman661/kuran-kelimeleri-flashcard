@@ -1,0 +1,161 @@
+# Eril/dişil çiftleri: harekeli yazılışı eril + "َة" olan, aynı kökten kartlar (scripts/merge_feminine.py).
+# karar: birlestir = yalnızca cinsiyet/uyum farkı, dişil kart erile katılır ve destede kalkar
+#        ayri      = anlamı ayrışıyor (ism-i vahde, ism-i merre, ayrı mastar, ayrı kavram), iki kart da kalır
+# Sütunlar: eril sıra, eril, dişil sıra, dişil, karar, not  (sıralar birleştirmeden önceki hâl)
+82	مُؤْمِن	436	مُؤْمِنَة	birlestir
+91	خَيْر	869	خَيْرَة	ayri	hayır / seçkin (kadın), hayırlı işler
+103	كَافِرٌ	4079	كَافِرَةٌ	birlestir
+122	ظَالِم	1629	ظَالِمَة	birlestir
+168	لَيْلٌ	1051	لَيْلَةٌ	ayri	gece / (bir) gece: ism-i vahde, Leyletü'l-Kadr
+194	صَالِحٌ	230	صَالِحَةٌ	ayri	salih / salih amel
+208	قَلِيل	4054	قَلِيلَة	birlestir
+226	ابْن	2242	ابْنَة	ayri	oğul / kız
+228	كَثِير	832	كَثِيرَة	birlestir
+235	صَادِق	3783	صَادِقَة	birlestir
+268	بَصِير	1097	بَصِيرَة	ayri	gören / basiret
+274	مَوْت	2050	مَوْتَة	ayri	ölüm / bir kez ölüş (ism-i merre)
+305	مُشْرِك	1464	مُشْرِكَة	birlestir
+337	كَبِير	1154	كَبِيرَة	ayri	büyük / büyük günah
+346	مُسْلِم	2068	مُسْلِمَة	birlestir
+349	ضَلَالٌ	953	ضَلَالَةٌ	ayri	ayrı mastar
+350	مَعْرُوف	4228	مَعْرُوفَة	ayri	iyilik (örf) / bilinen, uygun
+352	مُحْسِن	4343	مُحْسِنَة	birlestir
+376	مُرْسَل	4366	مُرْسَلَة	birlestir
+392	خَاسِر	3472	خَاسِرَة	birlestir
+415	وَاحِد	405	وَاحِدَة	birlestir
+444	غَافِل	3946	غَافِلَة	birlestir
+448	مَكَانٌ	1456	مَكَانَةٌ	ayri	yer / durum, mevki
+449	مُنَافِق	1469	مُنَافِقَة	birlestir
+495	سَبْع	1593	سَبْعَة	birlestir	sayı: müennes/müzekker sayılanla
+528	حَسَن	401	حَسَنَة	ayri	güzel / iyilik, sevap
+553	صَابِر	2506	صَابِرَة	birlestir
+554	ظُلْم	496	ظُلْمَة	ayri	zulüm / karanlık
+618	قَائِم	1440	قَائِمَة	birlestir
+623	آمِن	2888	آمِنَة	birlestir
+637	طَيِّب	409	طَيِّبَة	birlestir
+712	وَالِد	2105	وَالِدَة	ayri	baba / anne
+722	حَافِظ	2369	حَافِظَة	birlestir
+774	صَاحِب	1613	صَاحِبَة	ayri	arkadaş / eş, hanım
+778	عَامِل	3881	عَامِلَة	birlestir
+787	مَسْكَن	2680	مَسْكَنَة	ayri	ev / yoksulluk
+789	مَوْعِد	4292	مَوْعِدَة	ayri	ayrı mastar
+819	عَابِد	3873	عَابِدَة	birlestir
+838	مَعْلُوم	2688	مَعْلُومَة	birlestir
+842	نَخْل	2763	نَخْلَة	ayri	hurmalık / tek hurma ağacı (ism-i vahde)
+882	صُورٌ	1948	صُورَةٌ	ayri	Sûr / suret
+942	خَبِيث	1217	خَبِيثَة	birlestir
+977	مُبَشِّر	4305	مُبَشِّرَة	birlestir
+978	مُحِيط	2714	مُحِيطَة	birlestir
+982	وَاسِع	1720	وَاسِعَة	birlestir
+1017	ثَلَاث	719	ثَلَاثَة	birlestir	sayı: müennes/müzekker sayılanla
+1038	ظَاهِر	2541	ظَاهِرَة	birlestir
+1043	قَانِت	1997	قَانِتَة	birlestir
+1054	مُبَارَك	1691	مُبَارَكَة	birlestir
+1079	أَرْبَع	917	أَرْبَعَة	birlestir	sayı: müennes/müzekker sayılanla
+1110	جَهْر	1853	جَهْرَة	ayri	ayrı mastar (açıkça)
+1127	سَابِق	3663	سَابِقَة	birlestir
+1135	شَجَر	564	شَجَرَة	ayri	ağaçlar / ağaç (ism-i vahde)
+1143	عَشْر	1963	عَشْرَة	ayri	sayı: on; dişil bileşik (اثْنَتَا عَشْرَةَ) ayrı kullanım
+1149	قَاعِد	2003	قَاعِدَة	ayri	oturan / temel
+1163	مُهَاجِرٌ	4490	مُهَاجِرَةٌ	birlestir
+1201	بَالِغ	1817	بَالِغَة	birlestir
+1236	سَرِير	3685	سَرِيرَة	ayri	taht / gizli şey
+1244	ظَهِير	3868	ظَهِيرَة	ayri	yardımcı / öğle vakti
+1300	وَاقِع	2792	وَاقِعَة	birlestir
+1360	تِسْع	2341	تِسْعَة	birlestir	sayı: müennes/müzekker sayılanla
+1362	ثَمَر	610	ثَمَرَة	ayri	ism-i vahde
+1376	خَاطِئ	2386	خَاطِئَة	birlestir
+1397	زَيْتُون	3648	زَيْتُونَة	ayri	ism-i vahde
+1412	صِدِّيق	3827	صِدِّيقَة	birlestir
+1429	عُسْر	2575	عُسْرَة	ayri	zorluk / darlık, yoksulluk
+1444	قَيِّم	2618	قَيِّمَة	birlestir
+1448	كَفَّارٌ	1667	كَفَّارَةٌ	ayri	çok nankör / keffaret
+1459	مَيْت	1285	مَيْتَة	ayri	ölü / leş
+1476	نَاظِر	2758	نَاظِرَة	birlestir
+1601	سَيِّئ	240	سَيِّئَة	ayri	kötü / günah
+1622	طَائِف	481	طَائِفَة	ayri	tavaf eden / topluluk
+1624	طَرِيق	1416	طَرِيقَة	ayri	yol / tarz, mezhep
+1633	عَشَر	2559	عَشَرَة	ayri	sayı: on; bileşik (عَشَر) ile tek başına (عَشَرَة) ayrı kullanım
+1669	كَلِمٌ	318	كَلِمَةٌ	ayri	sözler / söz (ism-i vahde)
+1692	مُبْصِر	2057	مُبْصِرَة	birlestir
+1697	مُحَرَّم	4337	مُحَرَّمَة	birlestir
+1700	مُرْسِل	4367	مُرْسِلَة	birlestir
+1815	بَاطِن	3119	بَاطِنَة	birlestir
+1821	بَطْش	2281	بَطْشَة	ayri	ism-i merre
+1822	بَقَر	1203	بَقَرَة	ayri	sığırlar / inek (ism-i vahde)
+1880	خَائِن	2385	خَائِنَة	ayri	hain / hain bakış, hıyanet
+1922	سَارِق	3669	سَارِقَة	birlestir
+1947	صَغِيرٌ	2513	صَغِيرَةٌ	ayri	küçük / küçük günah
+1971	غَائِب	3941	غَائِبَة	ayri	hazır olmayan / gizli şey
+1983	فَاكِه	828	فَاكِهَة	ayri	keyifli / meyve
+2012	كَاشِفٌ	2626	كَاشِفَةٌ	birlestir
+2074	مُقَام	4442	مُقَامَة	ayri	ayrı mastar
+2081	مُنْكِرٌ	4484	مُنْكِرَةٌ	birlestir
+2236	إِقَام	3027	إِقَامَة	ayri	ayrı mastar
+2344	ثَالِث	3345	ثَالِثَة	birlestir
+2387	خَال	1884	خَالَة	ayri	dayı / teyze
+2388	خَالِص	1377	خَالِصَة	birlestir
+2422	ذَائِق	1896	ذَائِقَة	birlestir
+2423	ذَاكِر	3547	ذَاكِرَة	birlestir
+2490	سِدْر	2491	سِدْرَة	ayri	ism-i vahde, Sidretü'l-Müntehâ
+2546	عَاصِف	2547	عَاصِفَة	birlestir
+2611	قَبِيل	4037	قَبِيلَة	ayri	topluluk / kabile
+2625	قِطْع	2623	قِطْعَة	ayri	parça / kıta
+2704	مَيْل	4299	مَيْلَة	ayri	ism-i merre
+2709	مُتَصَدِّق	4320	مُتَصَدِّقَة	birlestir
+2712	مُثْقَل	4333	مُثْقَلَة	birlestir
+2723	مُسَافِح	4375	مُسَافِحَة	birlestir
+2742	مُقَدَّس	4443	مُقَدَّسَة	birlestir
+2743	مُقْتَصِد	4453	مُقْتَصِدَة	birlestir
+2776	نَمْلٌ	4584	نَمْلَةٌ	ayri	ism-i vahde
+2799	وَرَق	4644	وَرَقَة	ayri	ism-i vahde
+2880	حَاضِر	2368	حَاضِرَة	birlestir
+3113	بَارِز	3114	بَارِزَة	birlestir
+3115	بَازِغ	3116	بَازِغَة	birlestir
+3125	بَدَن	3147	بَدَنَة	ayri	beden / kurbanlık deve
+3128	بَرَاء	2275	بَرَاءَة	ayri	ayrı mastar
+3133	بَسْط	2279	بَسْطَة	ayri	yayma / genişlik
+3145	بَيِّن	205	بَيِّنَة	ayri	açık / delil
+3158	تَائِب	3159	تَائِبَة	birlestir
+3309	تَوْب	1106	تَوْبَة	ayri	ayrı mastar
+3409	حَامِل	3410	حَامِلَة	birlestir
+3477	خَالِف	2401	خَالِفَة	birlestir
+3560	رَافِع	3561	رَافِعَة	birlestir
+3589	رَهِين	3590	رَهِينَة	birlestir
+3591	رَهْب	3593	رَهْبَة	ayri	ayrı mastar
+3632	زَجْر	2455	زَجْرَة	ayri	ism-i merre
+3658	سَائِح	3659	سَائِحَة	birlestir
+3717	سُنْبُل	1602	سُنْبُلَة	ayri	ism-i vahde
+3721	سُور	877	سُورَة	ayri	sur / sure
+3757	شَيْب	3758	شَيْبَة	ayri	ağarma / ihtiyarlık
+3779	صَائِمٌ	3780	صَائِمَةٌ	birlestir
+3791	صَخْر	2508	صَخْرَة	ayri	ism-i vahde
+3825	صِبْغ	2521	صِبْغَة	ayri	katık / boya, fıtrat
+3832	ضَاحِكٌ	3833	ضَاحِكَةٌ	birlestir
+3901	عَشِير	1962	عَشِيرَة	ayri	dost / aşiret
+3908	عَلَق	1428	عَلَقَة	ayri	ism-i vahde
+4019	فِرْق	4020	فِرْقَة	ayri	parça / topluluk
+4039	قَبْض	2612	قَبْضَة	ayri	ism-i merre
+4040	قَتَر	4041	قَتَرَة	ayri	ayrı kelime
+4081	كَامِلٌ	2629	كَامِلَةٌ	birlestir
+4089	كَعْبٌ	2634	كَعْبَةٌ	ayri	topuk / Kâbe
+4105	كِسْفٌ	1671	كِسْفَةٌ	ayri	ism-i vahde
+4121	لَعْنٌ	705	لَعْنَةٌ	ayri	ayrı mastar
+4152	مَبْثُوث	4153	مَبْثُوثَة	birlestir
+4181	مُرْضِع	4369	مُرْضِعَة	birlestir
+4195	مَرْفُوع	2033	مَرْفُوعَة	birlestir
+4227	مَعْدُود	1281	مَعْدُودَة	birlestir
+4238	مَفَاز	2690	مَفَازَة	ayri	kurtuluş / çöl
+4250	مَقْطُوع	4251	مَقْطُوعَة	birlestir
+4260	مَلْعُونٌ	4261	مَلْعُونَةٌ	birlestir
+4323	مُتَفَرِّق	4324	مُتَفَرِّقَة	birlestir
+4376	مُسَخَّر	2064	مُسَخَّرَة	birlestir
+4405	مُصِيبٌ	904	مُصِيبَةٌ	ayri	isabet eden / musibet
+4406	مُصَّدِّق	4407	مُصَّدِّقَة	birlestir
+4416	مُطَهَّر	1467	مُطَهَّرَة	birlestir
+4423	مُعَقِّب	4424	مُعَقِّبَة	birlestir
+4438	مُفَصَّل	4439	مُفَصَّلَة	birlestir
+4469	مُمْسِكٌ	4470	مُمْسِكَةٌ	birlestir
+4568	نَفَق	2092	نَفَقَة	ayri	tünel / harcama
+4638	وَجِل	4639	وَجِلَة	birlestir
+4672	يَابِس	2809	يَابِسَة	birlestir
